@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<net.noliaware.yumi_contributor.feature_account.presentation.views.ManagedAccountParentView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/coordinator_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/title_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sf_pro_display_semibold"
+        android:text="@string/selected_account"
+        android:textColor="@color/black_font"
+        android:textSize="24sp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/description_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:textColor="@color/grey_1"
+        android:textSize="18sp" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/parent_content_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/rectangle_half_rounded"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        android:paddingTop="10dp">
+
+        <net.noliaware.yumi_contributor.feature_account.presentation.views.ManagedAccountView
+            android:id="@+id/managed_account_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/available_vouchers_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sf_pro_display_semibold"
+                android:text="@string/available_vouchers"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/available_categories_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/used_vouchers_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sf_pro_display_semibold"
+                android:text="@string/used_vouchers"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/used_categories_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"
+                android:visibility="gone" />
+
+        </net.noliaware.yumi_contributor.feature_account.presentation.views.ManagedAccountView>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/change_account_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_filled_rounded_primary"
+        android:clickable="true"
+        android:focusable="true"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        android:gravity="center"
+        android:text="@string/select_account"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
+
+</net.noliaware.yumi_contributor.feature_account.presentation.views.ManagedAccountParentView>

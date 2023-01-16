@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<net.noliaware.yumi_contributor.feature_login.presentation.views.LoginParentView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/background_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_ketzal_background" />
+
+    <ViewAnimator
+        android:id="@+id/login_view_animator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <net.noliaware.yumi_contributor.feature_login.presentation.views.LoginView
+            android:id="@+id/login_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rectangle_half_rounded">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/input_message_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sf_pro_display_semibold"
+                android:text="@string/enter_login_message"
+                android:textColor="@color/black_font"
+                android:textSize="24sp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_layout_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                app:boxBackgroundColor="@color/grey_3"
+                app:boxBackgroundMode="filled"
+                app:endIconMode="clear_text">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/sf_pro_text_semibold"
+                    android:hint="@string/hint_login"
+                    android:imeOptions="actionDone|flagNoExtractUi"
+                    android:inputType="textNoSuggestions" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/progress_bar"
+                style="@style/Widget.MaterialComponents.CircularProgressIndicator.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:visibility="gone"
+                app:indicatorColor="@color/colorPrimary" />
+
+        </net.noliaware.yumi_contributor.feature_login.presentation.views.LoginView>
+
+        <net.noliaware.yumi_contributor.feature_login.presentation.views.PasswordView
+            android:id="@+id/password_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rectangle_half_rounded">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/input_code_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sf_pro_display_semibold"
+                android:text="@string/enter_code_message"
+                android:textColor="@color/black_font"
+                android:textSize="24sp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/description_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sf_pro_text_regular"
+                android:text="@string/enter_code_description"
+                android:textColor="@color/grey_1" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/code_linear_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:divider="@drawable/empty_divider"
+                app:showDividers="middle" />
+
+            <View
+                android:id="@+id/separator_line_view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey_3"
+                android:importantForAccessibility="no" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pad_first_digit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/ring_empty_grey1"
+                android:fontFamily="@font/sf_pro_display_semibold"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textColor="@color/black_font"
+                android:textSize="29sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pad_second_digit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/ring_empty_grey1"
+                android:fontFamily="@font/sf_pro_display_semibold"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textColor="@color/black_font"
+                android:textSize="29sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pad_third_digit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/ring_empty_grey1"
+                android:fontFamily="@font/sf_pro_display_semibold"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textColor="@color/black_font"
+                android:textSize="29sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pad_fourth_digit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/ring_empty_grey1"
+                android:fontFamily="@font/sf_pro_display_semibold"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textColor="@color/black_font"
+                android:textSize="29sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pad_fifth_digit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/ring_empty_grey1"
+                android:fontFamily="@font/sf_pro_display_semibold"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textColor="@color/black_font"
+                android:textSize="29sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pad_sixth_digit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/ring_empty_grey1"
+                android:fontFamily="@font/sf_pro_display_semibold"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textColor="@color/black_font"
+                android:textSize="29sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pad_seventh_digit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/ring_empty_grey1"
+                android:fontFamily="@font/sf_pro_display_semibold"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textColor="@color/black_font"
+                android:textSize="29sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pad_eighth_digit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/ring_empty_grey1"
+                android:fontFamily="@font/sf_pro_display_semibold"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textColor="@color/black_font"
+                android:textSize="29sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pad_ninth_digit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/ring_empty_grey1"
+                android:fontFamily="@font/sf_pro_display_semibold"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textColor="@color/black_font"
+                android:textSize="29sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/pad_tenth_digit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/ring_empty_grey1"
+                android:fontFamily="@font/sf_pro_display_semibold"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textColor="@color/black_font"
+                android:textSize="29sp" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/delete_image_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:background="?selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_delete" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/confirm_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_filled_rounded_primary"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="@font/sf_pro_text_semibold"
+                android:gravity="center"
+                android:text="@string/confirm"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+        </net.noliaware.yumi_contributor.feature_login.presentation.views.PasswordView>
+    </ViewAnimator>
+
+</net.noliaware.yumi_contributor.feature_login.presentation.views.LoginParentView>

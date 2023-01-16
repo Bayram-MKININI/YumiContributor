@@ -1,0 +1,86 @@
+<resources>
+
+    <string name="error_no_network">Erreur réseau. Vérifier vos paramètres de connexion.</string>
+    <string name="error_contact_support">Une erreur est survenue, veuillez contacter le support technique.</string>
+    <string name="error_message">%s Essais restants: %d</string>
+
+    //Login
+    <string name="enter_login_message">Saisissez votre identifiant</string>
+    <string name="enter_code_message">Saisissez votre code</string>
+    <string name="enter_code_description">Saisissez votre code à 6 chiffres</string>
+    <string name="enter_code_comment_message">Bienvenue %s!</string>
+    <string name="login_empty_error">Le champ identifiant est vide</string>
+    <string name="hint_login">Identifiant</string>
+    <string name="secret_code">Votre code secret</string>
+    <string name="confirm">Valider</string>
+    <string name="correct">Corriger</string>
+    <string name="ok">OK</string>
+
+    //Selected account
+    <string name="selected_account">Bénéficiaire selectionné</string>
+    <string name="categories_list">Liste des familles de coupons</string>
+    <string name="select_account">Seléctionner un bénéficiaire</string>
+    <string name="selected_account_to_handle">Selectionner un bénéficiaire pour consulter ses données</string>
+    <string name="back">Retour</string>
+    <string name="expiry_date">Date d\'expiration: %s</string>
+    <string name="retailer">Fournisseur: %s</string>
+    <string name="available_vouchers">Coupons disponibles</string>
+    <string name="used_vouchers">Coupons utilisés</string>
+    <string name="display_voucher">Accéder au coupon</string>
+    <string name="use_voucher">Utiliser ce coupon</string>
+
+    //Vouchers
+    <string name="creation_date">Date de création:</string>
+    <string name="expiry_date_title">Date d\'expiration:</string>
+    <string name="description">Description:</string>
+    <string name="web_page">Page web:</string>
+    <string name="retailer_title">Fournisseur:</string>
+    <string name="address_title">Adresse:</string>
+    <string name="landline">Tél fixe:</string>
+    <string name="mobile">Tél mobile:</string>
+    <string name="mobile_short">Tél: %s</string>
+    <string name="email">Mail:</string>
+    <string name="location">Localisation:</string>
+    <string name="application_not_found">Application cartographique introuvable</string>
+    <string name="voucher_inexistent">Coupon inexistant</string>
+    <string name="voucher_canceled">Coupon annulé</string>
+    <string name="voucher_consumed">Coupon consommé</string>
+
+    //Profile
+    <string name="my_profile">Mon Profil</string>
+    <string name="my_data">Mes informations</string>
+    <string name="complementary_data">Informations complémentaires</string>
+    <string name="login">Login:</string>
+    <string name="surname">Nom:</string>
+    <string name="name">Prénom:</string>
+    <string name="referent">Référent:</string>
+    <string name="birth">Naissance:</string>
+    <string name="birth_data">%s\nà %s\n%s</string>
+    <string name="address">Adresse:</string>
+    <string name="new_line">\n</string>
+    <string name="phone_numbers">N° de tél:</string>
+    <string name="occupation">Occupation:</string>
+    <string name="get_code">Obtenir un code</string>
+    <string name="bo_sign_in_description">Veuillez utiliser ce code pour vous connecter sur votre compte back office</string>
+    <string name="bo_code_expiration">Ce code expire dans:</string>
+    <string name="empty_time">--:--</string>
+    <string name="usage_date">Date d\'utilisation: %s à %s</string>
+
+    //Messages
+    <string name="mail">Messagerie</string>
+    <string name="sent">Envoyés</string>
+    <string name="received">Reçus</string>
+    <string name="mail_description">Le centre de messagerie vous permet de communiquer avec votre agent</string>
+    <string name="sent_at">Envoyé le %s à %s</string>
+    <string name="select_subject">Sélectionner un sujet</string>
+    <string name="new_mail">Nouveau message</string>
+    <string name="send">Envoyer</string>
+    <string name="mail_object">Object</string>
+    <string name="mail_body">Message</string>
+
+    //Alert
+    <string name="notifications">Notifications</string>
+    <string name="notification_description">Le centre de notifications est une fonction pour vous informer de toutes les mises à jour</string>
+    <string name="received_at">Reçu le %s à %s</string>
+
+</resources>

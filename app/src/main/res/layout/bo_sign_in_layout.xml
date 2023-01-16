@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<net.noliaware.yumi_contributor.feature_profile.presentation.views.BOSignInView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/back_layout" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/description_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:gravity="center"
+        android:text="@string/bo_sign_in_description" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/code_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sf_pro_display_semibold"
+        android:gravity="center"
+        android:letterSpacing="0.3"
+        android:textColor="@color/black_font"
+        android:textSize="32sp" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/bo_code_expiration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:gravity="center"
+        android:text="@string/bo_code_expiration" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/timestamp_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sf_pro_display_semibold"
+        android:gravity="center"
+        android:textColor="@color/black_font"
+        android:textSize="24sp" />
+
+</net.noliaware.yumi_contributor.feature_profile.presentation.views.BOSignInView>

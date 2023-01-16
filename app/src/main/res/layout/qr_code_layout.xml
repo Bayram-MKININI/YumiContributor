@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<net.noliaware.yumi_contributor.feature_account.presentation.views.QrCodeView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true">
+
+    <include layout="@layout/back_layout" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/title_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sf_pro_display_semibold"
+        android:textColor="@color/black_font"
+        android:textSize="24sp" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/creation_date_title_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sf_pro_display_medium"
+        android:text="@string/creation_date"
+        android:textSize="16sp" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/creation_date_value_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sf_pro_text_regular" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/expiry_date_title_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sf_pro_display_medium"
+        android:text="@string/expiry_date_title"
+        android:textSize="16sp" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/expiry_date_value_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sf_pro_text_regular" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/qr_code_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true" />
+
+    <View
+        android:id="@+id/layer_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent_black" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/use_vouchers_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_filled_rounded_primary"
+        android:clickable="true"
+        android:focusable="true"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        android:gravity="center"
+        android:text="@string/use_voucher"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
+</net.noliaware.yumi_contributor.feature_account.presentation.views.QrCodeView>

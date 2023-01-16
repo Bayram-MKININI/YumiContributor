@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<net.noliaware.yumi_contributor.feature_login.presentation.views.AccountItemView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rectangle_empty_rounded_grey2">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/title_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sf_pro_display_semibold"
+        android:textColor="@color/black_font"
+        android:textSize="18sp" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/phone_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:textColor="@color/grey_1"
+        android:textSize="14sp" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/last_login_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:textColor="@color/grey_1"
+        android:textSize="14sp" />
+
+    <View
+        android:id="@+id/separator_line_view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_2"
+        android:importantForAccessibility="no" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/categories_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
+
+</net.noliaware.yumi_contributor.feature_login.presentation.views.AccountItemView>
