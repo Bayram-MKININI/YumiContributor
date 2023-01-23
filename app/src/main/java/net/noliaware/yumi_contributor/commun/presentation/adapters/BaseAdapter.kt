@@ -9,7 +9,10 @@ class BaseAdapter<T>(private val listOfItems: List<T>) : RecyclerView.Adapter<Ba
     var expressionViewHolderBinding: ((T, View) -> Unit)? = null
     var expressionOnCreateViewHolder: ((ViewGroup) -> View)? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<T> {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): BaseViewHolder<T> {
         return expressionOnCreateViewHolder?.let {
             it(parent)
         }?.let {

@@ -14,12 +14,14 @@ class ManagedAccountsAdapter(
     private val onItemClicked: (ManagedAccount) -> Unit
 ) : PagingDataAdapter<ManagedAccount, ItemViewHolder<AccountItemView>>(ManagedAccountComparator) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        ItemViewHolder<AccountItemView>(
-            LayoutInflater.from(parent.context).inflate(R.layout.account_item_layout, parent, false)
-        ) { position ->
-            getItem(position)?.let { onItemClicked(it) }
-        }
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ) = ItemViewHolder<AccountItemView>(
+        LayoutInflater.from(parent.context).inflate(R.layout.account_item_layout, parent, false)
+    ) { position ->
+        getItem(position)?.let { onItemClicked(it) }
+    }
 
     override fun onBindViewHolder(holder: ItemViewHolder<AccountItemView>, position: Int) {
         getItem(position)?.let { accountData ->

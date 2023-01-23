@@ -14,6 +14,15 @@ class MessageAdapter(
     private val onItemClicked: (Message) -> Unit
 ) : PagingDataAdapter<Message, ItemViewHolder<MessageItemView>>(MessageComparator) {
 
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ) = ItemViewHolder<MessageItemView>(
+        LayoutInflater.from(parent.context).inflate(R.layout.message_item_layout, parent, false)
+    ) { position ->
+        getItem(position)?.let { onItemClicked(it) }
+    }
+
     override fun onBindViewHolder(holder: ItemViewHolder<MessageItemView>, position: Int) {
         getItem(position)?.let { message ->
             holder.heldItemView.fillViewWithData(
@@ -29,13 +38,6 @@ class MessageAdapter(
         time = parseToShortDate(message.messageDate),
         body = message.messagePreview.orEmpty()
     )
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        ItemViewHolder<MessageItemView>(
-            LayoutInflater.from(parent.context).inflate(R.layout.message_item_layout, parent, false)
-        ) { position ->
-            getItem(position)?.let { onItemClicked(it) }
-        }
 
     object MessageComparator : DiffUtil.ItemCallback<Message>() {
         override fun areItemsTheSame(

@@ -14,6 +14,13 @@ import net.noliaware.yumi_contributor.feature_alerts.presentation.views.AlertIte
 
 class AlertAdapter : PagingDataAdapter<Alert, ItemViewHolder<AlertItemView>>(AlertComparator) {
 
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ) = ItemViewHolder<AlertItemView>(
+        LayoutInflater.from(parent.context).inflate(R.layout.alert_item_layout, parent, false)
+    )
+
     override fun onBindViewHolder(holder: ItemViewHolder<AlertItemView>, position: Int) {
         getItem(position)?.let { alert ->
             holder.heldItemView.fillViewWithData(
@@ -41,11 +48,6 @@ class AlertAdapter : PagingDataAdapter<Alert, ItemViewHolder<AlertItemView>>(Ale
         4 -> AlertPriority.CRITICAL
         else -> AlertPriority.INFORMATION
     }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        ItemViewHolder<AlertItemView>(
-            LayoutInflater.from(parent.context).inflate(R.layout.alert_item_layout, parent, false)
-        )
 
     object AlertComparator : DiffUtil.ItemCallback<Alert>() {
         override fun areItemsTheSame(
