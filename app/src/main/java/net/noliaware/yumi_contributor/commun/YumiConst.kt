@@ -19,6 +19,8 @@ const val GET_INBOX_MESSAGE = "getInboxMessage"
 const val GET_OUTBOX_MESSAGE_LIST = "getOutboxMessageList"
 const val GET_OUTBOX_MESSAGE = "getOutboxMessage"
 const val SEND_MESSAGE = "sendMessage"
+const val DELETE_INBOX_MESSAGE = "delInboxMessage"
+const val DELETE_OUTBOX_MESSAGE = "delOutboxMessage"
 
 const val LOGIN = "login"
 const val PASSWORD = "password"

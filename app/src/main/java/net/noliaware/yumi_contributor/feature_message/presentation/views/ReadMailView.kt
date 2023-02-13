@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
 import net.noliaware.yumi_contributor.R
@@ -13,6 +14,7 @@ class ReadMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
 
     private lateinit var backView: View
     private lateinit var titleTextView: TextView
+    private lateinit var deleteImageView: ImageView
     private lateinit var messageParentView: View
     private lateinit var readMailContentView: ReadMailContentView
     private lateinit var composeButton: View
@@ -21,6 +23,7 @@ class ReadMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
 
     interface ReadMailViewCallback {
         fun onBackButtonClicked()
+        fun onDeleteButtonClicked()
         fun onComposeButtonClicked()
     }
 
@@ -39,17 +42,26 @@ class ReadMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
     private fun initView() {
 
         backView = findViewById(R.id.back_view)
-        backView.setOnClickListener {
-            callback?.onBackButtonClicked()
-        }
+        backView.setOnClickListener(onClickListener)
 
         titleTextView = findViewById(R.id.title_text_view)
+        deleteImageView = findViewById(R.id.delete_image_view)
+        deleteImageView.setOnClickListener(onClickListener)
+
         messageParentView = findViewById(R.id.message_parent_view)
         readMailContentView = messageParentView.findViewById(R.id.read_mail_content_view)
 
         composeButton = findViewById(R.id.compose_fab)
-        composeButton.setOnClickListener {
-            callback?.onComposeButtonClicked()
+        composeButton.setOnClickListener(onClickListener)
+    }
+
+    private val onClickListener: OnClickListener by lazy {
+        OnClickListener {
+            when (it.id) {
+                R.id.back_view -> callback?.onBackButtonClicked()
+                R.id.delete_image_view -> callback?.onDeleteButtonClicked()
+                R.id.compose_fab -> callback?.onComposeButtonClicked()
+            }
         }
     }
 
@@ -65,6 +77,8 @@ class ReadMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
         val viewHeight = MeasureSpec.getSize(heightMeasureSpec)
 
         backView.measureWrapContent()
+
+        deleteImageView.measureWrapContent()
 
         titleTextView.measure(
             MeasureSpec.makeMeasureSpec(viewWidth - convertDpToPx(40), MeasureSpec.AT_MOST),
@@ -102,6 +116,11 @@ class ReadMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
         titleTextView.layoutToTopLeft(
             (viewWidth - titleTextView.measuredWidth) / 2,
             backView.bottom + convertDpToPx(10)
+        )
+
+        deleteImageView.layoutToTopRight(
+            viewWidth - convertDpToPx(10),
+            titleTextView.top + (titleTextView.measuredHeight - deleteImageView.measuredHeight) / 2
         )
 
         messageParentView.layoutToTopLeft(

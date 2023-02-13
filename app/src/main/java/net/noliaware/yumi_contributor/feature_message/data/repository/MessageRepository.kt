@@ -21,4 +21,8 @@ interface MessageRepository {
         messageSubjectId: String?,
         messageBody: String
     ): Flow<Resource<Boolean>>
+
+    fun deleteInboxMessageForId(messageId: String): Flow<Resource<Boolean>>
+
+    fun deleteOutboxMessageForId(messageId: String): Flow<Resource<Boolean>>
 }

@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import net.noliaware.yumi_contributor.commun.DATA_SHOULD_REFRESH
 import net.noliaware.yumi_contributor.commun.MESSAGE_ID
 import net.noliaware.yumi_contributor.commun.presentation.EventsHelper
 import net.noliaware.yumi_contributor.feature_message.data.repository.MessageRepository
@@ -15,21 +16,39 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReadOutboxMailFragmentViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val repository: MessageRepository
 ) : ViewModel() {
 
-    val eventsHelper = EventsHelper<Message>()
+    val getMessageEventsHelper = EventsHelper<Message>()
+    val deleteMessageEventsHelper = EventsHelper<Boolean>()
+    val messageId get() = savedStateHandle.get<String>(MESSAGE_ID)
+
+    var sentMessageListShouldRefresh
+        get() = savedStateHandle.get<Boolean>(DATA_SHOULD_REFRESH)
+        set(value) = savedStateHandle.set(DATA_SHOULD_REFRESH, value)
 
     init {
-        savedStateHandle.get<String>(MESSAGE_ID)?.let { callGetMessageForId(it) }
+        messageId?.let {
+            callGetMessageForId(it)
+        }
     }
 
     private fun callGetMessageForId(messageId: String) {
         viewModelScope.launch {
             repository.getOutboxMessageForId(messageId).onEach { result ->
-                eventsHelper.handleResponse(result)
+                getMessageEventsHelper.handleResponse(result)
             }.launchIn(this)
+        }
+    }
+
+    fun callDeleteOutboxMessageForId() {
+        messageId?.let { messageId ->
+            viewModelScope.launch {
+                repository.deleteOutboxMessageForId(messageId).onEach { result ->
+                    deleteMessageEventsHelper.handleResponse(result)
+                }.launchIn(this)
+            }
         }
     }
 }

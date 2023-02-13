@@ -32,7 +32,11 @@ class SentMessagesFragment : Fragment() {
             messagesListView?.adapter = MessageAdapter { message ->
                 ReadOutboxMailFragment.newInstance(
                     message.messageId
-                ).show(
+                ).apply {
+                    onSentMessageListRefreshed = {
+                        refreshAdapter()
+                    }
+                }.show(
                     childFragmentManager.beginTransaction(),
                     READ_MESSAGE_FRAGMENT_TAG
                 )

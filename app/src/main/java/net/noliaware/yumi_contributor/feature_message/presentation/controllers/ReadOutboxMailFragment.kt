@@ -1,5 +1,6 @@
 package net.noliaware.yumi_contributor.feature_message.presentation.controllers
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +27,7 @@ class ReadOutboxMailFragment : AppCompatDialogFragment() {
 
     private var readMailView: ReadMailView? = null
     private val viewModel by viewModels<ReadOutboxMailFragmentViewModel>()
+    var onSentMessageListRefreshed: (() -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +51,10 @@ class ReadOutboxMailFragment : AppCompatDialogFragment() {
                 dismissAllowingStateLoss()
             }
 
+            override fun onDeleteButtonClicked() {
+                viewModel.callDeleteOutboxMessageForId()
+            }
+
             override fun onComposeButtonClicked() = Unit
         }
     }
@@ -61,18 +67,32 @@ class ReadOutboxMailFragment : AppCompatDialogFragment() {
     private fun collectFlows() {
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.eventsHelper.eventFlow.collectLatest { sharedEvent ->
+            viewModel.getMessageEventsHelper.eventFlow.collectLatest { sharedEvent ->
                 handleSharedEvent(sharedEvent)
                 redirectToLoginScreenFromSharedEvent(sharedEvent)
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.eventsHelper.stateFlow.collect { vmState ->
+            viewModel.getMessageEventsHelper.stateFlow.collect { vmState ->
                 when (vmState) {
                     is ViewModelState.LoadingState -> Unit
                     is ViewModelState.DataState -> vmState.data?.let { message ->
                         bindViewToData(message)
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.deleteMessageEventsHelper.stateFlow.collect { vmState ->
+                when (vmState) {
+                    is ViewModelState.LoadingState -> Unit
+                    is ViewModelState.DataState -> vmState.data?.let { result ->
+                        if (result) {
+                            viewModel.sentMessageListShouldRefresh = true
+                            dismissAllowingStateLoss()
+                        }
                     }
                 }
             }
@@ -90,6 +110,13 @@ class ReadOutboxMailFragment : AppCompatDialogFragment() {
             message = message.messageBody.orEmpty()
         ).also {
             readMailView?.fillViewWithData(it)
+        }
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        if (viewModel.sentMessageListShouldRefresh == true) {
+            onSentMessageListRefreshed?.invoke()
         }
     }
 

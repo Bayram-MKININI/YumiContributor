@@ -58,6 +58,10 @@ class ReadInboxMailFragment : AppCompatDialogFragment() {
                 dismissAllowingStateLoss()
             }
 
+            override fun onDeleteButtonClicked() {
+                viewModel.callDeleteInboxMessageForId()
+            }
+
             override fun onComposeButtonClicked() {
                 SendMailFragment.newInstance(
                     messageId = viewModel.messageId,
@@ -79,18 +83,32 @@ class ReadInboxMailFragment : AppCompatDialogFragment() {
     private fun collectFlows() {
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.eventsHelper.eventFlow.collectLatest { sharedEvent ->
+            viewModel.getMessageEventsHelper.eventFlow.collectLatest { sharedEvent ->
                 handleSharedEvent(sharedEvent)
                 redirectToLoginScreenFromSharedEvent(sharedEvent)
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.eventsHelper.stateFlow.collect { vmState ->
+            viewModel.getMessageEventsHelper.stateFlow.collect { vmState ->
                 when (vmState) {
                     is ViewModelState.LoadingState -> Unit
                     is ViewModelState.DataState -> vmState.data?.let { message ->
                         bindViewToData(message)
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.deleteMessageEventsHelper.stateFlow.collect { vmState ->
+                when (vmState) {
+                    is ViewModelState.LoadingState -> Unit
+                    is ViewModelState.DataState -> vmState.data?.let { result ->
+                        if (result) {
+                            viewModel.receivedMessageListShouldRefresh = true
+                            dismissAllowingStateLoss()
+                        }
                     }
                 }
             }

@@ -204,4 +204,92 @@ class MessageRepositoryImpl(
         messageId?.let { map[MESSAGE_ID] = messageId }
         map.plusAssign(getCommonWSParams(sessionData, tokenKey))
     }.toMap()
+
+    override fun deleteInboxMessageForId(messageId: String): Flow<Resource<Boolean>> = flow {
+
+        emit(Resource.Loading())
+
+        try {
+
+            val timestamp = System.currentTimeMillis().toString()
+            val randomString = UUID.randomUUID().toString()
+
+            val remoteData = api.deleteInboxMessageForId(
+                timestamp = timestamp,
+                saltString = randomString,
+                token = generateToken(
+                    timestamp = timestamp,
+                    methodName = DELETE_INBOX_MESSAGE,
+                    randomString = randomString
+                ),
+                params = generateGetMessageParams(messageId, DELETE_INBOX_MESSAGE)
+            )
+
+            val sessionNoFailure = handleSessionWithNoFailure(
+                session = remoteData.session,
+                sessionData = sessionData,
+                tokenKey = DELETE_INBOX_MESSAGE,
+                appMessage = remoteData.message,
+                error = remoteData.error
+            )
+
+            if (sessionNoFailure) {
+                emit(
+                    Resource.Success(
+                        data = remoteData.data != null,
+                        appMessage = remoteData.message?.toAppMessage()
+                    )
+                )
+            }
+
+        } catch (ex: HttpException) {
+            emit(Resource.Error(errorType = ErrorType.SYSTEM_ERROR))
+        } catch (ex: IOException) {
+            emit(Resource.Error(errorType = ErrorType.NETWORK_ERROR))
+        }
+    }
+
+    override fun deleteOutboxMessageForId(messageId: String): Flow<Resource<Boolean>> = flow {
+
+        emit(Resource.Loading())
+
+        try {
+
+            val timestamp = System.currentTimeMillis().toString()
+            val randomString = UUID.randomUUID().toString()
+
+            val remoteData = api.deleteOutboxMessageForId(
+                timestamp = timestamp,
+                saltString = randomString,
+                token = generateToken(
+                    timestamp = timestamp,
+                    methodName = DELETE_OUTBOX_MESSAGE,
+                    randomString = randomString
+                ),
+                params = generateGetMessageParams(messageId, DELETE_OUTBOX_MESSAGE)
+            )
+
+            val sessionNoFailure = handleSessionWithNoFailure(
+                session = remoteData.session,
+                sessionData = sessionData,
+                tokenKey = DELETE_OUTBOX_MESSAGE,
+                appMessage = remoteData.message,
+                error = remoteData.error
+            )
+
+            if (sessionNoFailure) {
+                emit(
+                    Resource.Success(
+                        data = remoteData.data != null,
+                        appMessage = remoteData.message?.toAppMessage()
+                    )
+                )
+            }
+
+        } catch (ex: HttpException) {
+            emit(Resource.Error(errorType = ErrorType.SYSTEM_ERROR))
+        } catch (ex: IOException) {
+            emit(Resource.Error(errorType = ErrorType.NETWORK_ERROR))
+        }
+    }
 }

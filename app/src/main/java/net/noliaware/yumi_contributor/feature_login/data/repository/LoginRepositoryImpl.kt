@@ -157,5 +157,7 @@ class LoginRepositoryImpl @Inject constructor(
         this.sessionTokens[GET_OUTBOX_MESSAGE_LIST] = sessionDTO.sessionToken
         this.sessionTokens[GET_OUTBOX_MESSAGE] = sessionDTO.sessionToken
         this.sessionTokens[SEND_MESSAGE] = sessionDTO.sessionToken
+        this.sessionTokens[DELETE_INBOX_MESSAGE] = sessionDTO.sessionToken
+        this.sessionTokens[DELETE_OUTBOX_MESSAGE] = sessionDTO.sessionToken
     }
 }
