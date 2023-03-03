@@ -6,6 +6,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.presentation.adapters.ItemViewHolder
+import net.noliaware.yumi_contributor.commun.util.parseTimeString
 import net.noliaware.yumi_contributor.commun.util.parseToShortDate
 import net.noliaware.yumi_contributor.feature_message.domain.model.Message
 import net.noliaware.yumi_contributor.feature_message.presentation.views.MessageItemView
@@ -26,16 +27,21 @@ class MessageAdapter(
     override fun onBindViewHolder(holder: ItemViewHolder<MessageItemView>, position: Int) {
         getItem(position)?.let { message ->
             holder.heldItemView.fillViewWithData(
-                mapAdapter(message)
+                mapAdapter(message, holder)
             )
         }
     }
 
     private fun mapAdapter(
-        message: Message
+        message: Message,
+        holder: ItemViewHolder<MessageItemView>
     ) = MessageItemView.MessageItemViewAdapter(
         subject = message.messageSubject,
-        time = parseToShortDate(message.messageDate),
+        time = holder.itemView.context.getString(
+            R.string.date_short,
+            parseToShortDate(message.messageDate),
+            parseTimeString(message.messageTime)
+        ),
         body = message.messagePreview.orEmpty()
     )
 

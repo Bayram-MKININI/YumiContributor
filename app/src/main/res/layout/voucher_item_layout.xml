@@ -1,31 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherItemView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/mail_layout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/rectangle_empty_rounded_grey3">
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/highlight_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="5dp"
+        app:divider="@drawable/empty_divider_2dp"
+        app:showDividers="middle">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/highlight_description_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/omnes_light"
+            android:text="@string/expiry_date"
+            android:textColor="@android:color/white" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/highlight_value_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/omnes_semibold_regular"
+            android:textColor="@android:color/white" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/sf_pro_display_semibold"
-        android:textColor="@color/black_font"
-        android:textSize="20sp" />
+        android:fontFamily="@font/omnes_semibold_regular"
+        android:textColor="@color/grey_2"
+        android:textSize="22sp" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/expiry_date_text_view"
+        android:id="@+id/retrieve_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/sf_pro_text_regular"
-        android:textColor="@color/grey_1" />
+        android:fontFamily="@font/omnes_light"
+        android:text="@string/to_retrieve"
+        android:textColor="@color/grey_2"
+        android:textSize="16sp" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/description_text_view"
+        android:id="@+id/retailer_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/sf_pro_text_regular"
-        android:textColor="@color/grey_1"
-        android:textSize="14sp" />
+        android:ellipsize="end"
+        android:fontFamily="@font/omnes_semibold_regular"
+        android:lines="1"
+        android:textColor="@color/colorPrimary"
+        android:textSize="16sp" />
+
 </net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherItemView>

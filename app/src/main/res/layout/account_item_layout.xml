@@ -1,45 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<net.noliaware.yumi_contributor.feature_login.presentation.views.AccountItemView
+<net.noliaware.yumi_contributor.feature_account.presentation.views.AccountsListItemView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/rectangle_empty_rounded_grey2">
+    android:background="@drawable/rectangle_white_ripple">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/sf_pro_display_semibold"
-        android:textColor="@color/black_font"
-        android:textSize="18sp" />
+        android:fontFamily="@font/omnes_semibold_regular"
+        android:textColor="@color/grey_2"
+        android:textSize="16sp"
+        tools:text="John DOE" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/phone_text_view"
+        android:id="@+id/count_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/sf_pro_text_regular"
-        android:textColor="@color/grey_1"
-        android:textSize="14sp" />
+        android:background="@drawable/rectangle_rounded_yellow"
+        android:fontFamily="@font/omnes_semibold_regular"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:minWidth="30dp"
+        android:minHeight="30dp"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="2dp"
+        android:textColor="@color/grey_3"
+        android:textSize="16sp"
+        tools:text="3" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/last_login_text_view"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/phone_image_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/sf_pro_text_regular"
-        android:textColor="@color/grey_1"
-        android:textSize="14sp" />
+        android:adjustViewBounds="true"
+        android:background="@drawable/circle_primary"
+        android:clickable="true"
+        android:padding="7dp"
+        android:src="@drawable/ic_phone" />
 
     <View
         android:id="@+id/separator_line_view"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/grey_2"
-        android:importantForAccessibility="no" />
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/categories_linear_layout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical" />
+        android:background="@color/grey_5" />
 
-</net.noliaware.yumi_contributor.feature_login.presentation.views.AccountItemView>
+</net.noliaware.yumi_contributor.feature_account.presentation.views.AccountsListItemView>

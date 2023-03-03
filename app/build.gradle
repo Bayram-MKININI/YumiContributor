@@ -58,13 +58,13 @@ dependencies {
     implementation 'androidx.fragment:fragment-ktx:1.5.5'
     implementation 'androidx.activity:activity-ktx:1.6.1'
     implementation 'androidx.paging:paging-runtime-ktx:3.1.1'
-    implementation 'androidx.browser:browser:1.4.0'
+    implementation 'androidx.browser:browser:1.5.0'
 
     implementation 'com.google.zxing:zxingorg:3.5.1'
 
     implementation 'androidx.datastore:datastore-preferences:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
-    implementation 'androidx.appcompat:appcompat:1.6.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'

@@ -9,13 +9,19 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.MESSAGE_ID
 import net.noliaware.yumi_contributor.commun.MESSAGE_SUBJECT_LABEL
 import net.noliaware.yumi_contributor.commun.SEND_MESSAGES_FRAGMENT_TAG
-import net.noliaware.yumi_contributor.commun.util.*
+import net.noliaware.yumi_contributor.commun.util.ViewModelState
+import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
+import net.noliaware.yumi_contributor.commun.util.parseTimeString
+import net.noliaware.yumi_contributor.commun.util.parseToLongDate
+import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromSharedEvent
+import net.noliaware.yumi_contributor.commun.util.withArgs
 import net.noliaware.yumi_contributor.feature_message.domain.model.Message
 import net.noliaware.yumi_contributor.feature_message.presentation.views.ReadMailView
 
@@ -59,7 +65,18 @@ class ReadInboxMailFragment : AppCompatDialogFragment() {
             }
 
             override fun onDeleteButtonClicked() {
-                viewModel.callDeleteInboxMessageForId()
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.delete)
+                    .setMessage(R.string.delete_mail_confirmation)
+                    .setPositiveButton(R.string.ok) { dialog, _ ->
+                        dialog.dismiss()
+                        viewModel.callDeleteInboxMessageForId()
+                    }
+                    .setNegativeButton(R.string.cancel) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .create()
+                    .show()
             }
 
             override fun onComposeButtonClicked() {

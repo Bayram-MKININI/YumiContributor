@@ -8,242 +8,369 @@
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/background_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_ketzal_background" />
+        android:src="@drawable/ic_view_background" />
 
     <ViewAnimator
         android:id="@+id/login_view_animator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <net.noliaware.yumi_contributor.feature_login.presentation.views.LoginView
-            android:id="@+id/login_view"
+        <net.noliaware.yumi_contributor.feature_login.presentation.views.LoginViewContainer
+            android:id="@+id/login_view_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rectangle_half_rounded">
+            android:layout_height="wrap_content">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/input_message_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/sf_pro_display_semibold"
-                android:text="@string/enter_login_message"
-                android:textColor="@color/black_font"
-                android:textSize="24sp" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/input_layout_login"
+            <net.noliaware.yumi_contributor.feature_login.presentation.views.LoginView
+                android:id="@+id/login_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                app:boxBackgroundColor="@color/grey_3"
-                app:boxBackgroundMode="filled"
-                app:endIconMode="clear_text">
+                android:layout_height="wrap_content">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_login"
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/input_message_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_semibold_regular"
+                    android:text="@string/enter_login_message"
+                    android:textColor="@color/grey_2"
+                    android:textSize="18sp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/input_layout_login"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/sf_pro_text_semibold"
-                    android:hint="@string/hint_login"
-                    android:imeOptions="actionDone|flagNoExtractUi"
-                    android:inputType="textNoSuggestions" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_gravity="center_horizontal"
+                    app:boxBackgroundColor="@color/grey_1"
+                    app:boxBackgroundMode="filled"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:endIconMode="clear_text"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.rounded7dp">
 
-            <com.google.android.material.progressindicator.CircularProgressIndicator
-                android:id="@+id/progress_bar"
-                style="@style/Widget.MaterialComponents.CircularProgressIndicator.Small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:indeterminate="true"
-                android:visibility="gone"
-                app:indicatorColor="@color/colorPrimary" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/input_login"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/omnes_regular"
+                        android:hint="@string/hint_login"
+                        android:imeOptions="actionDone|flagNoExtractUi"
+                        android:inputType="textNoSuggestions"
+                        android:textColor="@color/grey_2" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-        </net.noliaware.yumi_contributor.feature_login.presentation.views.LoginView>
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/confirm_image_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:src="@drawable/validate_selector" />
 
-        <net.noliaware.yumi_contributor.feature_login.presentation.views.PasswordView
-            android:id="@+id/password_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rectangle_half_rounded">
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/confirm_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_semibold_regular"
+                    android:text="@string/confirm"
+                    android:textColor="@color/black_font"
+                    android:textSize="18sp" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/input_code_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/sf_pro_display_semibold"
-                android:text="@string/enter_code_message"
-                android:textColor="@color/black_font"
-                android:textSize="24sp" />
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/progress_bar"
+                    style="@style/Widget.MaterialComponents.CircularProgressIndicator.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:indeterminate="true"
+                    android:visibility="gone"
+                    app:indicatorColor="@color/colorPrimary" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/description_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/sf_pro_text_regular"
-                android:text="@string/enter_code_description"
-                android:textColor="@color/grey_1" />
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/code_linear_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal"
-                app:divider="@drawable/empty_divider"
-                app:showDividers="middle" />
-
-            <View
-                android:id="@+id/separator_line_view"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/grey_3"
-                android:importantForAccessibility="no" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/pad_first_digit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/ring_empty_grey1"
-                android:fontFamily="@font/sf_pro_display_semibold"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:textColor="@color/black_font"
-                android:textSize="29sp" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/pad_second_digit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/ring_empty_grey1"
-                android:fontFamily="@font/sf_pro_display_semibold"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:textColor="@color/black_font"
-                android:textSize="29sp" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/pad_third_digit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/ring_empty_grey1"
-                android:fontFamily="@font/sf_pro_display_semibold"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:textColor="@color/black_font"
-                android:textSize="29sp" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/pad_fourth_digit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/ring_empty_grey1"
-                android:fontFamily="@font/sf_pro_display_semibold"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:textColor="@color/black_font"
-                android:textSize="29sp" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/pad_fifth_digit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/ring_empty_grey1"
-                android:fontFamily="@font/sf_pro_display_semibold"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:textColor="@color/black_font"
-                android:textSize="29sp" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/pad_sixth_digit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/ring_empty_grey1"
-                android:fontFamily="@font/sf_pro_display_semibold"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:textColor="@color/black_font"
-                android:textSize="29sp" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/pad_seventh_digit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/ring_empty_grey1"
-                android:fontFamily="@font/sf_pro_display_semibold"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:textColor="@color/black_font"
-                android:textSize="29sp" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/pad_eighth_digit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/ring_empty_grey1"
-                android:fontFamily="@font/sf_pro_display_semibold"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:textColor="@color/black_font"
-                android:textSize="29sp" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/pad_ninth_digit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/ring_empty_grey1"
-                android:fontFamily="@font/sf_pro_display_semibold"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:textColor="@color/black_font"
-                android:textSize="29sp" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/pad_tenth_digit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/ring_empty_grey1"
-                android:fontFamily="@font/sf_pro_display_semibold"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:textColor="@color/black_font"
-                android:textSize="29sp" />
+            </net.noliaware.yumi_contributor.feature_login.presentation.views.LoginView>
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/delete_image_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:background="?selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_delete" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/confirm_text_view"
+                android:id="@+id/icon_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_filled_rounded_primary"
-                android:clickable="true"
-                android:focusable="true"
-                android:fontFamily="@font/sf_pro_text_semibold"
-                android:gravity="center"
-                android:text="@string/confirm"
-                android:textColor="@android:color/white"
-                android:textSize="18sp" />
+                android:adjustViewBounds="true"
+                android:elevation="16dp"
+                android:src="@drawable/ic_bee" />
+        </net.noliaware.yumi_contributor.feature_login.presentation.views.LoginViewContainer>
 
-        </net.noliaware.yumi_contributor.feature_login.presentation.views.PasswordView>
+        <net.noliaware.yumi_contributor.feature_login.presentation.views.PasswordViewContainer
+            android:id="@+id/password_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <net.noliaware.yumi_contributor.feature_login.presentation.views.PasswordView
+                android:id="@+id/password_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/input_code_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_semibold_regular"
+                    android:text="@string/enter_code_message"
+                    android:textColor="@color/grey_2"
+                    android:textSize="18sp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/description_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_regular"
+                    android:text="@string/enter_code_description"
+                    android:textColor="@color/grey_2"
+                    android:textSize="15sp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/code_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rectangle_rounded_grey1"
+                    android:fontFamily="@font/omnes_semibold_regular"
+                    android:gravity="center_horizontal"
+                    android:lines="1"
+                    android:paddingTop="2dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="40sp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/pad_first_digit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="19dp"
+                    app:cardElevation="16dp"
+                    app:cardPreventCornerOverlap="false">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/pad_first_digit_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/omnes_semibold_regular"
+                        android:includeFontPadding="false"
+                        android:textColor="@color/grey_2"
+                        android:textSize="25sp" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/pad_second_digit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="19dp"
+                    app:cardElevation="16dp"
+                    app:cardPreventCornerOverlap="false">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/pad_second_digit_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/omnes_semibold_regular"
+                        android:includeFontPadding="false"
+                        android:textColor="@color/grey_2"
+                        android:textSize="25sp" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/pad_third_digit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="19dp"
+                    app:cardElevation="16dp"
+                    app:cardPreventCornerOverlap="false">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/pad_third_digit_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/omnes_semibold_regular"
+                        android:includeFontPadding="false"
+                        android:textColor="@color/grey_2"
+                        android:textSize="25sp" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/pad_fourth_digit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="19dp"
+                    app:cardElevation="16dp"
+                    app:cardPreventCornerOverlap="false">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/pad_fourth_digit_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/omnes_semibold_regular"
+                        android:includeFontPadding="false"
+                        android:textColor="@color/grey_2"
+                        android:textSize="25sp" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/pad_fifth_digit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="19dp"
+                    app:cardElevation="16dp"
+                    app:cardPreventCornerOverlap="false">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/pad_fifth_digit_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/omnes_semibold_regular"
+                        android:includeFontPadding="false"
+                        android:textColor="@color/grey_2"
+                        android:textSize="25sp" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/pad_sixth_digit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="19dp"
+                    app:cardElevation="16dp"
+                    app:cardPreventCornerOverlap="false">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/pad_sixth_digit_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/omnes_semibold_regular"
+                        android:includeFontPadding="false"
+                        android:textColor="@color/grey_2"
+                        android:textSize="25sp" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/pad_seventh_digit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="19dp"
+                    app:cardElevation="16dp"
+                    app:cardPreventCornerOverlap="false">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/pad_seventh_digit_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/omnes_semibold_regular"
+                        android:includeFontPadding="false"
+                        android:textColor="@color/grey_2"
+                        android:textSize="25sp" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/pad_eighth_digit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="19dp"
+                    app:cardElevation="16dp"
+                    app:cardPreventCornerOverlap="false">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/pad_eighth_digit_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/omnes_semibold_regular"
+                        android:includeFontPadding="false"
+                        android:textColor="@color/grey_2"
+                        android:textSize="25sp" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/pad_ninth_digit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="19dp"
+                    app:cardElevation="16dp"
+                    app:cardPreventCornerOverlap="false">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/pad_ninth_digit_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/omnes_semibold_regular"
+                        android:includeFontPadding="false"
+                        android:textColor="@color/grey_2"
+                        android:textSize="25sp" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/pad_tenth_digit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="19dp"
+                    app:cardElevation="16dp"
+                    app:cardPreventCornerOverlap="false">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/pad_tenth_digit_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/omnes_semibold_regular"
+                        android:includeFontPadding="false"
+                        android:textColor="@color/grey_2"
+                        android:textSize="25sp" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/delete_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:fontFamily="@font/omnes_semibold_regular"
+                    android:text="@string/erase"
+                    android:textColor="@color/orange_font"
+                    android:textSize="18sp" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/confirm_pass_image_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:src="@drawable/validate_selector" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/confirm_pass_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_semibold_regular"
+                    android:text="@string/confirm"
+                    android:textColor="@color/black_font"
+                    android:textSize="18sp" />
+            </net.noliaware.yumi_contributor.feature_login.presentation.views.PasswordView>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/inverted_icon_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:elevation="16dp"
+                android:src="@drawable/ic_bee_inverted" />
+        </net.noliaware.yumi_contributor.feature_login.presentation.views.PasswordViewContainer>
     </ViewAnimator>
 
 </net.noliaware.yumi_contributor.feature_login.presentation.views.LoginParentView>

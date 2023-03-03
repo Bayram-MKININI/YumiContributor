@@ -22,8 +22,9 @@ import net.noliaware.yumi_contributor.feature_profile.presentation.controllers.U
 class HomeFragment : Fragment() {
 
     companion object {
-        fun newInstance(accountData: AccountData) =
-            HomeFragment().withArgs(ACCOUNT_DATA to accountData)
+        fun newInstance(
+            accountData: AccountData
+        ) = HomeFragment().withArgs(ACCOUNT_DATA to accountData)
     }
 
     private var homeView: HomeView? = null
@@ -42,6 +43,16 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.accountData?.let { accountData ->
+            homeView?.homeMenuView?.let { homeMenuView ->
+                if (accountData.newMessageCount > 0) {
+                    homeMenuView.setBadgeForMailButton(accountData.newMessageCount)
+                }
+                if (accountData.newAlertCount > 0) {
+                    homeMenuView.setBadgeForNotificationButton(accountData.newAlertCount)
+                }
+            }
+        }
         displayManagedAccountFragment()
     }
 
@@ -59,6 +70,7 @@ class HomeFragment : Fragment() {
             }
 
             override fun onMailButtonClicked() {
+                homeView?.homeMenuView?.hideMailButtonBadge()
                 childFragmentManager.beginTransaction().run {
                     replace(
                         R.id.main_fragment_container,
@@ -69,6 +81,7 @@ class HomeFragment : Fragment() {
             }
 
             override fun onNotificationButtonClicked() {
+                homeView?.homeMenuView?.hideNotificationButtonBadge()
                 childFragmentManager.beginTransaction().run {
                     replace(R.id.main_fragment_container, AlertsFragment())
                     commitAllowingStateLoss()
@@ -82,9 +95,13 @@ class HomeFragment : Fragment() {
             replace(
                 R.id.main_fragment_container,
                 ManagedAccountFragment.newInstance(
+                    viewModel.accountData,
                     viewModel.managedAccount
                 ).apply {
-                    this.onAccountSelected = { managedAccount ->
+                    this.onBackButtonPressed = {
+                        viewModel.managedAccount = null
+                    }
+                    this.onManagedAccountSelected = { managedAccount ->
                         viewModel.managedAccount = managedAccount
                     }
                 }

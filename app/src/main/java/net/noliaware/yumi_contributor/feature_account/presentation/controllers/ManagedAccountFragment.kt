@@ -4,183 +4,145 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.ACCOUNTS_LIST_FRAGMENT_TAG
+import net.noliaware.yumi_contributor.commun.ACCOUNT_DATA
 import net.noliaware.yumi_contributor.commun.MANAGED_ACCOUNT
-import net.noliaware.yumi_contributor.commun.USED_VOUCHERS_LIST_FRAGMENT_TAG
-import net.noliaware.yumi_contributor.commun.VOUCHERS_LIST_FRAGMENT_TAG
-import net.noliaware.yumi_contributor.commun.util.ViewModelState
-import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
+import net.noliaware.yumi_contributor.commun.util.formatNumber
+import net.noliaware.yumi_contributor.commun.util.getSerializableCompat
 import net.noliaware.yumi_contributor.commun.util.inflate
-import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromSharedEvent
 import net.noliaware.yumi_contributor.commun.util.withArgs
-import net.noliaware.yumi_contributor.feature_account.domain.model.Category
 import net.noliaware.yumi_contributor.feature_account.domain.model.ManagedAccount
-import net.noliaware.yumi_contributor.feature_account.presentation.views.CategoryView.CategoryViewAdapter
+import net.noliaware.yumi_contributor.feature_account.domain.model.SelectableData
 import net.noliaware.yumi_contributor.feature_account.presentation.views.ManagedAccountParentView
-import net.noliaware.yumi_contributor.feature_account.presentation.views.ManagedAccountParentView.ManagedAccountParentViewAdapter
-import net.noliaware.yumi_contributor.feature_account.presentation.views.ManagedAccountParentView.ManagedAccountParentViewCallback
+import net.noliaware.yumi_contributor.feature_login.domain.model.AccountData
 
 @AndroidEntryPoint
 class ManagedAccountFragment : Fragment() {
 
     companion object {
-        fun newInstance(managedAccount: ManagedAccount?) = ManagedAccountFragment().withArgs(
+        fun newInstance(
+            accountData: AccountData?,
+            managedAccount: ManagedAccount?
+        ) = ManagedAccountFragment().withArgs(
+            ACCOUNT_DATA to accountData,
             MANAGED_ACCOUNT to managedAccount
         )
     }
 
     private var managedAccountParentView: ManagedAccountParentView? = null
-    private val viewModel by viewModels<ManagedAccountFragmentViewModel>()
-    var onAccountSelected: ((ManagedAccount) -> Unit)? = null
+    private val viewModel: ManagedAccountFragmentViewModel by activityViewModels()
+    var onManagedAccountSelected: ((ManagedAccount) -> Unit)? = null
+    var onBackButtonPressed: (() -> Unit)? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         return container?.inflate(R.layout.managed_account_layout, false)?.apply {
             managedAccountParentView = this as ManagedAccountParentView
-            managedAccountParentView?.callback = managedAccountParentViewCallback
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        collectFlows()
-        viewModel.managedAccount?.let {
-            setupSelectedAccount(it)
+        addDefaultManagedAccountIfAny()
+        setUpWelcomeMessage()
+        setUpViewPager()
+        collectFlow()
+        setUpBackButtonIntercept()
+    }
+
+    private fun addDefaultManagedAccountIfAny() {
+        arguments?.getSerializableCompat(MANAGED_ACCOUNT, ManagedAccount::class.java)?.let {
+            viewModel.setInitManagedAccount(it)
         }
     }
 
-    private fun collectFlows() {
+    private fun setUpWelcomeMessage() {
+        viewModel.accountData?.let {
+            managedAccountParentView?.setUserData(
+                it.helloMessage, it.userName, it.accountCount.formatNumber()
+            )
+        }
+    }
 
+    private fun setUpViewPager() {
+        val viewPager = managedAccountParentView?.getViewPager
+        ManagedAccountFragmentStateAdapter(childFragmentManager, lifecycle).apply {
+            viewPager?.adapter = this
+        }
+    }
+
+    private fun collectFlow() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.selectAccountEventsHelper.eventFlow.collectLatest { sharedEvent ->
-                handleSharedEvent(sharedEvent)
-                redirectToLoginScreenFromSharedEvent(sharedEvent)
+            viewModel.onBackEventFlow.collectLatest {
+                viewModel.resetSelectedManagedAccount()
+                managedAccountParentView?.displayAccountListView()
+                onBackButtonPressed?.invoke()
             }
         }
-
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.selectAccountEventsHelper.stateFlow.collect { vmState ->
-                when (vmState) {
-                    is ViewModelState.LoadingState -> Unit
-                    is ViewModelState.DataState -> vmState.data?.let { accountId ->
-                        viewModel.callGetCategories()
+            viewModel.managedAccountFlow.collect { managedAccount ->
+                when (managedAccount) {
+                    is SelectableData.AssignedData -> {
+                        managedAccount.data?.let {
+                            managedAccountParentView?.displaySelectedAccountView(animated = false)
+                        }
+                    }
+                    is SelectableData.SelectedData -> {
+                        managedAccount.data?.let {
+                            onManagedAccountSelected?.invoke(it)
+                            managedAccountParentView?.displaySelectedAccountView()
+                        }
                     }
                 }
             }
         }
+    }
 
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.categoriesEventsHelper.stateFlow.collect { vmState ->
-                when (vmState) {
-                    is ViewModelState.LoadingState -> Unit
-                    is ViewModelState.DataState -> vmState.data?.let { categoryList ->
-
-                        managedAccountParentView?.refreshAvailableCategoryList(
-                            filterAvailableEmptyCategories(
-                                categoryList
-                            ).map { category ->
-                                CategoryViewAdapter(
-                                    count = category.availableVoucherCount,
-                                    iconName = category.categoryIcon,
-                                    title = category.categoryShortLabel
-                                )
-                            })
-
-                        managedAccountParentView?.refreshUsedCategoryList(
-                            filterUsedEmptyCategories(
-                                categoryList
-                            ).map { category ->
-                                CategoryViewAdapter(
-                                    count = category.usedVoucherCount,
-                                    iconName = category.categoryIcon,
-                                    title = category.categoryShortLabel
-                                )
-                            })
+    private fun setUpBackButtonIntercept() {
+        activity?.onBackPressedDispatcher?.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (managedAccountParentView?.getViewPager?.currentItem == 1) {
+                        viewModel.sendBackButtonClickedEvent()
+                    } else {
+                        activity?.finish()
                     }
                 }
-            }
-        }
-    }
-
-    private val managedAccountParentViewCallback: ManagedAccountParentViewCallback by lazy {
-        object : ManagedAccountParentViewCallback {
-            override fun onAvailableItemClickedAtIndex(index: Int) {
-                viewModel.categoriesEventsHelper.stateData?.let { categoryList ->
-                    filterAvailableEmptyCategories(categoryList)[index]
-                        .let { category ->
-                            VouchersListFragment.newInstance(
-                                category.categoryId,
-                                category.categoryLabel
-                            ).apply {
-                                this.onDataRefreshed = {
-                                    viewModel.callGetCategories()
-                                }
-                            }.show(
-                                childFragmentManager.beginTransaction(),
-                                VOUCHERS_LIST_FRAGMENT_TAG
-                            )
-                        }
-                }
-            }
-
-            override fun onUsedItemClickedAtIndex(index: Int) {
-                viewModel.categoriesEventsHelper.stateData?.let { categoryList ->
-                    filterUsedEmptyCategories(categoryList)[index]
-                        .let { category ->
-                            UsedVouchersListFragment.newInstance(
-                                category.categoryId,
-                                category.categoryLabel
-                            ).show(
-                                childFragmentManager.beginTransaction(),
-                                USED_VOUCHERS_LIST_FRAGMENT_TAG
-                            )
-                        }
-                }
-            }
-
-            override fun onChangeAccountClicked() {
-                ManagedAccountsListFragment.newInstance()
-                    .apply {
-                        this.onManagedAccountSelected = { managedAccount ->
-                            setupSelectedAccount(managedAccount)
-                            onAccountSelected?.invoke(managedAccount)
-                        }
-                    }.show(
-                        childFragmentManager.beginTransaction(),
-                        ACCOUNTS_LIST_FRAGMENT_TAG
-                    )
-            }
-        }
-    }
-
-    private fun setupSelectedAccount(managedAccount: ManagedAccount) {
-        ManagedAccountParentViewAdapter(
-            description = "${managedAccount.title} ${managedAccount.firstName} ${managedAccount.lastName}"
-        ).apply {
-            managedAccountParentView?.fillViewWithData(this)
-        }
-        viewModel.callSelectAccountForId(managedAccount.login)
-    }
-
-    private fun filterAvailableEmptyCategories(categoryList: List<Category>) = categoryList.filter {
-        it.availableVoucherCount > 0
-    }
-
-    private fun filterUsedEmptyCategories(categoryList: List<Category>) = categoryList.filter {
-        it.usedVoucherCount > 0
+            })
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         managedAccountParentView = null
+    }
+}
+
+class ManagedAccountFragmentStateAdapter(
+    fragmentManager: FragmentManager,
+    lifecycle: Lifecycle
+) : FragmentStateAdapter(fragmentManager, lifecycle) {
+
+    override fun getItemCount() = 2
+
+    override fun createFragment(position: Int): Fragment {
+        return when (position) {
+            0 -> {
+                AccountsListFragment()
+            }
+            else -> {
+                SelectedAccountFragment()
+            }
+        }
     }
 }

@@ -4,13 +4,17 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import net.noliaware.yumi_contributor.commun.GET_DATA_PER_CATEGORY
-import net.noliaware.yumi_contributor.commun.GET_USED_VOUCHER_LIST_BY_CATEGORY
+import net.noliaware.yumi_contributor.commun.GET_AVAILABLE_DATA_PER_CATEGORY
+import net.noliaware.yumi_contributor.commun.GET_CANCELLED_DATA_PER_CATEGORY
+import net.noliaware.yumi_contributor.commun.GET_FILTER_USERS_LIST
+import net.noliaware.yumi_contributor.commun.GET_SINGLE_MANAGED_ACCOUNT
+import net.noliaware.yumi_contributor.commun.GET_USED_DATA_PER_CATEGORY
 import net.noliaware.yumi_contributor.commun.GET_VOUCHER
 import net.noliaware.yumi_contributor.commun.GET_VOUCHER_STATUS
 import net.noliaware.yumi_contributor.commun.LIST_PAGE_SIZE
 import net.noliaware.yumi_contributor.commun.SELECTED_USER
 import net.noliaware.yumi_contributor.commun.SELECT_USER
+import net.noliaware.yumi_contributor.commun.USER_ID
 import net.noliaware.yumi_contributor.commun.USE_VOUCHER
 import net.noliaware.yumi_contributor.commun.VOUCHER_ID
 import net.noliaware.yumi_contributor.commun.data.remote.RemoteApi
@@ -21,6 +25,7 @@ import net.noliaware.yumi_contributor.commun.util.generateToken
 import net.noliaware.yumi_contributor.commun.util.getCommonWSParams
 import net.noliaware.yumi_contributor.commun.util.handleSessionWithNoFailure
 import net.noliaware.yumi_contributor.feature_account.domain.model.Category
+import net.noliaware.yumi_contributor.feature_account.domain.model.ManagedAccount
 import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus
 import okio.IOException
@@ -31,6 +36,98 @@ class ManagedAccountRepositoryImpl(
     private val api: RemoteApi,
     private val sessionData: SessionData
 ) : ManagedAccountRepository {
+
+    override fun getFilterUsers(): Flow<Resource<List<ManagedAccount>>> = flow {
+
+        emit(Resource.Loading())
+
+        try {
+
+            val timestamp = System.currentTimeMillis().toString()
+            val randomString = UUID.randomUUID().toString()
+
+            val remoteData = api.fetchFilterUsersList(
+                timestamp = timestamp,
+                saltString = randomString,
+                token = generateToken(
+                    timestamp = timestamp,
+                    methodName = GET_FILTER_USERS_LIST,
+                    randomString = randomString
+                ),
+                params = getCommonWSParams(sessionData, GET_FILTER_USERS_LIST)
+            )
+
+            val sessionNoFailure = handleSessionWithNoFailure(
+                session = remoteData.session,
+                sessionData = sessionData,
+                tokenKey = GET_FILTER_USERS_LIST,
+                appMessage = remoteData.message,
+                error = remoteData.error
+            )
+
+            if (sessionNoFailure) {
+                remoteData.data?.let { usersDTO ->
+                    emit(
+                        Resource.Success(
+                            data = usersDTO.usersDTOs.map { it.toManagedAccount() },
+                            appMessage = remoteData.message?.toAppMessage()
+                        )
+                    )
+                }
+            }
+
+        } catch (ex: HttpException) {
+            emit(Resource.Error(errorType = ErrorType.SYSTEM_ERROR))
+        } catch (ex: IOException) {
+            emit(Resource.Error(errorType = ErrorType.NETWORK_ERROR))
+        }
+    }
+
+    override fun getManagedAccountForId(userId: String): Flow<Resource<ManagedAccount>> = flow {
+
+        emit(Resource.Loading())
+
+        try {
+
+            val timestamp = System.currentTimeMillis().toString()
+            val randomString = UUID.randomUUID().toString()
+
+            val remoteData = api.fetchManagedAccount(
+                timestamp = timestamp,
+                saltString = randomString,
+                token = generateToken(timestamp, GET_SINGLE_MANAGED_ACCOUNT, randomString),
+                params = getManagedAccountParams(userId, GET_SINGLE_MANAGED_ACCOUNT)
+            )
+
+            val sessionNoFailure = handleSessionWithNoFailure(
+                session = remoteData.session,
+                sessionData = sessionData,
+                tokenKey = GET_SINGLE_MANAGED_ACCOUNT,
+                appMessage = remoteData.message,
+                error = remoteData.error
+            )
+
+            if (sessionNoFailure) {
+                remoteData.data?.let { accountDataDTO ->
+                    emit(
+                        Resource.Success(
+                            data = accountDataDTO.managedAccountDTO.toManagedAccount(),
+                            appMessage = remoteData.message?.toAppMessage()
+                        )
+                    )
+                }
+            }
+
+        } catch (ex: HttpException) {
+            emit(Resource.Error(errorType = ErrorType.SYSTEM_ERROR))
+        } catch (ex: IOException) {
+            emit(Resource.Error(errorType = ErrorType.NETWORK_ERROR))
+        }
+    }
+
+    private fun getManagedAccountParams(userId: String, tokenKey: String) = mutableMapOf(
+        USER_ID to userId
+    ).also { it.plusAssign(getCommonWSParams(sessionData, tokenKey)) }
 
     override fun getManagedAccountList() = Pager(
         PagingConfig(
@@ -87,7 +184,7 @@ class ManagedAccountRepositoryImpl(
         SELECTED_USER to accountId
     ).also { it.plusAssign(getCommonWSParams(sessionData, tokenKey)) }
 
-    override fun getCategories(): Flow<Resource<List<Category>>> = flow {
+    override fun getAvailableCategories(): Flow<Resource<List<Category>>> = flow {
 
         emit(Resource.Loading())
 
@@ -96,28 +193,28 @@ class ManagedAccountRepositoryImpl(
             val timestamp = System.currentTimeMillis().toString()
             val randomString = UUID.randomUUID().toString()
 
-            val remoteData = api.fetchDataByCategory(
+            val remoteData = api.fetchAvailableVoucherDataByCategory(
                 timestamp = timestamp,
                 saltString = randomString,
                 token = generateToken(
                     timestamp = timestamp,
-                    methodName = GET_DATA_PER_CATEGORY,
+                    methodName = GET_AVAILABLE_DATA_PER_CATEGORY,
                     randomString = randomString
                 ),
-                params = getCommonWSParams(sessionData, GET_DATA_PER_CATEGORY)
+                params = getCommonWSParams(sessionData, GET_AVAILABLE_DATA_PER_CATEGORY)
             )
 
             val sessionNoFailure = handleSessionWithNoFailure(
                 session = remoteData.session,
                 sessionData = sessionData,
-                tokenKey = GET_DATA_PER_CATEGORY,
+                tokenKey = GET_AVAILABLE_DATA_PER_CATEGORY,
                 appMessage = remoteData.message,
                 error = remoteData.error
             )
 
             if (sessionNoFailure) {
-                remoteData.data?.let { voucherCategoriesDTO ->
-                    voucherCategoriesDTO.categoryDTOs?.let { categoriesDTO ->
+                remoteData.data?.let { voucherAvailableCategoriesDTO ->
+                    voucherAvailableCategoriesDTO.categoryDTOs?.let { categoriesDTO ->
                         emit(
                             Resource.Success(
                                 data = categoriesDTO.map { it.toCategory() },
@@ -135,14 +232,62 @@ class ManagedAccountRepositoryImpl(
         }
     }
 
-    override fun getVoucherList(categoryId: String) = Pager(
+    override fun getAvailableVoucherList(categoryId: String) = Pager(
         PagingConfig(
             pageSize = LIST_PAGE_SIZE,
             enablePlaceholders = false
         )
     ) {
-        VoucherPagingSource(api, sessionData, categoryId)
+        AvailableVoucherPagingSource(api, sessionData, categoryId)
     }.flow
+
+    override fun getUsedCategories(): Flow<Resource<List<Category>>> = flow {
+
+        emit(Resource.Loading())
+
+        try {
+
+            val timestamp = System.currentTimeMillis().toString()
+            val randomString = UUID.randomUUID().toString()
+
+            val remoteData = api.fetchUsedVoucherDataByCategory(
+                timestamp = timestamp,
+                saltString = randomString,
+                token = generateToken(
+                    timestamp = timestamp,
+                    methodName = GET_USED_DATA_PER_CATEGORY,
+                    randomString = randomString
+                ),
+                params = getCommonWSParams(sessionData, GET_USED_DATA_PER_CATEGORY)
+            )
+
+            val sessionNoFailure = handleSessionWithNoFailure(
+                session = remoteData.session,
+                sessionData = sessionData,
+                tokenKey = GET_USED_DATA_PER_CATEGORY,
+                appMessage = remoteData.message,
+                error = remoteData.error
+            )
+
+            if (sessionNoFailure) {
+                remoteData.data?.let { voucherUsedCategoriesDTO ->
+                    voucherUsedCategoriesDTO.categoryDTOs?.let { categoriesDTO ->
+                        emit(
+                            Resource.Success(
+                                data = categoriesDTO.map { it.toCategory() },
+                                appMessage = remoteData.message?.toAppMessage()
+                            )
+                        )
+                    }
+                }
+            }
+
+        } catch (ex: HttpException) {
+            emit(Resource.Error(errorType = ErrorType.SYSTEM_ERROR))
+        } catch (ex: IOException) {
+            emit(Resource.Error(errorType = ErrorType.NETWORK_ERROR))
+        }
+    }
 
     override fun getUsedVoucherList(categoryId: String) = Pager(
         PagingConfig(
@@ -151,6 +296,63 @@ class ManagedAccountRepositoryImpl(
         )
     ) {
         UsedVoucherPagingSource(api, sessionData, categoryId)
+    }.flow
+
+    override fun getCancelledCategories(): Flow<Resource<List<Category>>> = flow {
+
+        emit(Resource.Loading())
+
+        try {
+
+            val timestamp = System.currentTimeMillis().toString()
+            val randomString = UUID.randomUUID().toString()
+
+            val remoteData = api.fetchCancelledVoucherDataByCategory(
+                timestamp = timestamp,
+                saltString = randomString,
+                token = generateToken(
+                    timestamp = timestamp,
+                    methodName = GET_CANCELLED_DATA_PER_CATEGORY,
+                    randomString = randomString
+                ),
+                params = getCommonWSParams(sessionData, GET_CANCELLED_DATA_PER_CATEGORY)
+            )
+
+            val sessionNoFailure = handleSessionWithNoFailure(
+                session = remoteData.session,
+                sessionData = sessionData,
+                tokenKey = GET_CANCELLED_DATA_PER_CATEGORY,
+                appMessage = remoteData.message,
+                error = remoteData.error
+            )
+
+            if (sessionNoFailure) {
+                remoteData.data?.let { voucherUsedCategoriesDTO ->
+                    voucherUsedCategoriesDTO.categoryDTOs?.let { categoriesDTO ->
+                        emit(
+                            Resource.Success(
+                                data = categoriesDTO.map { it.toCategory() },
+                                appMessage = remoteData.message?.toAppMessage()
+                            )
+                        )
+                    }
+                }
+            }
+
+        } catch (ex: HttpException) {
+            emit(Resource.Error(errorType = ErrorType.SYSTEM_ERROR))
+        } catch (ex: IOException) {
+            emit(Resource.Error(errorType = ErrorType.NETWORK_ERROR))
+        }
+    }
+
+    override fun getCancelledVoucherList(categoryId: String) = Pager(
+        PagingConfig(
+            pageSize = LIST_PAGE_SIZE,
+            enablePlaceholders = false
+        )
+    ) {
+        CancelledVoucherPagingSource(api, sessionData, categoryId)
     }.flow
 
     override fun getVoucherById(voucherId: String): Flow<Resource<Voucher>> = flow {

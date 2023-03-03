@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import net.noliaware.yumi_contributor.commun.ACCOUNT_DATA
 import net.noliaware.yumi_contributor.commun.MANAGED_ACCOUNT
-import net.noliaware.yumi_contributor.commun.SELECTED_USER
 import net.noliaware.yumi_contributor.feature_account.domain.model.ManagedAccount
 import net.noliaware.yumi_contributor.feature_login.domain.model.AccountData
 import javax.inject.Inject

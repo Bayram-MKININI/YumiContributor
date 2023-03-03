@@ -15,9 +15,9 @@ data class ManagedAccountDTO(
     @Json(name = "lastName")
     val lastName: String,
     @Json(name = "cellPhoneNumber")
-    val cellPhoneNumber: String,
-    @Json(name = "availableVoucherCountPerCategory")
-    val categories: List<CategoryDTO> = listOf(),
+    val cellPhoneNumber: String?,
+    @Json(name = "availableVoucherCount")
+    val availableVoucherCount: Int?,
     @Json(name = "userRank")
     val accountRank: Int?,
     @Json(name = "userCount")
@@ -28,7 +28,7 @@ data class ManagedAccountDTO(
         title = title,
         firstName = firstName,
         lastName = lastName,
-        cellPhoneNumber = cellPhoneNumber,
-        categories = categories.map { it.toCategory() }
+        cellPhoneNumber = cellPhoneNumber ?: "",
+        availableVoucherCount = availableVoucherCount ?: 0
     )
 }

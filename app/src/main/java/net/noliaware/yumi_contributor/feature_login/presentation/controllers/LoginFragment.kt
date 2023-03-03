@@ -19,6 +19,7 @@ import net.noliaware.yumi_contributor.commun.util.inflate
 import net.noliaware.yumi_contributor.feature_account.presentation.controllers.MainActivity
 import net.noliaware.yumi_contributor.feature_login.presentation.views.LoginParentView
 import net.noliaware.yumi_contributor.feature_login.presentation.views.LoginView
+import net.noliaware.yumi_contributor.feature_login.presentation.views.LoginView.*
 import net.noliaware.yumi_contributor.feature_login.presentation.views.PasswordView
 import java.net.NetworkInterface
 
@@ -133,18 +134,15 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private val loginViewCallback: LoginView.LoginViewCallback by lazy {
-        object : LoginView.LoginViewCallback {
-            override fun onLoginEntered(login: String) {
+    private val loginViewCallback: LoginViewCallback by lazy {
+        LoginViewCallback { login ->
+            viewModel.saveLoginPreferences(login)
 
-                viewModel.saveLoginPreferences(login)
-
-                viewModel.callInitWebservice(
-                    getAndroidId(),
-                    viewModel.prefsStateData?.deviceId,
-                    login
-                )
-            }
+            viewModel.callInitWebservice(
+                getAndroidId(),
+                viewModel.prefsStateData?.deviceId,
+                login
+            )
         }
     }
 
@@ -159,9 +157,9 @@ class LoginFragment : Fragment() {
                 loginParentView?.addSecretDigit()
             }
 
-            override fun onDeleteButtonPressed() {
-                passwordIndexes.removeLastOrNull()
-                loginParentView?.removeOneSecretDigit()
+            override fun onClearButtonPressed() {
+                passwordIndexes.clear()
+                loginParentView?.clearSecretDigits()
             }
 
             override fun onConfirmButtonPressed() {

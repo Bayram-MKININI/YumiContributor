@@ -1,41 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<net.noliaware.yumi_contributor.feature_login.presentation.views.AccountsListView
+<net.noliaware.yumi_contributor.feature_account.presentation.views.AccountsListView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView
+        android:id="@+id/search_auto_complete_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/search_auto_complete"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:fontFamily="@font/omnes_light"
+            android:hint="@string/search_account"
+            android:imeOptions="actionDone|flagNoExtractUi"
+            android:inputType="textNoSuggestions"
+            android:paddingHorizontal="20dp"
+            android:textColor="@color/grey_2"
+            android:textSize="14sp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/close_image_view"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_close" />
+    </net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView>
+
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/sf_pro_display_semibold"
-        android:text="@string/select_account"
-        android:textColor="@color/black_font"
-        android:textSize="24sp" />
+        android:fontFamily="@font/omnes_semibold_regular"
+        android:text="@string/my_accounts"
+        android:textColor="@color/grey_2"
+        android:textSize="19sp" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/description_text_view"
+    <net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView
+        android:id="@+id/content_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/sf_pro_text_regular"
-        android:text="@string/selected_account_to_handle"
-        android:textColor="@color/grey_1"
-        android:textSize="18sp" />
+        android:layout_height="wrap_content">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:overScrollMode="never" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/accounts_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:paddingBottom="20dp" />
 
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/progress_bar"
-        style="@style/Widget.MaterialComponents.CircularProgressIndicator.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:indeterminate="true"
-        android:visibility="gone"
-        app:indicatorColor="@color/colorPrimary" />
-</net.noliaware.yumi_contributor.feature_login.presentation.views.AccountsListView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/filtered_accounts_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:paddingBottom="20dp"
+            android:visibility="gone" />
+    </net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView>
+</net.noliaware.yumi_contributor.feature_account.presentation.views.AccountsListView>

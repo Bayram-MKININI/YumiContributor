@@ -5,37 +5,58 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <View
+        android:id="@+id/header_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/notification_icon_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/colorPrimaryLight"
+        app:cardCornerRadius="25dp"
+        app:cardElevation="16dp"
+        app:cardPreventCornerOverlap="false">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:padding="12dp"
+            android:src="@drawable/ic_notification_on" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/sf_pro_display_semibold"
+        android:fontFamily="@font/omnes_semibold_regular"
         android:text="@string/notifications"
-        android:textColor="@color/black_font"
-        android:textSize="24sp" />
+        android:textColor="@android:color/white"
+        android:textSize="22sp" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/description_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/sf_pro_text_regular"
+        android:fontFamily="@font/omnes_regular"
         android:text="@string/notification_description"
-        android:textColor="@color/grey_1"
-        android:textSize="18sp" />
+        android:textColor="@color/grey_2"
+        android:textSize="14sp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:overScrollMode="never" />
-
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/progress_bar"
-        style="@style/Widget.MaterialComponents.CircularProgressIndicator.Small"
+    <net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView
+        android:id="@+id/content_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:indeterminate="true"
-        android:visibility="gone"
-        app:indicatorColor="@color/colorPrimary" />
+        android:layout_height="wrap_content">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never" />
+
+    </net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView>
 </net.noliaware.yumi_contributor.feature_alerts.presentation.views.AlertsView>

@@ -8,28 +8,36 @@ import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.GOLDEN_RATIO
 import net.noliaware.yumi_contributor.commun.util.*
+import kotlin.math.min
 import kotlin.math.roundToInt
 
 class QrCodeView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
 
+    private lateinit var headerView: View
     private lateinit var backView: View
+    private lateinit var backgroundView: View
+    private lateinit var categoryImageView: ImageView
+    private lateinit var contentView: View
     private lateinit var titleTextView: TextView
-    private lateinit var creationDateTitleTextView: TextView
-    private lateinit var creationDateValueTextView: TextView
-    private lateinit var expiryDateTitleTextView: TextView
-    private lateinit var expiryDateValueTextView: TextView
+    private lateinit var createdTextView: TextView
+    private lateinit var expiryTextView: TextView
+    private lateinit var qrCodeBackgroundView: View
+
     private lateinit var qrCodeImageView: ImageView
     private lateinit var layerView: View
-    private lateinit var useVoucherTextView: TextView
+    private lateinit var useVoucherLayout: LinearLayoutCompat
 
     var callback: QrCodeViewCallback? by weak()
 
     data class QrCodeViewAdapter(
+        val color: Int,
+        val iconName: String?,
         val title: String,
         val creationDate: String,
         val expiryDate: String
@@ -46,32 +54,38 @@ class QrCodeView(context: Context, attrs: AttributeSet?) : ViewGroup(context, at
     }
 
     private fun initView() {
+        headerView = findViewById(R.id.header_view)
         backView = findViewById(R.id.back_view)
         backView.setOnClickListener(onButtonClickListener)
-        titleTextView = findViewById(R.id.title_text_view)
-        creationDateTitleTextView = findViewById(R.id.creation_date_title_text_view)
-        creationDateValueTextView = findViewById(R.id.creation_date_value_text_view)
-        expiryDateTitleTextView = findViewById(R.id.expiry_date_title_text_view)
-        expiryDateValueTextView = findViewById(R.id.expiry_date_value_text_view)
-        qrCodeImageView = findViewById(R.id.qr_code_image_view)
-        layerView = findViewById(R.id.layer_view)
-        useVoucherTextView = findViewById(R.id.use_vouchers_text_view)
-        useVoucherTextView.setOnClickListener(onButtonClickListener)
+        backgroundView = findViewById(R.id.background_view)
+        categoryImageView = findViewById(R.id.category_image_view)
+        contentView = findViewById(R.id.content_layout)
+
+        titleTextView = contentView.findViewById(R.id.title_text_view)
+        createdTextView = contentView.findViewById(R.id.created_text_view)
+        expiryTextView = contentView.findViewById(R.id.expiry_date_text_view)
+        qrCodeBackgroundView = contentView.findViewById(R.id.qr_code_background)
+        qrCodeImageView = contentView.findViewById(R.id.qr_code_image_view)
+        layerView = contentView.findViewById(R.id.layer_view)
+        useVoucherLayout = contentView.findViewById(R.id.use_voucher_layout)
+        useVoucherLayout.setOnClickListener(onButtonClickListener)
     }
 
     private val onButtonClickListener: OnClickListener by lazy {
         OnClickListener {
             when (it.id) {
                 R.id.back_view -> callback?.onBackButtonClicked()
-                R.id.use_vouchers_text_view -> callback?.onUseVoucherButtonClicked()
+                R.id.use_voucher_layout -> callback?.onUseVoucherButtonClicked()
             }
         }
     }
 
     fun fillViewWithData(qrCodeViewAdapter: QrCodeViewAdapter) {
+        headerView.setBackgroundColor(qrCodeViewAdapter.color)
+        categoryImageView.setImageResource(context.drawableIdByName(qrCodeViewAdapter.iconName))
         titleTextView.text = qrCodeViewAdapter.title
-        creationDateValueTextView.text = qrCodeViewAdapter.creationDate
-        expiryDateValueTextView.text = qrCodeViewAdapter.expiryDate
+        createdTextView.text = qrCodeViewAdapter.creationDate
+        expiryTextView.text = qrCodeViewAdapter.expiryDate
     }
 
     fun setQrCode(bitmap: Bitmap) {
@@ -88,19 +102,49 @@ class QrCodeView(context: Context, attrs: AttributeSet?) : ViewGroup(context, at
         val viewWidth = MeasureSpec.getSize(widthMeasureSpec)
         val viewHeight = MeasureSpec.getSize(heightMeasureSpec)
 
+        headerView.measure(
+            MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(
+                getStatusBarHeight() + convertDpToPx(92),
+                MeasureSpec.EXACTLY
+            )
+        )
+
         backView.measureWrapContent()
 
+        backgroundView.measure(
+            MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(viewHeight - getStatusBarHeight(), MeasureSpec.EXACTLY)
+        )
+
+        categoryImageView.measure(
+            MeasureSpec.makeMeasureSpec(convertDpToPx(86), MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(convertDpToPx(86), MeasureSpec.EXACTLY)
+        )
+
+        val parentContentViewHeight = viewHeight - (headerView.measuredHeight + categoryImageView.measuredHeight / 2 +
+                convertDpToPx(25))
+
+        contentView.measure(
+            MeasureSpec.makeMeasureSpec(viewWidth * 9 / 10, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(parentContentViewHeight, MeasureSpec.EXACTLY)
+        )
+
         titleTextView.measureWrapContent()
+        createdTextView.measureWrapContent()
+        expiryTextView.measureWrapContent()
+        useVoucherLayout.measureWrapContent()
 
-        creationDateTitleTextView.measureWrapContent()
+        val availableViewHeight = contentView.measuredHeight - (titleTextView.measuredHeight + createdTextView.measuredHeight +
+                expiryTextView.measuredHeight + useVoucherLayout.measuredHeight + convertDpToPx(95))
 
-        creationDateValueTextView.measureWrapContent()
+        val qrCodeBackgroundViewWidth = min(availableViewHeight, contentView.measuredWidth * 9 / 10)
+        qrCodeBackgroundView.measure(
+            MeasureSpec.makeMeasureSpec(qrCodeBackgroundViewWidth, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(qrCodeBackgroundViewWidth, MeasureSpec.EXACTLY)
+        )
 
-        expiryDateTitleTextView.measureWrapContent()
-
-        expiryDateValueTextView.measureWrapContent()
-
-        val qrCodeImageViewSize = (viewWidth / GOLDEN_RATIO).roundToInt()
+        val qrCodeImageViewSize = (qrCodeBackgroundView.measuredWidth / GOLDEN_RATIO).roundToInt()
 
         qrCodeImageView.measure(
             MeasureSpec.makeMeasureSpec(qrCodeImageViewSize, MeasureSpec.EXACTLY),
@@ -114,11 +158,6 @@ class QrCodeView(context: Context, attrs: AttributeSet?) : ViewGroup(context, at
             )
         }
 
-        useVoucherTextView.measure(
-            MeasureSpec.makeMeasureSpec(viewWidth * 7 / 10, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(convertDpToPx(40), MeasureSpec.EXACTLY)
-        )
-
         setMeasuredDimension(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(viewHeight, MeasureSpec.EXACTLY)
@@ -126,44 +165,48 @@ class QrCodeView(context: Context, attrs: AttributeSet?) : ViewGroup(context, at
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-
         val viewWidth = right - left
         val viewHeight = bottom - top
 
+        backgroundView.layoutToTopLeft(0, getStatusBarHeight())
+
+        headerView.layoutToTopLeft(0, 0)
+
         backView.layoutToTopLeft(convertDpToPx(10), getStatusBarHeight() + convertDpToPx(10))
 
-        val contentHeight =
-            titleTextView.measuredHeight + creationDateTitleTextView.measuredHeight + expiryDateTitleTextView.measuredHeight + qrCodeImageView.measuredHeight + convertDpToPx(
-                45
-            )
+        categoryImageView.layoutToTopLeft(
+            (viewWidth - categoryImageView.measuredWidth) / 2,
+            headerView.bottom - categoryImageView.measuredHeight / 2
+        )
+
+        contentView.layoutToTopLeft(
+            (viewWidth - contentView.measuredWidth) / 2,
+            categoryImageView.bottom + convertDpToPx(15)
+        )
+
         titleTextView.layoutToTopLeft(
-            (viewWidth - titleTextView.measuredWidth) / 2,
-            (viewHeight - contentHeight) / 2
+            convertDpToPx(20),
+            convertDpToPx(20)
         )
 
-        creationDateTitleTextView.layoutToTopRight(
-            viewWidth / 2 - convertDpToPx(5),
-            titleTextView.bottom + convertDpToPx(15)
+        createdTextView.layoutToTopLeft(
+            titleTextView.left,
+            titleTextView.bottom + convertDpToPx(5)
         )
 
-        creationDateValueTextView.layoutToTopLeft(
-            viewWidth / 2 + convertDpToPx(5),
-            creationDateTitleTextView.top + (creationDateTitleTextView.measuredHeight - creationDateValueTextView.measuredHeight) / 2
+        expiryTextView.layoutToTopLeft(
+            titleTextView.left,
+            createdTextView.bottom + convertDpToPx(5)
         )
 
-        expiryDateTitleTextView.layoutToTopRight(
-            viewWidth / 2 - convertDpToPx(5),
-            creationDateValueTextView.bottom + convertDpToPx(10)
-        )
-
-        expiryDateValueTextView.layoutToTopLeft(
-            viewWidth / 2 + convertDpToPx(5),
-            expiryDateTitleTextView.top + (expiryDateTitleTextView.measuredHeight - expiryDateValueTextView.measuredHeight) / 2
+        qrCodeBackgroundView.layoutToTopLeft(
+            (contentView.measuredWidth - qrCodeBackgroundView.measuredWidth) / 2,
+            (contentView.measuredHeight - qrCodeBackgroundView.measuredHeight) / 2
         )
 
         qrCodeImageView.layoutToTopLeft(
-            (viewWidth - qrCodeImageView.measuredWidth) / 2,
-            expiryDateTitleTextView.bottom + convertDpToPx(20)
+            qrCodeBackgroundView.left + (qrCodeBackgroundView.measuredWidth - qrCodeImageView.measuredWidth) / 2,
+            qrCodeBackgroundView.top + (qrCodeBackgroundView.measuredHeight - qrCodeImageView.measuredHeight) / 2
         )
 
         if (layerView.isVisible) {
@@ -173,9 +216,9 @@ class QrCodeView(context: Context, attrs: AttributeSet?) : ViewGroup(context, at
             )
         }
 
-        useVoucherTextView.layoutToBottomLeft(
-            (viewWidth - useVoucherTextView.measuredWidth) / 2,
-            bottom - convertDpToPx(40)
+        useVoucherLayout.layoutToBottomLeft(
+            (contentView.measuredWidth - useVoucherLayout.measuredWidth) / 2,
+            contentView.measuredHeight - convertDpToPx(40)
         )
     }
 }

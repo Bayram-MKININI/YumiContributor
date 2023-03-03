@@ -13,34 +13,39 @@
     <string name="hint_login">Identifiant</string>
     <string name="secret_code">Votre code secret</string>
     <string name="confirm">Valider</string>
+    <string name="erase">Effacer</string>
     <string name="correct">Corriger</string>
     <string name="ok">OK</string>
+    <string name="cancel">Annuler</string>
 
     //Selected account
-    <string name="selected_account">Bénéficiaire selectionné</string>
-    <string name="categories_list">Liste des familles de coupons</string>
-    <string name="select_account">Seléctionner un bénéficiaire</string>
-    <string name="selected_account_to_handle">Selectionner un bénéficiaire pour consulter ses données</string>
+    <string name="hello">Bonjour</string>
+    <string name="name_formatted">%s!</string>
+    <string name="search_account">Rechercher un bénéficiaire</string>
+    <string name="my_accounts">Mes bénéficiaires</string>
+    <string name="available">Disponibles</string>
+    <string name="used">Utilisés</string>
+    <string name="cancelled">Annulés</string>
     <string name="back">Retour</string>
-    <string name="expiry_date">Date d\'expiration: %s</string>
-    <string name="retailer">Fournisseur: %s</string>
-    <string name="available_vouchers">Coupons disponibles</string>
-    <string name="used_vouchers">Coupons utilisés</string>
-    <string name="display_voucher">Accéder au coupon</string>
-    <string name="use_voucher">Utiliser ce coupon</string>
+    <string name="vouchers_list">Liste des coupons %s</string>
+    <string name="expiry_date">Valable jusqu\'au</string>
+    <string name="to_retrieve">À retirer chez</string>
 
     //Vouchers
-    <string name="creation_date">Date de création:</string>
-    <string name="expiry_date_title">Date d\'expiration:</string>
-    <string name="description">Description:</string>
-    <string name="web_page">Page web:</string>
-    <string name="retailer_title">Fournisseur:</string>
-    <string name="address_title">Adresse:</string>
-    <string name="landline">Tél fixe:</string>
-    <string name="mobile">Tél mobile:</string>
-    <string name="mobile_short">Tél: %s</string>
-    <string name="email">Mail:</string>
-    <string name="location">Localisation:</string>
+    <string name="retailer_label">\"%s\"</string>
+    <string name="created_in_hyphen">Crée le %s -</string>
+    <string name="created_in">Crée le %s</string>
+    <string name="validation_date">Validé le</string>
+    <string name="cancellation_date">Annulé le</string>
+    <string name="expiry_date_value">Valable jusqu\'au %s</string>
+    <string name="sponsored_by">Sponsorisé par :</string>
+    <string name="information">i</string>
+    <string name="go_to_retailer">Rendez-vous chez :</string>
+    <string name="call">Appeler</string>
+    <string name="write_email">Écrire un e-mail</string>
+    <string name="see_directions">Voir l\'itinéraire</string>
+    <string name="display_voucher">Accéder au coupon</string>
+    <string name="use_voucher">Utiliser ce coupon</string>
     <string name="application_not_found">Application cartographique introuvable</string>
     <string name="voucher_inexistent">Coupon inexistant</string>
     <string name="voucher_canceled">Coupon annulé</string>
@@ -49,17 +54,15 @@
     //Profile
     <string name="my_profile">Mon Profil</string>
     <string name="my_data">Mes informations</string>
+    <string name="my_vouchers">Mes coupons</string>
     <string name="complementary_data">Informations complémentaires</string>
-    <string name="login">Login:</string>
-    <string name="surname">Nom:</string>
-    <string name="name">Prénom:</string>
-    <string name="referent">Référent:</string>
-    <string name="birth">Naissance:</string>
-    <string name="birth_data">%s\nà %s\n%s</string>
-    <string name="address">Adresse:</string>
+    <string name="my_used_vouchers">Mes coupons</string>
+    <string name="login">Login</string>
+    <string name="surname">Nom</string>
+    <string name="name">Prénom</string>
+    <string name="phone">Téléphone</string>
+    <string name="address">Adresse</string>
     <string name="new_line">\n</string>
-    <string name="phone_numbers">N° de tél:</string>
-    <string name="occupation">Occupation:</string>
     <string name="get_code">Obtenir un code</string>
     <string name="bo_sign_in_description">Veuillez utiliser ce code pour vous connecter sur votre compte back office</string>
     <string name="bo_code_expiration">Ce code expire dans:</string>
@@ -70,17 +73,21 @@
     <string name="mail">Messagerie</string>
     <string name="sent">Envoyés</string>
     <string name="received">Reçus</string>
-    <string name="mail_description">Le centre de messagerie vous permet de communiquer avec votre agent</string>
+    <string name="mail_description">Communiquez avec votre agent via le centre de messagerie</string>
     <string name="sent_at">Envoyé le %s à %s</string>
+    <string name="date_short">%s\n%s</string>
     <string name="select_subject">Sélectionner un sujet</string>
     <string name="new_mail">Nouveau message</string>
+    <string name="reply">Répondre</string>
     <string name="send">Envoyer</string>
-    <string name="mail_object">Object</string>
+    <string name="mail_object">Sélectionner l\'objet</string>
     <string name="mail_body">Message</string>
+    <string name="delete">Suppression</string>
+    <string name="delete_mail_confirmation">Voulez‑vous vraiment supprimer ce message ?</string>
 
     //Alert
     <string name="notifications">Notifications</string>
-    <string name="notification_description">Le centre de notifications est une fonction pour vous informer de toutes les mises à jour</string>
+    <string name="notification_description">Restez informer des nouveautés et mises à jour</string>
     <string name="received_at">Reçu le %s à %s</string>
 
 </resources>

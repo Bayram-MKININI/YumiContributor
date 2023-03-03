@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.MESSAGE_SUBJECTS_DATA
@@ -18,6 +17,7 @@ import net.noliaware.yumi_contributor.commun.util.inflate
 import net.noliaware.yumi_contributor.commun.util.withArgs
 import net.noliaware.yumi_contributor.feature_login.domain.model.MessageSubject
 import net.noliaware.yumi_contributor.feature_message.presentation.views.MessagingView
+import net.noliaware.yumi_contributor.feature_message.presentation.views.MessagingView.*
 
 @AndroidEntryPoint
 class MessagingFragment : Fragment() {
@@ -42,33 +42,23 @@ class MessagingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val viewPager = messagingView?.getViewPager
-        val tabLayout = messagingView?.getTabLayout
 
         MessageFragmentStateAdapter(childFragmentManager, lifecycle).apply {
             viewPager?.adapter = this
         }
-
-        TabLayoutMediator(tabLayout!!, viewPager!!) { tab, position ->
-            tab.text = when (position) {
-                0 -> getString(R.string.received)
-                else -> getString(R.string.sent)
-            }
-        }.attach()
     }
 
-    private val messagingViewCallback: MessagingView.MailViewCallback by lazy {
-        object : MessagingView.MailViewCallback {
-            override fun onComposeButtonClicked() {
-                SendMailFragment.newInstance(
-                    viewModel.messageSubjects ?: listOf()
-                ).apply {
-                    onMessageSent = {
-                        (messagingView?.getViewPager?.adapter as MessageFragmentStateAdapter).refreshSentFragment()
-                    }
-                }.show(
-                    childFragmentManager.beginTransaction(), SEND_MESSAGES_FRAGMENT_TAG
-                )
-            }
+    private val messagingViewCallback: MailViewCallback by lazy {
+        MailViewCallback {
+            SendMailFragment.newInstance(
+                viewModel.messageSubjects ?: listOf()
+            ).apply {
+                onMessageSent = {
+                    (messagingView?.getViewPager?.adapter as MessageFragmentStateAdapter).refreshSentFragment()
+                }
+            }.show(
+                childFragmentManager.beginTransaction(), SEND_MESSAGES_FRAGMENT_TAG
+            )
         }
     }
 

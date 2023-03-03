@@ -1,6 +1,7 @@
 package net.noliaware.yumi_contributor.feature_account.presentation.controllers
 
 import android.content.DialogInterface
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,29 +14,39 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.merge
 import net.noliaware.yumi_contributor.R
+import net.noliaware.yumi_contributor.commun.CATEGORY_UI
 import net.noliaware.yumi_contributor.commun.QR_CODE_FRAGMENT_TAG
 import net.noliaware.yumi_contributor.commun.VOUCHER_ID
 import net.noliaware.yumi_contributor.commun.VOUCHER_VALIDATED
-import net.noliaware.yumi_contributor.commun.presentation.views.DataValueView
-import net.noliaware.yumi_contributor.commun.util.*
+import net.noliaware.yumi_contributor.commun.util.ViewModelState
+import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
+import net.noliaware.yumi_contributor.commun.util.makeCall
+import net.noliaware.yumi_contributor.commun.util.openMap
+import net.noliaware.yumi_contributor.commun.util.openWebPage
+import net.noliaware.yumi_contributor.commun.util.parseToShortDate
+import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromSharedEvent
+import net.noliaware.yumi_contributor.commun.util.withArgs
 import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherCodeData
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus
-import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsView
-import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsView.*
+import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView
 
 @AndroidEntryPoint
 class VoucherDetailsFragment : AppCompatDialogFragment() {
 
     companion object {
-        fun newInstance(voucherId: String, voucherValidated: Boolean = false) =
-            VoucherDetailsFragment().withArgs(
-                VOUCHER_ID to voucherId,
-                VOUCHER_VALIDATED to voucherValidated
-            )
+        fun newInstance(
+            categoryUI: CategoryUI,
+            voucherId: String,
+            voucherValidated: Boolean = false
+        ) = VoucherDetailsFragment().withArgs(
+            CATEGORY_UI to categoryUI,
+            VOUCHER_ID to voucherId,
+            VOUCHER_VALIDATED to voucherValidated
+        )
     }
 
-    private var vouchersDetailsView: VouchersDetailsView? = null
+    private var vouchersDetailsContainerView: VouchersDetailsContainerView? = null
     private val viewModel by viewModels<VoucherDetailsFragmentViewModel>()
     var onDataRefreshed: (() -> Unit)? = null
 
@@ -50,14 +61,18 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.vouchers_details_layout, container, false).apply {
-            vouchersDetailsView = this as VouchersDetailsView
-            vouchersDetailsView?.callback = vouchersDetailsViewCallback
+            vouchersDetailsContainerView = this as VouchersDetailsContainerView
+            vouchersDetailsContainerView?.callback = vouchersDetailsViewCallback
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         collectFlows()
+        vouchersDetailsContainerView?.setUpViewLook(
+            color = viewModel.categoryUI?.categoryColor ?: Color.TRANSPARENT,
+            iconName = viewModel.categoryUI?.categoryIcon
+        )
     }
 
     private fun collectFlows() {
@@ -97,54 +112,6 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
 
     private fun bindViewToData(voucher: Voucher) {
 
-        vouchersDetailsView?.fillViewWithData(
-            VouchersDetailsViewAdapter(
-                title = voucher.productLabel.orEmpty(),
-                partnerDescription = voucher.partnerInfoText,
-                partnerURL = voucher.partnerInfoURL,
-                hideDisplayVoucher = viewModel.voucherValidated == true,
-            )
-        )
-
-        DataValueView.DataValueViewAdapter(
-            title = getString(R.string.creation_date),
-            value = parseToLongDate(voucher.voucherDate)
-        ).also {
-            vouchersDetailsView?.addDataValue(it)
-        }
-
-        DataValueView.DataValueViewAdapter(
-            title = getString(R.string.expiry_date_title),
-            value = parseToLongDate(voucher.voucherExpiryDate)
-        ).also {
-            vouchersDetailsView?.addDataValue(it)
-        }
-
-        if (!voucher.productDescription.isNullOrEmpty()) {
-            DataValueView.DataValueViewAdapter(
-                title = getString(R.string.description),
-                value = voucher.productDescription
-            ).also {
-                vouchersDetailsView?.addDataValue(it)
-            }
-        }
-
-        if (!voucher.productWebpage.isNullOrEmpty()) {
-            DataValueView.DataValueViewAdapter(
-                title = getString(R.string.web_page),
-                value = voucher.productWebpage
-            ).also {
-                vouchersDetailsView?.addDataValue(it)
-            }
-        }
-
-        DataValueView.DataValueViewAdapter(
-            title = getString(R.string.retailer_title),
-            value = voucher.retailerLabel.orEmpty()
-        ).also {
-            vouchersDetailsView?.addDataValue(it)
-        }
-
         val retailerAddress = StringBuilder().apply {
             append(voucher.retailerAddress)
             append(getString(R.string.new_line))
@@ -152,64 +119,46 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
                 append(voucher.retailerAddressComplement)
                 append(getString(R.string.new_line))
             }
-            append(voucher.retailerCity)
-            append(getString(R.string.new_line))
             append(voucher.retailerPostcode)
-            append(getString(R.string.new_line))
-            append(voucher.retailerCountry)
+            append(" ")
+            append(voucher.retailerCity)
         }.toString()
 
-        DataValueView.DataValueViewAdapter(
-            title = getString(R.string.address_title),
-            value = retailerAddress
-        ).also {
-            vouchersDetailsView?.addDataValue(it)
-        }
+        vouchersDetailsContainerView?.fillViewWithData(
+            VouchersDetailsContainerView.VouchersDetailsViewAdapter(
+                title = voucher.productLabel.orEmpty(),
+                startDate = getString(
+                    R.string.created_in_hyphen,
+                    parseToShortDate(voucher.voucherDate)
+                ),
+                endDate = getString(
+                    R.string.expiry_date_value,
+                    parseToShortDate(voucher.voucherExpiryDate)
+                ),
+                partnerLabel = voucher.partnerInfoText,
+                voucherDescription = voucher.productDescription,
+                retailerLabel = voucher.retailerLabel.orEmpty(),
+                retailerAddress = retailerAddress,
+                displayVoucherActionNotAvailable = viewModel.voucherValidated == true
+            )
+        )
 
-        DataValueView.DataValueViewAdapter(
-            title = getString(R.string.mobile),
-            value = voucher.retailerCellPhoneNumber.orEmpty()
-        ).also {
-            vouchersDetailsView?.addDataValue(it)
+        if (viewModel.voucherValidated == true) {
+            handleVoucherStatusUpdate(VoucherStatus.CONSUMED)
         }
-
-        DataValueView.DataValueViewAdapter(
-            title = getString(R.string.landline),
-            value = voucher.retailerPhoneNumber.orEmpty()
-        ).also {
-            vouchersDetailsView?.addDataValue(it)
-        }
-
-        DataValueView.DataValueViewAdapter(
-            title = getString(R.string.email),
-            value = voucher.retailerEmail.orEmpty()
-        ).also {
-            vouchersDetailsView?.addDataValue(it)
-        }
-
-        if (!voucher.retailerWebsite.isNullOrEmpty()) {
-            DataValueView.DataValueViewAdapter(
-                title = getString(R.string.web_page),
-                value = voucher.retailerWebsite
-            ).also {
-                vouchersDetailsView?.addDataValue(it)
-            }
-        }
-
-        vouchersDetailsView?.addLocationView { vouchersDetailsViewCallback.onLocationClicked() }
     }
 
     private fun handleVoucherStatusUpdate(voucherStatus: VoucherStatus) {
         when (voucherStatus) {
-            VoucherStatus.INEXISTENT -> vouchersDetailsView?.setVoucherStatus(getString(R.string.voucher_inexistent))
-            VoucherStatus.CANCELED -> vouchersDetailsView?.setVoucherStatus(getString(R.string.voucher_canceled))
+            VoucherStatus.INEXISTENT -> vouchersDetailsContainerView?.setVoucherStatus(getString(R.string.voucher_inexistent))
+            VoucherStatus.CANCELED -> vouchersDetailsContainerView?.setVoucherStatus(getString(R.string.voucher_canceled))
             VoucherStatus.USABLE -> Unit
-            VoucherStatus.CONSUMED -> vouchersDetailsView?.setVoucherStatus(getString(R.string.voucher_consumed))
+            VoucherStatus.CONSUMED -> vouchersDetailsContainerView?.setVoucherStatus(getString(R.string.voucher_consumed))
         }
     }
 
-    private val vouchersDetailsViewCallback: VouchersDetailsViewCallback by lazy {
-        object : VouchersDetailsViewCallback {
+    private val vouchersDetailsViewCallback: VouchersDetailsContainerView.VouchersDetailsViewCallback by lazy {
+        object : VouchersDetailsContainerView.VouchersDetailsViewCallback {
             override fun onBackButtonClicked() {
                 dismissAllowingStateLoss()
             }
@@ -218,6 +167,14 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
                 viewModel.getVoucherEventsHelper.stateData?.let { voucher ->
                     voucher.partnerInfoURL?.let { url ->
                         context?.openWebPage(url)
+                    }
+                }
+            }
+
+            override fun onPhoneButtonClicked() {
+                viewModel.getVoucherEventsHelper.stateData?.let { voucher ->
+                    voucher.retailerCellPhoneNumber?.let { phone ->
+                        context?.makeCall(phone)
                     }
                 }
             }
@@ -234,6 +191,7 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
             override fun onDisplayVoucherButtonClicked() {
                 viewModel.getVoucherEventsHelper.stateData?.let { voucher ->
                     QrCodeFragment.newInstance(
+                        viewModel.categoryUI,
                         VoucherCodeData(
                             voucherId = voucher.voucherId,
                             productLabel = voucher.productLabel,
@@ -268,6 +226,6 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        vouchersDetailsView = null
+        vouchersDetailsContainerView = null
     }
 }

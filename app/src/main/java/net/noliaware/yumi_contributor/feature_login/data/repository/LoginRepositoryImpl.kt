@@ -1,8 +1,7 @@
 package net.noliaware.yumi_contributor.feature_login.data.repository
 
 import android.os.Build
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
+import com.squareup.leakcanary.core.BuildConfig
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import net.noliaware.yumi_contributor.BuildConfig
@@ -141,15 +140,21 @@ class LoginRepositoryImpl @Inject constructor(
     ).also { it.plusAssign(getCommonWSParams(sessionData, tokenKey)) }
 
     private fun SessionData.fillMapWithInitialToken(sessionDTO: SessionDTO) {
+        this.sessionTokens[GET_FILTER_USERS_LIST] = sessionDTO.sessionToken
+        this.sessionTokens[GET_SINGLE_MANAGED_ACCOUNT] = sessionDTO.sessionToken
         this.sessionTokens[GET_MANAGED_ACCOUNT_LIST] = sessionDTO.sessionToken
         this.sessionTokens[SELECT_USER] = sessionDTO.sessionToken
+        this.sessionTokens[GET_AVAILABLE_DATA_PER_CATEGORY] = sessionDTO.sessionToken
         this.sessionTokens[GET_AVAILABLE_VOUCHER_LIST_BY_CATEGORY] = sessionDTO.sessionToken
+        this.sessionTokens[GET_USED_DATA_PER_CATEGORY] = sessionDTO.sessionToken
+        this.sessionTokens[GET_USED_VOUCHER_LIST_BY_CATEGORY] = sessionDTO.sessionToken
+        this.sessionTokens[GET_CANCELLED_DATA_PER_CATEGORY] = sessionDTO.sessionToken
+        this.sessionTokens[GET_CANCELLED_VOUCHER_LIST_BY_CATEGORY] = sessionDTO.sessionToken
         this.sessionTokens[GET_VOUCHER] = sessionDTO.sessionToken
         this.sessionTokens[GET_VOUCHER_STATUS] = sessionDTO.sessionToken
         this.sessionTokens[USE_VOUCHER] = sessionDTO.sessionToken
         this.sessionTokens[GET_ACCOUNT] = sessionDTO.sessionToken
         this.sessionTokens[GET_BACK_OFFICE_SIGN_IN_CODE] = sessionDTO.sessionToken
-        this.sessionTokens[GET_DATA_PER_CATEGORY] = sessionDTO.sessionToken
         this.sessionTokens[GET_USED_VOUCHER_LIST_BY_CATEGORY] = sessionDTO.sessionToken
         this.sessionTokens[GET_ALERT_LIST] = sessionDTO.sessionToken
         this.sessionTokens[GET_INBOX_MESSAGE_LIST] = sessionDTO.sessionToken

@@ -2,23 +2,31 @@ package net.noliaware.yumi_contributor.feature_account.presentation.views
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.content.ContextCompat
 import net.noliaware.yumi_contributor.R
+import net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
+import net.noliaware.yumi_contributor.commun.util.tint
 
-class VoucherItemView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
+class VoucherItemView(context: Context, attrs: AttributeSet?) : ElevatedCardView(context, attrs) {
 
+    private lateinit var highlightLayout: LinearLayoutCompat
+    private lateinit var highlightDescriptionTextView: TextView
+    private lateinit var highlightValueTextView: TextView
     private lateinit var titleTextView: TextView
-    private lateinit var expiryDateTextView: TextView
-    private lateinit var descriptionTextView: TextView
+    private lateinit var retrieveTextView: TextView
+    private lateinit var retailerTextView: TextView
 
     data class VoucherItemViewAdapter(
+        val color: Int,
+        val highlightDescription: String = "",
+        val highlightValue: String = "",
         val title: String = "",
-        val expiryDate: String = "",
-        val description: String = ""
+        val retailer: String = ""
     )
 
     override fun onFinishInflate() {
@@ -27,15 +35,23 @@ class VoucherItemView(context: Context, attrs: AttributeSet?) : ViewGroup(contex
     }
 
     private fun initView() {
+        highlightLayout = findViewById(R.id.highlight_layout)
+        highlightDescriptionTextView = highlightLayout.findViewById(R.id.highlight_description_text_view)
+        highlightValueTextView = highlightLayout.findViewById(R.id.highlight_value_text_view)
         titleTextView = findViewById(R.id.title_text_view)
-        expiryDateTextView = findViewById(R.id.expiry_date_text_view)
-        descriptionTextView = findViewById(R.id.description_text_view)
+        retrieveTextView = findViewById(R.id.retrieve_text_view)
+        retailerTextView = findViewById(R.id.retailer_text_view)
     }
 
     fun fillViewWithData(voucherItemViewAdapter: VoucherItemViewAdapter) {
+        highlightDescriptionTextView.text = voucherItemViewAdapter.highlightDescription
+        highlightValueTextView.text = voucherItemViewAdapter.highlightValue
+        highlightLayout.background = ContextCompat.getDrawable(
+            context,
+            R.drawable.rectangle_rounded_15dp
+        )?.tint(voucherItemViewAdapter.color)
         titleTextView.text = voucherItemViewAdapter.title
-        expiryDateTextView.text = voucherItemViewAdapter.expiryDate
-        descriptionTextView.text = voucherItemViewAdapter.description
+        retailerTextView.text = voucherItemViewAdapter.retailer
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -44,17 +60,18 @@ class VoucherItemView(context: Context, attrs: AttributeSet?) : ViewGroup(contex
 
         titleTextView.measureWrapContent()
 
-        expiryDateTextView.measureWrapContent()
+        highlightLayout.measureWrapContent()
 
-        descriptionTextView.measure(
-            MeasureSpec.makeMeasureSpec(viewWidth * 9 / 10, MeasureSpec.AT_MOST),
+        retrieveTextView.measureWrapContent()
+
+        val retailerTextViewWidth = viewWidth - (retrieveTextView.measuredWidth + convertDpToPx(42))
+        retailerTextView.measure(
+            MeasureSpec.makeMeasureSpec(retailerTextViewWidth, MeasureSpec.AT_MOST),
             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         )
 
-        viewHeight =
-            titleTextView.measuredHeight + expiryDateTextView.measuredHeight + descriptionTextView.measuredHeight + convertDpToPx(
-                40
-            )
+        viewHeight = highlightLayout.measuredHeight + titleTextView.measuredHeight + retrieveTextView.measuredHeight +
+                convertDpToPx(45)
 
         setMeasuredDimension(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
@@ -66,19 +83,24 @@ class VoucherItemView(context: Context, attrs: AttributeSet?) : ViewGroup(contex
         val viewWidth = right - left
         val viewHeight = bottom - top
 
-        titleTextView.layoutToTopLeft(
-            convertDpToPx(15),
-            convertDpToPx(15)
+        highlightLayout.layoutToTopLeft(
+            (viewWidth - highlightLayout.measuredWidth) / 2,
+            convertDpToPx(10)
         )
 
-        expiryDateTextView.layoutToTopLeft(
-            convertDpToPx(15),
+        titleTextView.layoutToTopLeft(
+            convertDpToPx(20),
+            highlightLayout.bottom + convertDpToPx(10)
+        )
+
+        retrieveTextView.layoutToTopLeft(
+            titleTextView.left,
             titleTextView.bottom + convertDpToPx(5)
         )
 
-        descriptionTextView.layoutToTopLeft(
-            convertDpToPx(15),
-            expiryDateTextView.bottom + convertDpToPx(5)
+        retailerTextView.layoutToTopLeft(
+            retrieveTextView.right + convertDpToPx(2),
+            retrieveTextView.top
         )
     }
 }

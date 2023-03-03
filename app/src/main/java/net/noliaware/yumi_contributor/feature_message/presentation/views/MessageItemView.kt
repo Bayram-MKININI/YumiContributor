@@ -7,7 +7,9 @@ import android.widget.TextView
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
+import net.noliaware.yumi_contributor.commun.util.layoutToTopRight
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
+import java.lang.Integer.max
 
 class MessageItemView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
 
@@ -44,22 +46,21 @@ class MessageItemView(context: Context, attrs: AttributeSet?) : ViewGroup(contex
 
         timeTextView.measureWrapContent()
 
-        val bodyTextMaxWidth = viewWidth - convertDpToPx(48)
-        bodyTextView.measure(
+        val bodyTextMaxWidth = viewWidth - (timeTextView.measuredWidth + convertDpToPx(45))
+        subjectTextView.measure(
             MeasureSpec.makeMeasureSpec(bodyTextMaxWidth, MeasureSpec.AT_MOST),
             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         )
 
-        subjectTextView.measure(
-            MeasureSpec.makeMeasureSpec(
-                bodyTextMaxWidth - timeTextView.measuredWidth,
-                MeasureSpec.AT_MOST
-            ),
+        bodyTextView.measure(
+            MeasureSpec.makeMeasureSpec(viewWidth * 9 / 10, MeasureSpec.AT_MOST),
             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         )
 
-        viewHeight =
-            subjectTextView.measuredHeight + bodyTextView.measuredHeight + convertDpToPx(70)
+        viewHeight = bodyTextView.measuredHeight + max(
+            subjectTextView.measuredHeight,
+            timeTextView.measuredHeight
+        ) + convertDpToPx(35)
 
         setMeasuredDimension(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
@@ -71,31 +72,19 @@ class MessageItemView(context: Context, attrs: AttributeSet?) : ViewGroup(contex
         val viewWidth = right - left
         val viewHeight = bottom - top
 
-        val bodyTextMaxWidth = viewWidth - convertDpToPx(48)
-        val marginLeft = (viewWidth - bodyTextMaxWidth) / 2
-
         subjectTextView.layoutToTopLeft(
-            marginLeft,
-            (viewHeight - (subjectTextView.measuredHeight + bodyTextView.measuredHeight + convertDpToPx(
-                10
-            ))) / 2
+            convertDpToPx(15),
+            convertDpToPx(15)
         )
 
-        val timeTextViewRight = viewWidth - marginLeft
-        val timeTextViewLeft = timeTextViewRight - timeTextView.measuredWidth
-        val timeTextViewBottom = subjectTextView.bottom
-        val timeTextViewTop = timeTextViewBottom - timeTextView.measuredHeight
-
-        timeTextView.layout(
-            timeTextViewLeft,
-            timeTextViewTop,
-            timeTextViewRight,
-            timeTextViewBottom
+        timeTextView.layoutToTopRight(
+            viewWidth - convertDpToPx(15),
+            subjectTextView.top
         )
 
         bodyTextView.layoutToTopLeft(
-            marginLeft,
-            subjectTextView.bottom + convertDpToPx(10)
+            subjectTextView.left,
+            max(subjectTextView.bottom, timeTextView.bottom) + convertDpToPx(5)
         )
     }
 }

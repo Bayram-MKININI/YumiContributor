@@ -7,10 +7,11 @@ import androidx.recyclerview.widget.DiffUtil
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.presentation.adapters.ItemViewHolder
 import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
-import net.noliaware.yumi_contributor.feature_account.presentation.controllers.VoucherMapper
+import net.noliaware.yumi_contributor.feature_account.presentation.mappers.VoucherMapper
 import net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherItemView
 
 class VoucherAdapter(
+    private val color: Int,
     private val voucherMapper: VoucherMapper,
     private val onItemClicked: (Voucher) -> Unit
 ) : PagingDataAdapter<Voucher, ItemViewHolder<VoucherItemView>>(VoucherComparator) {
@@ -27,7 +28,7 @@ class VoucherAdapter(
     override fun onBindViewHolder(holder: ItemViewHolder<VoucherItemView>, position: Int) {
         getItem(position)?.let { voucher ->
             holder.heldItemView.fillViewWithData(
-                voucherMapper.mapVoucher(holder.heldItemView.context, voucher)
+                voucherMapper.mapVoucher(holder.heldItemView.context, color, voucher)
             )
         }
     }

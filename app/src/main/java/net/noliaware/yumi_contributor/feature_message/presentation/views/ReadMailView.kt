@@ -3,20 +3,32 @@ package net.noliaware.yumi_contributor.feature_message.presentation.views
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.util.*
+import net.noliaware.yumi_contributor.commun.util.convertDpToPx
+import net.noliaware.yumi_contributor.commun.util.getStatusBarHeight
+import net.noliaware.yumi_contributor.commun.util.layoutToBottomLeft
+import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
+import net.noliaware.yumi_contributor.commun.util.layoutToTopRight
+import net.noliaware.yumi_contributor.commun.util.measureWrapContent
+import net.noliaware.yumi_contributor.commun.util.weak
 
 class ReadMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
 
+    private lateinit var headerView: View
+    private lateinit var messageIconView: View
     private lateinit var backView: View
+    private lateinit var backgroundView: View
+    private lateinit var contentView: View
+    private lateinit var deleteIconView: View
     private lateinit var titleTextView: TextView
-    private lateinit var deleteImageView: ImageView
+    private lateinit var timeTextView: TextView
     private lateinit var messageParentView: View
-    private lateinit var readMailContentView: ReadMailContentView
+    private lateinit var messageTextView: TextView
     private lateinit var composeButton: View
 
     var callback: ReadMailViewCallback? by weak()
@@ -41,17 +53,23 @@ class ReadMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
 
     private fun initView() {
 
+        headerView = findViewById(R.id.header_view)
+        messageIconView = findViewById(R.id.message_icon_view)
         backView = findViewById(R.id.back_view)
         backView.setOnClickListener(onClickListener)
+        backgroundView = findViewById(R.id.background_view)
 
-        titleTextView = findViewById(R.id.title_text_view)
-        deleteImageView = findViewById(R.id.delete_image_view)
-        deleteImageView.setOnClickListener(onClickListener)
+        deleteIconView = findViewById(R.id.delete_icon_view)
+        deleteIconView.setOnClickListener(onClickListener)
 
-        messageParentView = findViewById(R.id.message_parent_view)
-        readMailContentView = messageParentView.findViewById(R.id.read_mail_content_view)
+        contentView = findViewById(R.id.content_layout)
+        titleTextView = contentView.findViewById(R.id.title_text_view)
+        timeTextView = contentView.findViewById(R.id.time_text_view)
 
-        composeButton = findViewById(R.id.compose_fab)
+        messageParentView = contentView.findViewById(R.id.message_parent_view)
+        messageTextView = messageParentView.findViewById(R.id.message_text_view)
+
+        composeButton = findViewById(R.id.compose_layout)
         composeButton.setOnClickListener(onClickListener)
     }
 
@@ -59,16 +77,16 @@ class ReadMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
         OnClickListener {
             when (it.id) {
                 R.id.back_view -> callback?.onBackButtonClicked()
-                R.id.delete_image_view -> callback?.onDeleteButtonClicked()
-                R.id.compose_fab -> callback?.onComposeButtonClicked()
+                R.id.delete_icon_view -> callback?.onDeleteButtonClicked()
+                R.id.compose_layout -> callback?.onComposeButtonClicked()
             }
         }
     }
 
     fun fillViewWithData(readMailViewAdapter: ReadMailViewAdapter) {
         titleTextView.text = readMailViewAdapter.subject
-        readMailContentView.timeTextView.text = readMailViewAdapter.time
-        readMailContentView.messageTextView.text = readMailViewAdapter.message
+        timeTextView.text = readMailViewAdapter.time
+        messageTextView.text = readMailViewAdapter.message
         composeButton.isVisible = readMailViewAdapter.replyPossible
     }
 
@@ -76,26 +94,60 @@ class ReadMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
         val viewWidth = MeasureSpec.getSize(widthMeasureSpec)
         val viewHeight = MeasureSpec.getSize(heightMeasureSpec)
 
-        backView.measureWrapContent()
+        headerView.measure(
+            MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(
+                getStatusBarHeight() + convertDpToPx(75),
+                MeasureSpec.EXACTLY
+            )
+        )
 
-        deleteImageView.measureWrapContent()
+        backView.measureWrapContent()
+        messageIconView.measure(
+            MeasureSpec.makeMeasureSpec(convertDpToPx(50), MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(convertDpToPx(50), MeasureSpec.EXACTLY)
+        )
+
+        backgroundView.measure(
+            MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(viewHeight - getStatusBarHeight(), MeasureSpec.EXACTLY)
+        )
+
+        deleteIconView.measureWrapContent()
+
+        val contentViewHeight = viewHeight - (headerView.measuredHeight + messageIconView.measuredHeight / 2 +
+                    convertDpToPx(25))
+
+        val contentViewWidth = viewWidth * 9 / 10
+        contentView.measure(
+            MeasureSpec.makeMeasureSpec(contentViewWidth, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(contentViewHeight, MeasureSpec.EXACTLY)
+        )
 
         titleTextView.measure(
-            MeasureSpec.makeMeasureSpec(viewWidth - convertDpToPx(40), MeasureSpec.AT_MOST),
+            MeasureSpec.makeMeasureSpec(contentViewWidth * 9 / 10, MeasureSpec.AT_MOST),
             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         )
 
-        val readMailContentViewHeight =
-            viewHeight - (backView.measuredHeight + titleTextView.measuredHeight + getStatusBarHeight() + convertDpToPx(
-                60
-            ))
+        timeTextView.measureWrapContent()
+
+        val messageParentViewHeight =
+            contentView.height - (titleTextView.measuredHeight + timeTextView.measuredHeight +
+                    convertDpToPx(55))
 
         messageParentView.measure(
-            MeasureSpec.makeMeasureSpec(viewWidth - convertDpToPx(40), MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(readMailContentViewHeight, MeasureSpec.EXACTLY)
+            MeasureSpec.makeMeasureSpec(contentViewWidth * 9 / 10, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(messageParentViewHeight, MeasureSpec.EXACTLY)
         )
 
-        composeButton.measureWrapContent()
+        if (composeButton.isVisible) {
+            composeButton.measureWrapContent()
+            val availableSpaceForMessage = messageParentView.measuredHeight - (composeButton.measuredHeight + convertDpToPx(30))
+            val extraPadding = messageTextView.measuredHeight - availableSpaceForMessage
+            if (extraPadding > 0) {
+                messageParentView.updatePadding(bottom = extraPadding)
+            }
+        }
 
         setMeasuredDimension(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
@@ -108,29 +160,54 @@ class ReadMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
         val viewWidth = right - left
         val viewHeight = bottom - top
 
+        backgroundView.layoutToTopLeft(
+            0,
+            getStatusBarHeight()
+        )
+
+        headerView.layoutToTopLeft(0, 0)
+
         backView.layoutToTopLeft(
             convertDpToPx(10),
             getStatusBarHeight() + convertDpToPx(10)
         )
 
-        titleTextView.layoutToTopLeft(
-            (viewWidth - titleTextView.measuredWidth) / 2,
-            backView.bottom + convertDpToPx(10)
+        messageIconView.layoutToTopLeft(
+            (viewWidth - messageIconView.measuredWidth) / 2,
+            headerView.bottom - messageIconView.measuredHeight / 2
         )
 
-        deleteImageView.layoutToTopRight(
-            viewWidth - convertDpToPx(10),
-            titleTextView.top + (titleTextView.measuredHeight - deleteImageView.measuredHeight) / 2
+        contentView.layoutToTopLeft(
+            (viewWidth - contentView.measuredWidth) / 2,
+            messageIconView.bottom + convertDpToPx(15)
+        )
+
+        val marginLeft = contentView.measuredWidth * 1 / 20
+        titleTextView.layoutToTopLeft(
+            marginLeft,
+            convertDpToPx(20)
+        )
+
+        timeTextView.layoutToTopLeft(
+            marginLeft,
+            titleTextView.bottom + convertDpToPx(5)
         )
 
         messageParentView.layoutToTopLeft(
-            (viewWidth - readMailContentView.measuredWidth) / 2,
-            titleTextView.bottom + convertDpToPx(20)
+            marginLeft,
+            timeTextView.bottom + convertDpToPx(15)
         )
 
-        composeButton.layoutToBottomRight(
-            viewWidth - convertDpToPx(20),
-            viewHeight - convertDpToPx(20)
+        deleteIconView.layoutToTopRight(
+            contentView.right - convertDpToPx(20),
+            contentView.top - deleteIconView.measuredHeight / 2
         )
+
+        if (composeButton.isVisible) {
+            composeButton.layoutToBottomLeft(
+                (viewWidth - composeButton.measuredWidth) / 2,
+                bottom - convertDpToPx(40)
+            )
+        }
     }
 }

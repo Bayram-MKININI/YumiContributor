@@ -16,6 +16,7 @@ import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.parseTimestampToString
 import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromSharedEvent
 import net.noliaware.yumi_contributor.feature_profile.presentation.views.BOSignInView
+import net.noliaware.yumi_contributor.feature_profile.presentation.views.BOSignInView.*
 
 @AndroidEntryPoint
 class BOSignInFragment : AppCompatDialogFragment() {
@@ -43,11 +44,9 @@ class BOSignInFragment : AppCompatDialogFragment() {
         }
     }
 
-    private val boSignInViewCallback: BOSignInView.BOSignInViewCallback by lazy {
-        object : BOSignInView.BOSignInViewCallback {
-            override fun onBackButtonClicked() {
-                dismissAllowingStateLoss()
-            }
+    private val boSignInViewCallback: BOSignInViewCallback by lazy {
+        BOSignInViewCallback {
+            dismissAllowingStateLoss()
         }
     }
 
@@ -80,10 +79,15 @@ class BOSignInFragment : AppCompatDialogFragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.timerStateFlow.collect { timerState ->
                 boSignInView?.displayRemainingTime(
-                    timerState.secondsRemaining?.let {
-                        parseTimestampToString(it)
+                    timerState.secondsRemaining?.let { secondsRemaining ->
+                        parseTimestampToString(secondsRemaining)
                     } ?: getString(R.string.empty_time)
                 )
+                timerState.secondsRemaining?.let { secondsRemaining ->
+                    if (secondsRemaining <= 0) {
+                        dismissAllowingStateLoss()
+                    }
+                }
             }
         }
     }

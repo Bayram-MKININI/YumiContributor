@@ -6,12 +6,16 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.content.res.Resources
+import android.graphics.Color
+import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.LayoutInflater
+import android.view.TouchDelegate
 import android.view.View
 import android.view.View.MeasureSpec
 import android.view.ViewGroup
@@ -48,8 +52,10 @@ import java.math.BigInteger
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.max
 
 fun generateToken(timestamp: String, methodName: String, randomString: String): String {
     return "noliaware|$timestamp|${methodName}|${timestamp.reversed()}|$randomString".sha256()
@@ -199,7 +205,10 @@ fun Fragment.handlePaginationError(loadState: CombinedLoadStates) {
     when (val currentState = loadState.refresh) {
         is LoadState.Loading -> Unit
         is LoadState.Error -> {
-            if (currentState.error is PaginationException && (currentState.error as PaginationException).errorType == ErrorType.SYSTEM_ERROR) {
+            if (
+                currentState.error is PaginationException &&
+                (currentState.error as PaginationException).errorType == ErrorType.SYSTEM_ERROR
+            ) {
                 redirectToLoginScreenInternal()
             }
         }
@@ -211,6 +220,22 @@ private fun Fragment.redirectToLoginScreenInternal() {
     activity?.finish()
     startActivity(Intent(requireActivity(), LoginActivity::class.java))
 }
+
+fun <T : Serializable?> Bundle.getSerializableCompat(key: String, clazz: Class<T>): T? =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        getSerializable(key, clazz)
+    } else {
+        @Suppress("DEPRECATION")
+        (getSerializable(key) as T)
+    }
+
+inline fun <reified T : Serializable> Intent.getSerializableExtraCompat(key: String): T? =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        getSerializableExtra(key, T::class.java)
+    } else {
+        @Suppress("DEPRECATION")
+        getSerializableExtra(key) as? T
+    }
 
 fun <T : Fragment> T.withArgs(vararg pairs: Pair<String, Any?>) =
     apply { arguments = bundleOf(*pairs) }
@@ -279,11 +304,15 @@ fun Number.pxToDp(
     return toFloat() / metrics.density
 }
 
-fun RecyclerView.onItemClicked(
-    onClick: ((position: Int, view: View) -> Unit)? = null,
-    onLongClick: ((position: Int, view: View) -> Unit)? = null
-) {
-    this.addOnChildAttachStateChangeListener(RecyclerItemClickListener(this, onClick, onLongClick))
+fun View.expandViewHitArea() {
+    val minSize = convertDpToPx(48)
+    val viewRect = Rect()
+    getHitRect(viewRect)
+    viewRect.left = max(viewRect.left - (minSize - viewRect.width()) / 2, 0)
+    viewRect.top = max(viewRect.top - (minSize - viewRect.height()) / 2, 0)
+    viewRect.right = viewRect.left + minSize
+    viewRect.bottom = viewRect.top + minSize
+    (parent as View).touchDelegate = TouchDelegate(viewRect, this)
 }
 
 fun Context.showKeyboard() {
@@ -342,6 +371,15 @@ fun Context.getColorCompat(@ColorRes colorRes: Int): Int {
     return ContextCompat.getColor(this, colorRes)
 }
 
+@ColorInt
+fun String.parseHexColor(): Int {
+    return if (isEmpty()) {
+        Color.TRANSPARENT
+    } else {
+        Color.parseColor(this)
+    }
+}
+
 fun Context.getDrawableCompat(@DrawableRes drawableRes: Int): Drawable {
     return AppCompatResources.getDrawable(this, drawableRes)!!
 }
@@ -357,6 +395,8 @@ fun Drawable.tint(@ColorInt color: Int): Drawable {
 fun Drawable.tint(context: Context, @ColorRes color: Int): Drawable {
     return tint(context.getColorCompat(color))
 }
+
+fun Number.formatNumber(): String = NumberFormat.getNumberInstance(Locale.getDefault()).format(this)
 
 fun <T> unsafeLazy(initializer: () -> T) = lazy(LazyThreadSafetyMode.NONE, initializer)
 val <T> T.exhaustive: T get() = this
@@ -382,15 +422,6 @@ fun openMap(
         ).show();
     }
 }
-
-inline fun <reified T : Serializable> Intent.getSerializable(key: String): T? =
-    when {
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getSerializableExtra(
-            key,
-            T::class.java
-        )
-        else -> @Suppress("DEPRECATION") getSerializableExtra(key) as? T
-    }
 
 fun Context.startWebBrowserAtURL(url: String) {
     Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
@@ -443,6 +474,12 @@ fun String.toWebUri(): Uri {
             else
                 "https://$this"
             ).toUri()
+}
+
+fun Context.makeCall(phoneNumber: String) {
+    val intent = Intent(Intent.ACTION_DIAL)
+    intent.data = Uri.parse("tel:$phoneNumber")
+    startActivity(intent)
 }
 
 fun Context.toActivity(): Activity? {

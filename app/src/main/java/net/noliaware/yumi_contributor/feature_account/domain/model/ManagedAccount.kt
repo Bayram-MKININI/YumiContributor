@@ -8,5 +8,5 @@ data class ManagedAccount(
     val firstName: String,
     val lastName: String,
     val cellPhoneNumber: String,
-    val categories: List<Category> = listOf()
+    val availableVoucherCount: Int,
 ) : Serializable

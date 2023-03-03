@@ -1,74 +1,271 @@
 <?xml version="1.0" encoding="utf-8"?>
-<net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsView
+<net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <View
+        android:id="@+id/header_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <include layout="@layout/back_layout" />
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/parent_content_layout"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/background_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:overScrollMode="never">
+        android:alpha="0.15"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_view_background" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/category_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:background="@drawable/circle_white"
+        android:padding="12dp" />
+
+    <net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView
+        android:id="@+id/parent_content_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:overScrollMode="never"
+            android:paddingVertical="20dp">
+
+            <net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsView
+                android:id="@+id/content_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/title_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_semibold_regular"
+                    android:textColor="@color/grey_2"
+                    android:textSize="19sp"
+                    tools:text="Coupon Title" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/created_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_light"
+                    android:textColor="@color/grey_2"
+                    android:textSize="13sp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/expiry_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_semibold_regular"
+                    android:textColor="@color/grey_2"
+                    android:textSize="13sp" />
+
+                <View
+                    android:id="@+id/separator_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rectangle_rounded_primary" />
+
+                <View
+                    android:id="@+id/sponsor_background"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rectangle_rounded_green"
+                    android:visibility="gone" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/sponsored_by_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_medium_italic"
+                    android:text="@string/sponsored_by"
+                    android:textColor="@color/grey_2"
+                    android:textSize="15sp"
+                    android:visibility="gone" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/sponsor_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_medium"
+                    android:textColor="@color/grey_2"
+                    android:textSize="15sp"
+                    android:visibility="gone" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/information_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/circle_primary"
+                    android:clickable="true"
+                    android:fontFamily="@font/omnes_medium_italic"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:text="@string/information"
+                    android:textColor="@android:color/white"
+                    android:textSize="15sp"
+                    android:visibility="gone" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/description_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_regular"
+                    android:textColor="@color/grey_2"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/go_to_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_semibold_regular"
+                    android:text="@string/go_to_retailer"
+                    android:textColor="@color/grey_2"
+                    android:textSize="14sp" />
+
+                <View
+                    android:id="@+id/location_background"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rectangle_rounded_grey1" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/retailer_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_semibold_regular"
+                    android:text="@string/go_to_retailer"
+                    android:textColor="@color/grey_2"
+                    android:textSize="15sp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/address_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_regular"
+                    android:text="@string/go_to_retailer"
+                    android:textColor="@color/grey_2"
+                    android:textSize="14sp" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/phone_image_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/circle_primary"
+                    android:clickable="true"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_phone" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/phone_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_semibold_regular"
+                    android:text="@string/call"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14sp" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/mail_image_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/circle_primary"
+                    android:clickable="true"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_mail_on"
+                    android:visibility="gone" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/mail_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_semibold_regular"
+                    android:text="@string/write_email"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14sp"
+                    android:visibility="gone" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/open_location_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rectangle_rounded_primary"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="6dp">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/location_image_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/ic_location" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/location_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="7dp"
+                        android:fontFamily="@font/omnes_semibold_regular"
+                        android:text="@string/see_directions"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsView>
+        </androidx.core.widget.NestedScrollView>
 
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/content_layout"
-            android:layout_width="match_parent"
+            android:id="@+id/display_voucher_layout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:gravity="center"
+            android:orientation="horizontal"
             android:paddingHorizontal="20dp"
-            android:paddingTop="20dp"
-            app:dividerPadding="20dp">
+            android:paddingVertical="10dp"
+            android:visibility="gone">
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/title_text_view"
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/display_voucher_image_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="20dp"
-                android:fontFamily="@font/sf_pro_text_semibold"
-                android:textColor="@color/black_font"
-                android:textSize="24sp"
-                tools:text="Coupon Title" />
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_voucher" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/partner_description_text_view"
+                android:id="@+id/display_voucher_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/sf_pro_text_regular"
-                tools:text="Coupon offer par Total energies" />
+                android:layout_marginLeft="10dp"
+                android:fontFamily="@font/omnes_semibold_regular"
+                android:text="@string/display_voucher"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
-    </androidx.core.widget.NestedScrollView>
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/display_voucher_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_filled_rounded_primary"
-        android:clickable="true"
-        android:focusable="true"
-        android:fontFamily="@font/sf_pro_text_semibold"
-        android:gravity="center"
-        android:text="@string/display_voucher"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        android:visibility="gone" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/voucher_status_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/omnes_semibold_regular"
+            android:gravity="center"
+            android:textColor="@color/color_bittersweet"
+            android:textSize="18sp"
+            android:visibility="gone" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/voucher_status_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/sf_pro_text_semibold"
-        android:gravity="center"
-        android:text="@string/display_voucher"
-        android:textColor="@color/red"
-        android:textSize="18sp"
-        android:visibility="gone" />
-
-</net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsView>
+    </net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView>
+</net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView>

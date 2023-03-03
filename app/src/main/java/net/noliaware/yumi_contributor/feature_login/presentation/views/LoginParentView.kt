@@ -8,7 +8,6 @@ import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.ViewAnimator
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.util.layoutToBottomLeft
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 
 class LoginParentView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
@@ -62,10 +61,6 @@ class LoginParentView(context: Context, attrs: AttributeSet?) : ViewGroup(contex
         passwordView.addSecretDigit()
     }
 
-    fun removeOneSecretDigit() {
-        passwordView.removeOneSecretDigit()
-    }
-
     fun clearSecretDigits() {
         passwordView.clearSecretDigits()
     }
@@ -75,13 +70,13 @@ class LoginParentView(context: Context, attrs: AttributeSet?) : ViewGroup(contex
         val viewHeight = MeasureSpec.getSize(heightMeasureSpec)
 
         backgroundView.measure(
-            MeasureSpec.makeMeasureSpec(viewWidth * 3 / 2, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(viewHeight / 2, MeasureSpec.EXACTLY)
+            MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(viewHeight, MeasureSpec.EXACTLY)
         )
 
         loginViewAnimator.measure(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(viewHeight * 75 / 100, MeasureSpec.EXACTLY)
+            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         )
 
         setMeasuredDimension(
@@ -94,14 +89,11 @@ class LoginParentView(context: Context, attrs: AttributeSet?) : ViewGroup(contex
         val viewWidth = right - left
         val viewHeight = bottom - top
 
-        backgroundView.layoutToTopLeft(
-            -backgroundView.measuredWidth * 3 / 10,
-            -backgroundView.measuredHeight * 5 / 10
-        )
+        backgroundView.layoutToTopLeft(0, 0)
 
-        loginViewAnimator.layoutToBottomLeft(
+        loginViewAnimator.layoutToTopLeft(
             0,
-            bottom
+            (viewHeight - loginViewAnimator.measuredHeight) / 2
         )
     }
 }

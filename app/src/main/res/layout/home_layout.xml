@@ -5,6 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/background_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.15"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_view_background" />
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/main_fragment_container"
         android:layout_width="match_parent"
@@ -30,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
-            android:padding="12dp"
+            android:padding="10dp"
             android:src="@drawable/profile_button_selector" />
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -41,6 +49,21 @@
             android:padding="12dp"
             android:src="@drawable/mail_button_selector" />
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/mail_badge_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rectangle_rounded_yellow"
+            android:fontFamily="@font/omnes_semibold_regular"
+            android:gravity="center"
+            android:minWidth="18dp"
+            android:minHeight="18dp"
+            android:paddingHorizontal="4dp"
+            android:paddingVertical="2dp"
+            android:textColor="@android:color/black"
+            android:textSize="13sp"
+            android:visibility="gone" />
+
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/notification_image_view"
             android:layout_width="wrap_content"
@@ -49,6 +72,20 @@
             android:padding="12dp"
             android:src="@drawable/notification_button_selector" />
 
-    </net.noliaware.yumi_contributor.feature_account.presentation.views.HomeMenuView>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/notification_badge_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rectangle_rounded_yellow"
+            android:fontFamily="@font/omnes_semibold_regular"
+            android:gravity="center"
+            android:minWidth="18dp"
+            android:minHeight="18dp"
+            android:paddingHorizontal="4dp"
+            android:paddingVertical="2dp"
+            android:textColor="@android:color/black"
+            android:textSize="13sp"
+            android:visibility="gone" />
 
+    </net.noliaware.yumi_contributor.feature_account.presentation.views.HomeMenuView>
 </net.noliaware.yumi_contributor.feature_account.presentation.views.HomeView>

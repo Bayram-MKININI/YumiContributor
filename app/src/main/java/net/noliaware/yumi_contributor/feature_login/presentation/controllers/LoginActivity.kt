@@ -15,29 +15,6 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         installSplashScreen()
         setContentView(R.layout.activity_login)
-
-        val content: View = findViewById(android.R.id.content)
-
-        var delay = false
-
-        content.postDelayed({ delay = true }, 1000)
-
-        content.viewTreeObserver.addOnPreDrawListener(
-            object : ViewTreeObserver.OnPreDrawListener {
-                override fun onPreDraw(): Boolean {
-                    return if (delay) {
-                        content.viewTreeObserver.removeOnPreDrawListener(this)
-                        showLoginFragment.invoke()
-                        true
-                    } else {
-                        false
-                    }
-                }
-            }
-        )
-    }
-
-    private val showLoginFragment = {
         supportFragmentManager.beginTransaction().run {
             replace(R.id.main_fragment_container, LoginFragment())
             commitAllowingStateLoss()

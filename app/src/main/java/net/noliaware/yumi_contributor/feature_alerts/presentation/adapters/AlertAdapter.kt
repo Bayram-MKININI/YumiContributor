@@ -33,7 +33,6 @@ class AlertAdapter : PagingDataAdapter<Alert, ItemViewHolder<AlertItemView>>(Ale
         alert: Alert,
         holder: ItemViewHolder<AlertItemView>
     ) = AlertItemView.AlertItemViewAdapter(
-        priority = resolveAlertPriority(alert.alertLevel),
         time = holder.itemView.context.getString(
             R.string.received_at,
             parseToShortDate(alert.alertDate),

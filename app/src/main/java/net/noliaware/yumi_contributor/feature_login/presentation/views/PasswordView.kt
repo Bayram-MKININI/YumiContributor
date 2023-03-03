@@ -4,45 +4,60 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.View.OnClickListener
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.isEmpty
-import com.google.android.material.textview.MaterialTextView
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.GOLDEN_RATIO
-import net.noliaware.yumi_contributor.commun.util.*
-import kotlin.math.roundToInt
+import net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView
+import net.noliaware.yumi_contributor.commun.util.convertDpToPx
+import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
+import net.noliaware.yumi_contributor.commun.util.measureWrapContent
+import net.noliaware.yumi_contributor.commun.util.weak
 
-class PasswordView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
+class PasswordView(context: Context, attrs: AttributeSet?) : ElevatedCardView(context, attrs) {
 
     private lateinit var inputCodeTextView: TextView
     private lateinit var descriptionTextView: TextView
-    private lateinit var codeLinearLayout: LinearLayoutCompat
-    private lateinit var separatorLineView: View
+    private lateinit var codeTextView: TextView
 
-    private lateinit var padFirstDigit: TextView
-    private lateinit var padSecondDigit: TextView
-    private lateinit var padThirdDigit: TextView
-    private lateinit var padFourthDigit: TextView
-    private lateinit var padFifthDigit: TextView
-    private lateinit var padSixthDigit: TextView
-    private lateinit var padSeventhDigit: TextView
-    private lateinit var padEighthDigit: TextView
-    private lateinit var padNinthDigit: TextView
-    private lateinit var padTenthDigit: TextView
+    private lateinit var padFirstDigit: View
+    private lateinit var padFirstDigitTextView: TextView
 
-    private lateinit var deleteImageView: ImageView
+    private lateinit var padSecondDigit: View
+    private lateinit var padSecondDigitTextView: TextView
+
+    private lateinit var padThirdDigit: View
+    private lateinit var padThirdDigitTextView: TextView
+
+    private lateinit var padFourthDigit: View
+    private lateinit var padFourthDigitTextView: TextView
+
+    private lateinit var padFifthDigit: View
+    private lateinit var padFifthDigitTextView: TextView
+
+    private lateinit var padSixthDigit: View
+    private lateinit var padSixthDigitTextView: TextView
+
+    private lateinit var padSeventhDigit: View
+    private lateinit var padSeventhDigitTextView: TextView
+
+    private lateinit var padEighthDigit: View
+    private lateinit var padEighthDigitTextView: TextView
+
+    private lateinit var padNinthDigit: View
+    private lateinit var padNinthDigitTextView: TextView
+
+    private lateinit var padTenthDigit: View
+    private lateinit var padTenthDigitTextView: TextView
+
+    private lateinit var deleteTextView: TextView
+    private lateinit var confirmImageView: ImageView
     private lateinit var confirmTextView: TextView
 
     var callback: PasswordViewCallback? by weak()
 
     interface PasswordViewCallback {
         fun onPadClickedAtIndex(index: Int)
-        fun onDeleteButtonPressed()
+        fun onClearButtonPressed()
         fun onConfirmButtonPressed()
     }
 
@@ -55,44 +70,54 @@ class PasswordView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
 
         inputCodeTextView = findViewById(R.id.input_code_text_view)
         descriptionTextView = findViewById(R.id.description_text_view)
-        codeLinearLayout = findViewById(R.id.code_linear_layout)
-        separatorLineView = findViewById(R.id.separator_line_view)
+        codeTextView = findViewById(R.id.code_text_view)
 
         padFirstDigit = findViewById(R.id.pad_first_digit)
         padFirstDigit.setOnClickListener(onPadButtonClickListener)
+        padFirstDigitTextView = padFirstDigit.findViewById(R.id.pad_first_digit_text_view)
 
         padSecondDigit = findViewById(R.id.pad_second_digit)
         padSecondDigit.setOnClickListener(onPadButtonClickListener)
+        padSecondDigitTextView = padSecondDigit.findViewById(R.id.pad_second_digit_text_view)
 
         padThirdDigit = findViewById(R.id.pad_third_digit)
         padThirdDigit.setOnClickListener(onPadButtonClickListener)
+        padThirdDigitTextView = padThirdDigit.findViewById(R.id.pad_third_digit_text_view)
 
         padFourthDigit = findViewById(R.id.pad_fourth_digit)
         padFourthDigit.setOnClickListener(onPadButtonClickListener)
+        padFourthDigitTextView = padFourthDigit.findViewById(R.id.pad_fourth_digit_text_view)
 
         padFifthDigit = findViewById(R.id.pad_fifth_digit)
         padFifthDigit.setOnClickListener(onPadButtonClickListener)
+        padFifthDigitTextView = padFifthDigit.findViewById(R.id.pad_fifth_digit_text_view)
 
         padSixthDigit = findViewById(R.id.pad_sixth_digit)
         padSixthDigit.setOnClickListener(onPadButtonClickListener)
+        padSixthDigitTextView = padSixthDigit.findViewById(R.id.pad_sixth_digit_text_view)
 
         padSeventhDigit = findViewById(R.id.pad_seventh_digit)
         padSeventhDigit.setOnClickListener(onPadButtonClickListener)
+        padSeventhDigitTextView = padSeventhDigit.findViewById(R.id.pad_seventh_digit_text_view)
 
         padEighthDigit = findViewById(R.id.pad_eighth_digit)
         padEighthDigit.setOnClickListener(onPadButtonClickListener)
+        padEighthDigitTextView = padEighthDigit.findViewById(R.id.pad_eighth_digit_text_view)
 
         padNinthDigit = findViewById(R.id.pad_ninth_digit)
         padNinthDigit.setOnClickListener(onPadButtonClickListener)
+        padNinthDigitTextView = padNinthDigit.findViewById(R.id.pad_ninth_digit_text_view)
 
         padTenthDigit = findViewById(R.id.pad_tenth_digit)
         padTenthDigit.setOnClickListener(onPadButtonClickListener)
+        padTenthDigitTextView = padTenthDigit.findViewById(R.id.pad_tenth_digit_text_view)
 
-        deleteImageView = findViewById(R.id.delete_image_view)
-        deleteImageView.setOnClickListener(onActionButtonClickListener)
+        deleteTextView = findViewById(R.id.delete_text_view)
+        deleteTextView.setOnClickListener(onActionButtonClickListener)
 
-        confirmTextView = findViewById(R.id.confirm_text_view)
-        confirmTextView.setOnClickListener(onActionButtonClickListener)
+        confirmImageView = findViewById(R.id.confirm_pass_image_view)
+        confirmImageView.setOnClickListener(onActionButtonClickListener)
+        confirmTextView = findViewById(R.id.confirm_pass_text_view)
     }
 
     private val onPadButtonClickListener: OnClickListener by lazy {
@@ -115,8 +140,8 @@ class PasswordView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
     private val onActionButtonClickListener: OnClickListener by lazy {
         OnClickListener {
             when (it.id) {
-                R.id.delete_image_view -> callback?.onDeleteButtonPressed()
-                R.id.confirm_text_view -> callback?.onConfirmButtonPressed()
+                R.id.delete_text_view -> callback?.onClearButtonPressed()
+                R.id.confirm_pass_image_view -> callback?.onConfirmButtonPressed()
             }
         }
     }
@@ -129,62 +154,46 @@ class PasswordView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
 
     private fun resolveDigitIconAtIndexForValue(index: Int, value: String) {
         when (index) {
-            0 -> padFirstDigit.text = value
-            1 -> padSecondDigit.text = value
-            2 -> padThirdDigit.text = value
-            3 -> padFourthDigit.text = value
-            4 -> padFifthDigit.text = value
-            5 -> padSixthDigit.text = value
-            6 -> padSeventhDigit.text = value
-            7 -> padEighthDigit.text = value
-            8 -> padNinthDigit.text = value
-            9 -> padTenthDigit.text = value
+            0 -> padFirstDigitTextView.text = value
+            1 -> padSecondDigitTextView.text = value
+            2 -> padThirdDigitTextView.text = value
+            3 -> padFourthDigitTextView.text = value
+            4 -> padFifthDigitTextView.text = value
+            5 -> padSixthDigitTextView.text = value
+            6 -> padSeventhDigitTextView.text = value
+            7 -> padEighthDigitTextView.text = value
+            8 -> padNinthDigitTextView.text = value
+            9 -> padTenthDigitTextView.text = value
         }
     }
 
     fun addSecretDigit() {
-
-        val star = MaterialTextView(context).also {
-            it.text = "*"
-            it.typeface = ResourcesCompat.getFont(context, R.font.sf_pro_text_semibold)
-            it.textSize = 35f
-            it.setTextColor(ContextCompat.getColor(context, R.color.black_font))
-        }
-
-        codeLinearLayout.addView(star)
-    }
-
-    fun removeOneSecretDigit() {
-        if (!codeLinearLayout.isEmpty())
-            codeLinearLayout.removeViewAt(codeLinearLayout.childCount - 1)
+        codeTextView.text = StringBuilder().apply {
+            append(codeTextView.text.toString())
+            if (codeTextView.length() > 0)
+                append(" ")
+            append("*")
+        }.toString()
     }
 
     fun clearSecretDigits() {
-        codeLinearLayout.removeAllViews()
+        if (codeTextView.length() > 0)
+            codeTextView.text = ""
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val viewWidth = MeasureSpec.getSize(widthMeasureSpec)
-        val viewHeight = MeasureSpec.getSize(heightMeasureSpec)
+        var viewHeight = MeasureSpec.getSize(heightMeasureSpec)
+
+        val rectangleWidth = viewWidth * 9 / 10
 
         inputCodeTextView.measureWrapContent()
 
-        descriptionTextView.measure(
-            MeasureSpec.makeMeasureSpec(viewWidth * 8 / 10, MeasureSpec.AT_MOST),
-            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
-        )
+        descriptionTextView.measureWrapContent()
 
-        codeLinearLayout.measure(
-            MeasureSpec.makeMeasureSpec(
-                (viewWidth / GOLDEN_RATIO).roundToInt(),
-                MeasureSpec.EXACTLY
-            ),
-            MeasureSpec.makeMeasureSpec(convertDpToPx(40), MeasureSpec.EXACTLY)
-        )
-
-        separatorLineView.measure(
-            MeasureSpec.makeMeasureSpec(viewWidth * 8 / 10, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(convertDpToPx(1), MeasureSpec.EXACTLY)
+        codeTextView.measure(
+            MeasureSpec.makeMeasureSpec(rectangleWidth * 8 / 10, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(convertDpToPx(42), MeasureSpec.EXACTLY)
         )
 
         measurePadView(padFirstDigit)
@@ -198,15 +207,12 @@ class PasswordView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
         measurePadView(padNinthDigit)
         measurePadView(padTenthDigit)
 
-        deleteImageView.measure(
-            MeasureSpec.makeMeasureSpec(convertDpToPx(47), MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(convertDpToPx(35), MeasureSpec.EXACTLY)
-        )
+        deleteTextView.measureWrapContent()
+        confirmImageView.measureWrapContent()
+        confirmTextView.measureWrapContent()
 
-        confirmTextView.measure(
-            MeasureSpec.makeMeasureSpec(viewWidth * 7 / 10, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(convertDpToPx(40), MeasureSpec.EXACTLY)
-        )
+        viewHeight = inputCodeTextView.measuredHeight + descriptionTextView.measuredHeight + codeTextView.measuredHeight +
+                    padFirstDigit.measuredHeight * 2 + confirmImageView.measuredHeight + convertDpToPx(135)
 
         setMeasuredDimension(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
@@ -216,8 +222,8 @@ class PasswordView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
 
     private fun measurePadView(padView: View) {
         padView.measure(
-            MeasureSpec.makeMeasureSpec(convertDpToPx(40), MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(convertDpToPx(40), MeasureSpec.EXACTLY)
+            MeasureSpec.makeMeasureSpec(convertDpToPx(38), MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(convertDpToPx(38), MeasureSpec.EXACTLY)
         )
     }
 
@@ -235,23 +241,16 @@ class PasswordView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
             inputCodeTextView.bottom + convertDpToPx(5)
         )
 
-        codeLinearLayout.layoutToTopLeft(
-            (viewWidth - codeLinearLayout.measuredWidth) / 2,
-            descriptionTextView.bottom + convertDpToPx(30)
+        codeTextView.layoutToTopLeft(
+            (viewWidth - codeTextView.measuredWidth) / 2,
+            descriptionTextView.bottom + convertDpToPx(10)
         )
 
-        separatorLineView.layoutToTopLeft(
-            (viewWidth - separatorLineView.measuredWidth) / 2,
-            codeLinearLayout.bottom + convertDpToPx(10)
-        )
-
-        val spaceBetweenPads = padFirstDigit.measuredWidth / 3
-        val contentHeight = padFirstDigit.measuredHeight * 7 / 3
-        val emptySpace = viewHeight - (convertDpToPx(80)) - separatorLineView.bottom
+        val spaceBetweenPads = convertDpToPx(7)
 
         padFirstDigit.layoutToTopLeft(
-            (viewWidth - padFirstDigit.measuredWidth * 19 / 3) / 2,
-            separatorLineView.bottom + (emptySpace * (1 - 1 / GOLDEN_RATIO)).toInt() - contentHeight / 2
+            (viewWidth - (padFirstDigit.measuredWidth * 5 + convertDpToPx(28))) / 2,
+            codeTextView.bottom + convertDpToPx(15)
         )
 
         padSecondDigit.layoutToTopLeft(
@@ -299,14 +298,19 @@ class PasswordView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
             padSixthDigit.top
         )
 
-        deleteImageView.layoutToTopRight(
-            padTenthDigit.right,
-            padTenthDigit.bottom + spaceBetweenPads
+        deleteTextView.layoutToTopLeft(
+            (viewWidth - deleteTextView.measuredWidth) / 2,
+            padTenthDigit.bottom + convertDpToPx(15)
         )
 
-        confirmTextView.layoutToBottomLeft(
+        confirmImageView.layoutToTopLeft(
+            (viewWidth - confirmImageView.measuredWidth) / 2,
+            deleteTextView.bottom + convertDpToPx(10)
+        )
+
+        confirmTextView.layoutToTopLeft(
             (viewWidth - confirmTextView.measuredWidth) / 2,
-            bottom - convertDpToPx(40)
+            confirmImageView.top + convertDpToPx(7)
         )
     }
 }

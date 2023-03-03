@@ -5,6 +5,6 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class AlertsDTO(
-    @Json(name = "alerts")
+    @Json(name = "alertList")
     val alertDTOList: List<AlertDTO>
 )

@@ -6,42 +6,100 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <View
+        android:id="@+id/header_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/message_icon_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/colorPrimaryLight"
+        app:cardCornerRadius="25dp"
+        app:cardElevation="16dp"
+        app:cardPreventCornerOverlap="false">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:padding="12dp"
+            android:src="@drawable/ic_mail_on" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/sf_pro_display_semibold"
+        android:fontFamily="@font/omnes_semibold_regular"
         android:text="@string/mail"
-        android:textColor="@color/black_font"
-        android:textSize="24sp" />
+        android:textColor="@android:color/white"
+        android:textSize="22sp" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/description_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/sf_pro_text_regular"
+        android:fontFamily="@font/omnes_regular"
+        android:gravity="center"
         android:text="@string/mail_description"
-        android:textColor="@color/grey_1"
-        android:textSize="18sp" />
+        android:textColor="@color/grey_2"
+        android:textSize="14sp" />
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_layout"
+    <net.noliaware.yumi_contributor.commun.presentation.views.ClipartTabView
+        android:id="@+id/received_tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/pager"
+    <net.noliaware.yumi_contributor.commun.presentation.views.ClipartTabView
+        android:id="@+id/sent_tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/compose_fab"
+    <net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView
+        android:id="@+id/content_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never" />
+
+    </net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/compose_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_compose"
-        app:backgroundTint="@color/colorPrimary"
-        app:borderWidth="0dp"
-        app:elevation="16dp"
-        app:tint="@android:color/white" />
+        android:background="@drawable/button_rounded_orange"
+        android:elevation="20dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/compose_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@drawable/ic_compose" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/compose_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:fontFamily="@font/omnes_semibold_regular"
+            android:text="@string/new_mail"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </net.noliaware.yumi_contributor.feature_message.presentation.views.MessagingView>

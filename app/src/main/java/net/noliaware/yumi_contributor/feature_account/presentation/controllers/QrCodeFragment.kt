@@ -1,6 +1,7 @@
 package net.noliaware.yumi_contributor.feature_account.presentation.controllers
 
 import android.content.DialogInterface
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,19 +13,24 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
+import net.noliaware.yumi_contributor.commun.CATEGORY_UI
 import net.noliaware.yumi_contributor.commun.VOUCHER_CODE_DATA
 import net.noliaware.yumi_contributor.commun.util.*
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherCodeData
 import net.noliaware.yumi_contributor.feature_account.presentation.views.QrCodeView
 import net.noliaware.yumi_contributor.feature_account.presentation.views.QrCodeView.*
 
-
 @AndroidEntryPoint
 class QrCodeFragment : AppCompatDialogFragment() {
 
     companion object {
-        fun newInstance(voucherCodeData: VoucherCodeData) =
-            QrCodeFragment().withArgs(VOUCHER_CODE_DATA to voucherCodeData)
+        fun newInstance(
+            categoryUI: CategoryUI?,
+            voucherCodeData: VoucherCodeData
+        ) = QrCodeFragment().withArgs(
+            CATEGORY_UI to categoryUI,
+            VOUCHER_CODE_DATA to voucherCodeData
+        )
     }
 
     private var qrCodeView: QrCodeView? = null
@@ -87,9 +93,17 @@ class QrCodeFragment : AppCompatDialogFragment() {
         viewModel.voucherCodeData?.let { voucherCodeData ->
             qrCodeView?.fillViewWithData(
                 QrCodeViewAdapter(
+                    color = viewModel.categoryUI?.categoryColor ?: Color.TRANSPARENT,
+                    iconName = viewModel.categoryUI?.categoryIcon,
                     title = voucherCodeData.productLabel.orEmpty(),
-                    creationDate = parseToLongDate(voucherCodeData.voucherDate),
-                    expiryDate = parseToLongDate(voucherCodeData.voucherExpiryDate)
+                    creationDate = getString(
+                        R.string.created_in,
+                        parseToLongDate(voucherCodeData.voucherDate)
+                    ),
+                    expiryDate = getString(
+                        R.string.expiry_date_value,
+                        parseToLongDate(voucherCodeData.voucherExpiryDate)
+                    )
                 )
             )
         }

@@ -1,76 +1,197 @@
 <?xml version="1.0" encoding="utf-8"?>
 <net.noliaware.yumi_contributor.feature_profile.presentation.views.ProfileParentView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <View
+        android:id="@+id/header_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/profile_icon_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/colorPrimaryLight"
+        app:cardCornerRadius="25dp"
+        app:cardElevation="16dp"
+        app:cardPreventCornerOverlap="false">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:src="@drawable/ic_profile_on" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/sf_pro_display_semibold"
+        android:fontFamily="@font/omnes_semibold_regular"
         android:text="@string/my_profile"
-        android:textColor="@color/black_font"
-        android:textSize="24sp" />
+        android:textColor="@android:color/white"
+        android:textSize="22sp" />
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/parent_content_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/rectangle_half_rounded"
-        android:fillViewport="true"
-        android:overScrollMode="never"
-        android:paddingTop="10dp">
+    <net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView
+        android:id="@+id/content_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-        <net.noliaware.yumi_contributor.feature_profile.presentation.views.ProfileView
-            android:id="@+id/profile_view"
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/profile_data_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:overScrollMode="never"
+            android:paddingVertical="15dp">
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/my_data_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/sf_pro_display_semibold"
-                android:text="@string/my_data"
-                android:textColor="@color/colorPrimary"
-                android:textSize="16sp" />
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/my_data_linear_layout"
+            <net.noliaware.yumi_contributor.feature_profile.presentation.views.ProfileView
+                android:id="@+id/profile_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:layout_height="wrap_content">
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/complementary_data_text_view"
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/my_data_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_semibold_regular"
+                    android:text="@string/my_data"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="19sp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/login_title_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_regular"
+                    android:text="@string/login"
+                    android:textColor="@color/grey_2"
+                    android:textSize="15sp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/login_value_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_semibold_regular"
+                    android:textColor="@color/grey_2"
+                    android:textSize="15sp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/surname_title_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_regular"
+                    android:text="@string/surname"
+                    android:textColor="@color/grey_2"
+                    android:textSize="15sp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/surname_value_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_semibold_regular"
+                    android:textColor="@color/grey_2"
+                    android:textSize="15sp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/name_title_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_regular"
+                    android:text="@string/name"
+                    android:textColor="@color/grey_2"
+                    android:textSize="15sp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/name_value_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_semibold_regular"
+                    android:textColor="@color/grey_2"
+                    android:textSize="15sp" />
+
+                <View
+                    android:id="@+id/separator_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rectangle_rounded_primary" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/complementary_data_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_semibold_regular"
+                    android:text="@string/complementary_data"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="19sp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/phone_title_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_regular"
+                    android:gravity="end"
+                    android:text="@string/phone"
+                    android:textColor="@color/grey_2"
+                    android:textSize="15sp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/phone_value_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_semibold_regular"
+                    android:textColor="@color/grey_2"
+                    android:textSize="15sp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/address_title_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_regular"
+                    android:gravity="end"
+                    android:text="@string/address"
+                    android:textColor="@color/grey_2"
+                    android:textSize="15sp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/address_value_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_semibold_regular"
+                    android:textColor="@color/grey_2"
+                    android:textSize="15sp" />
+            </net.noliaware.yumi_contributor.feature_profile.presentation.views.ProfileView>
+        </androidx.core.widget.NestedScrollView>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/get_code_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_rounded_primary"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="10dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/sf_pro_display_semibold"
-                android:text="@string/complementary_data"
-                android:textColor="@color/colorPrimary"
-                android:textSize="16sp" />
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/complementary_data_linear_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_voucher" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/get_code_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_filled_rounded_primary"
-                android:clickable="true"
-                android:focusable="true"
-                android:fontFamily="@font/sf_pro_text_semibold"
-                android:gravity="center"
+                android:layout_marginLeft="10dp"
+                android:fontFamily="@font/omnes_semibold_regular"
                 android:text="@string/get_code"
                 android:textColor="@android:color/white"
-                android:textSize="14sp" />
-
-        </net.noliaware.yumi_contributor.feature_profile.presentation.views.ProfileView>
-    </androidx.core.widget.NestedScrollView>
-
+                android:textSize="18sp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView>
 </net.noliaware.yumi_contributor.feature_profile.presentation.views.ProfileParentView>

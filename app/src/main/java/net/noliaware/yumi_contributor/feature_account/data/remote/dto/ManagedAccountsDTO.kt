@@ -5,6 +5,6 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class ManagedAccountsDTO(
-    @Json(name = "contributorUsers")
+    @Json(name = "userAccountList")
     val accountsDTOs: List<ManagedAccountDTO> = listOf()
 )

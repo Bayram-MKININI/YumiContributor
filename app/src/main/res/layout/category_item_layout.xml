@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<net.noliaware.yumi_contributor.feature_account.presentation.views.CategoryView
+<net.noliaware.yumi_contributor.feature_account.presentation.views.CategoryItemView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/mail_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/rectangle_empty_rounded_grey3">
+    android:layout_height="match_parent">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/count_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/ring_filled_grey3"
-        android:fontFamily="@font/sf_pro_display_semibold"
+        android:background="@drawable/rectangle_rounded_yellow"
+        android:fontFamily="@font/omnes_semibold_regular"
         android:gravity="center"
         android:includeFontPadding="false"
-        android:textColor="@color/black_font"
-        android:textSize="16sp" />
+        android:minWidth="30dp"
+        android:minHeight="30dp"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="2dp"
+        android:textColor="@color/grey_2"
+        android:textSize="18sp" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/icon_image_view"
@@ -27,8 +30,9 @@
         android:id="@+id/title_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/sf_pro_display_semibold"
+        android:fontFamily="@font/omnes_semibold_regular"
         android:gravity="center"
-        android:textColor="@color/black_font"
-        android:textSize="16sp" />
-</net.noliaware.yumi_contributor.feature_account.presentation.views.CategoryView>
+        android:textColor="@color/grey_2"
+        android:textSize="18sp" />
+
+</net.noliaware.yumi_contributor.feature_account.presentation.views.CategoryItemView>

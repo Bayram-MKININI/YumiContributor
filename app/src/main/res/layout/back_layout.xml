@@ -12,15 +12,15 @@
         android:layout_width="wrap_content"
         android:layout_height="14dp"
         android:adjustViewBounds="true"
-        android:paddingEnd="7dp"
+        android:paddingEnd="10dp"
         android:src="@drawable/ic_arrow_back" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/sf_pro_display_semibold"
+        android:fontFamily="@font/omnes_semibold_regular"
         android:text="@string/back"
-        android:textColor="@color/black_font"
-        android:textSize="18sp" />
+        android:textColor="@android:color/white"
+        android:textSize="22sp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -5,6 +5,6 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class SelectUserDTO(
-    @Json(name = "userId")
+    @Json(name = "userAccountSelected")
     val userId: String
 )

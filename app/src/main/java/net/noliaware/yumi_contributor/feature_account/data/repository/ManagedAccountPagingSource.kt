@@ -36,11 +36,14 @@ class ManagedAccountPagingSource(
             val randomString = UUID.randomUUID().toString()
 
             val remoteData = api.fetchManagedAccounts(
-                timestamp = timestamp, saltString = randomString, token = generateToken(
+                timestamp = timestamp,
+                saltString = randomString,
+                token = generateToken(
                     timestamp = timestamp,
                     methodName = GET_MANAGED_ACCOUNT_LIST,
                     randomString = randomString
-                ), params = generateWSParams(nextPage, GET_MANAGED_ACCOUNT_LIST)
+                ),
+                params = generateWSParams(nextPage, GET_MANAGED_ACCOUNT_LIST)
             )
 
             val errorType = handlePaginatedListErrorIfAny(
@@ -75,7 +78,8 @@ class ManagedAccountPagingSource(
     }
 
     private fun generateWSParams(offset: Int, tokenKey: String) = mutableMapOf(
-        LIMIT to LIST_PAGE_SIZE.toString(), OFFSET to offset.toString()
+        LIMIT to LIST_PAGE_SIZE.toString(),
+        OFFSET to offset.toString()
     ).also {
         it.plusAssign(getCommonWSParams(sessionData, tokenKey))
     }.toMap()

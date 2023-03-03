@@ -65,4 +65,8 @@ class EventsHelper<S> {
             }
         }.exhaustive
     }
+
+    fun resetStateData() {
+        _stateFlow.value = DataState(null)
+    }
 }

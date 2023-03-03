@@ -5,6 +5,6 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class SentMessageDTO(
-    @Json(name = "messageId")
+    @Json(name = "sentMessageId")
     val messageId: String
 )
