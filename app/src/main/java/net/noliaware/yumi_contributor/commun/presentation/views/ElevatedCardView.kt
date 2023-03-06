@@ -6,10 +6,11 @@ import com.google.android.material.card.MaterialCardView
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 
-open class ElevatedCardView(
+open class ElevatedCardView @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet?
-) : MaterialCardView(context, attrs) {
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : MaterialCardView(context, attrs, defStyle) {
     override fun onFinishInflate() {
         super.onFinishInflate()
         cardElevation = convertDpToPx(16) * 1f

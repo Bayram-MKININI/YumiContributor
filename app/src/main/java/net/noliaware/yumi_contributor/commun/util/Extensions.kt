@@ -287,6 +287,16 @@ fun View.convertDpToPx(dpValue: Int): Int = TypedValue.applyDimension(
     TypedValue.COMPLEX_UNIT_DIP, dpValue.toFloat(), context.resources.displayMetrics
 ).toInt()
 
+fun View.getLocationRectOnScreen(): Rect {
+    val location = IntArray(2)
+    getLocationOnScreen(location)
+    return Rect().apply {
+        left = location[0]
+        top = location[1]
+        right = left + measuredWidth
+        bottom = top + measuredHeight
+    }
+}
 
 @JvmOverloads
 @Dimension(unit = Dimension.PX)
@@ -325,17 +335,6 @@ fun Context.hideKeyboard() {
     (this as? Activity)?.let {
         WindowInsetsControllerCompat(window, window.decorView).hide(WindowInsetsCompat.Type.ime())
     }
-}
-
-fun View.getKeyboardHeight(): Int? {
-
-    /*WindowInsetsCompat
-        .toWindowInsetsCompat(View.rootWindowInsets)
-        .getInsets(WindowInsetsCompat.Type.ime()).bottom
-
-     */
-
-    return ViewCompat.getRootWindowInsets(this)?.getInsets(WindowInsetsCompat.Type.ime())?.bottom
 }
 
 inline fun <reified T : View> View.find(id: Int): T = findViewById(id)

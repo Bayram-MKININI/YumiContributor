@@ -150,10 +150,16 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
 
     private fun handleVoucherStatusUpdate(voucherStatus: VoucherStatus) {
         when (voucherStatus) {
-            VoucherStatus.INEXISTENT -> vouchersDetailsContainerView?.setVoucherStatus(getString(R.string.voucher_inexistent))
-            VoucherStatus.CANCELED -> vouchersDetailsContainerView?.setVoucherStatus(getString(R.string.voucher_canceled))
+            VoucherStatus.INEXISTENT -> vouchersDetailsContainerView?.setVoucherStatus(
+                getString(R.string.voucher_inexistent)
+            )
+            VoucherStatus.CANCELED -> vouchersDetailsContainerView?.setVoucherStatus(
+                getString(R.string.voucher_canceled)
+            )
             VoucherStatus.USABLE -> Unit
-            VoucherStatus.CONSUMED -> vouchersDetailsContainerView?.setVoucherStatus(getString(R.string.voucher_consumed))
+            VoucherStatus.CONSUMED -> vouchersDetailsContainerView?.setVoucherStatus(
+                getString(R.string.voucher_consumed)
+            )
         }
     }
 

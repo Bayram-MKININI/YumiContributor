@@ -10,7 +10,7 @@ import android.widget.ViewAnimator
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 
-class LoginParentView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
+class LoginParentLayout(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
 
     private lateinit var backgroundView: ImageView
     private lateinit var loginViewAnimator: ViewAnimator
@@ -76,7 +76,7 @@ class LoginParentView(context: Context, attrs: AttributeSet?) : ViewGroup(contex
 
         loginViewAnimator.measure(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+            MeasureSpec.makeMeasureSpec(viewHeight, MeasureSpec.EXACTLY)
         )
 
         setMeasuredDimension(
@@ -86,14 +86,7 @@ class LoginParentView(context: Context, attrs: AttributeSet?) : ViewGroup(contex
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        val viewWidth = right - left
-        val viewHeight = bottom - top
-
         backgroundView.layoutToTopLeft(0, 0)
-
-        loginViewAnimator.layoutToTopLeft(
-            0,
-            (viewHeight - loginViewAnimator.measuredHeight) / 2
-        )
+        loginViewAnimator.layoutToTopLeft(0, 0)
     }
 }

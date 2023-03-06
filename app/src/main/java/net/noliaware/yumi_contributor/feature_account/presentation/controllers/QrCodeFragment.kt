@@ -81,7 +81,7 @@ class QrCodeFragment : AppCompatDialogFragment() {
             viewModel.useVoucherEventsHelper.stateFlow.collect { vmState ->
                 when (vmState) {
                     is ViewModelState.LoadingState -> Unit
-                    is ViewModelState.DataState -> vmState.data?.let { useVoucherResponse ->
+                    is ViewModelState.DataState -> vmState.data?.let {
                         qrCodeView?.revealQrCode()
                     }
                 }

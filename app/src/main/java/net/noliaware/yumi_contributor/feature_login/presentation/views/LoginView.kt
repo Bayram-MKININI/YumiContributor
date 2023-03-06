@@ -2,7 +2,6 @@ package net.noliaware.yumi_contributor.feature_login.presentation.views
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
@@ -76,22 +75,23 @@ class LoginView(context: Context, attrs: AttributeSet?) : ElevatedCardView(conte
     }
 
     private val onEditorActionListener = OnEditorActionListener { _, actionId, _ ->
-
         if (actionId == EditorInfo.IME_ACTION_DONE) {
-
             if (validateLogin()) {
-                //confirmTextView.requestFocus()
-                context.hideKeyboard()
                 confirmInputText()
             }
         }
-
         false
     }
 
     private fun confirmInputText() {
-        callback?.onLoginEntered(
-            inputLogin.text.toString().trim()
+        context.hideKeyboard()
+        postDelayed(
+            {
+                callback?.onLoginEntered(
+                    inputLogin.text.toString().trim()
+                )
+            },
+            150
         )
     }
 
@@ -112,14 +112,14 @@ class LoginView(context: Context, attrs: AttributeSet?) : ElevatedCardView(conte
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val viewWidth = View.MeasureSpec.getSize(widthMeasureSpec)
-        var viewHeight = View.MeasureSpec.getSize(heightMeasureSpec)
+        val viewWidth = MeasureSpec.getSize(widthMeasureSpec)
+        var viewHeight = MeasureSpec.getSize(heightMeasureSpec)
 
         inputMessageTextView.measureWrapContent()
 
         inputLayoutLogin.measure(
-            View.MeasureSpec.makeMeasureSpec(viewWidth * 8 / 10, View.MeasureSpec.EXACTLY),
-            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+            MeasureSpec.makeMeasureSpec(viewWidth * 8 / 10, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         )
 
         confirmImageView.measureWrapContent()
@@ -131,8 +131,8 @@ class LoginView(context: Context, attrs: AttributeSet?) : ElevatedCardView(conte
                 confirmImageView.measuredHeight + convertDpToPx(108)
 
         setMeasuredDimension(
-            View.MeasureSpec.makeMeasureSpec(viewWidth, View.MeasureSpec.EXACTLY),
-            View.MeasureSpec.makeMeasureSpec(viewHeight, View.MeasureSpec.EXACTLY)
+            MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(viewHeight, MeasureSpec.EXACTLY)
         )
     }
 

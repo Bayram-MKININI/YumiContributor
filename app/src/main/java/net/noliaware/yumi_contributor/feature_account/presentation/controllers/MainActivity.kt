@@ -10,7 +10,6 @@ import net.noliaware.yumi_contributor.feature_login.domain.model.AccountData
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -22,19 +21,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    /*
-    private fun hideSystemUI() {
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        WindowInsetsControllerCompat(window, mainContainer).let { controller ->
-            controller.hide(WindowInsetsCompat.Type.systemBars())
-            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        }
-    }
-
-    private fun showSystemUI() {
-        WindowCompat.setDecorFitsSystemWindows(window, true)
-        WindowInsetsControllerCompat(window, mainContainer).show(WindowInsetsCompat.Type.systemBars())
-    }
-     */
 }
