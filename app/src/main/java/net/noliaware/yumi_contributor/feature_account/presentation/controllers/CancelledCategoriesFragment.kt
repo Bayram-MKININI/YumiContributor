@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -24,7 +24,7 @@ import net.noliaware.yumi_contributor.feature_account.presentation.views.Categor
 class CancelledCategoriesFragment : Fragment() {
 
     private var categoriesView: CategoriesView? = null
-    private val viewModel by viewModels<CancelledCategoriesFragmentViewModel>()
+    private val viewModel: CategoriesFragmentViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,30 +40,31 @@ class CancelledCategoriesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         collectFlows()
+        viewModel.callGetCancelledCategories()
     }
 
     private fun collectFlows() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.eventsHelper.eventFlow.collectLatest { sharedEvent ->
+            viewModel.cancelledCategoriesEventsHelper.eventFlow.collectLatest { sharedEvent ->
                 handleSharedEvent(sharedEvent)
                 redirectToLoginScreenFromSharedEvent(sharedEvent)
             }
         }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.eventsHelper.stateFlow.collect { vmState ->
+            viewModel.cancelledCategoriesEventsHelper.stateFlow.collect { vmState ->
                 when (vmState) {
                     is ViewModelState.LoadingState -> Unit
-                    is ViewModelState.DataState -> vmState.data?.let { usedCategories ->
-                        bindViewToData(usedCategories)
+                    is ViewModelState.DataState -> vmState.data?.let { categories ->
+                        bindViewToData(categories)
                     }
                 }
             }
         }
     }
 
-    private fun bindViewToData(usedCategories: List<Category>) {
+    private fun bindViewToData(categories: List<Category>) {
         val categoryItemViewAdapters = mutableListOf<CategoryItemViewAdapter>()
-        usedCategories.map { category ->
+        categories.map { category ->
             CategoryItemViewAdapter(
                 count = category.cancelledVoucherCount.formatNumber(),
                 iconName = category.categoryIcon.orEmpty(),
@@ -77,7 +78,7 @@ class CancelledCategoriesFragment : Fragment() {
 
     private val categoriesViewCallback: CategoriesViewCallback by lazy {
         CategoriesViewCallback { index ->
-            viewModel.eventsHelper.stateData?.let { categories ->
+            viewModel.cancelledCategoriesEventsHelper.stateData?.let { categories ->
                 categories[index].apply {
                     CancelledVouchersListFragment.newInstance(
                         this

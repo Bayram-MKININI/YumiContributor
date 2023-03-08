@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -17,13 +17,14 @@ import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromSharedEvent
 import net.noliaware.yumi_contributor.feature_account.domain.model.Category
 import net.noliaware.yumi_contributor.feature_account.presentation.views.CategoriesView
-import net.noliaware.yumi_contributor.feature_account.presentation.views.CategoryItemView
+import net.noliaware.yumi_contributor.feature_account.presentation.views.CategoriesView.CategoriesViewCallback
+import net.noliaware.yumi_contributor.feature_account.presentation.views.CategoryItemView.CategoryItemViewAdapter
 
 @AndroidEntryPoint
 class UsedCategoriesFragment : Fragment() {
 
     private var categoriesView: CategoriesView? = null
-    private val viewModel by viewModels<UsedCategoriesFragmentViewModel>()
+    private val viewModel: CategoriesFragmentViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,33 +40,40 @@ class UsedCategoriesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         collectFlows()
+        viewModel.callGetUsedCategories()
     }
 
     private fun collectFlows() {
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.eventsHelper.eventFlow.collectLatest { sharedEvent ->
+            viewModel.onDataRefreshedEventFlow.collectLatest {
+                viewModel.callGetUsedCategories()
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.usedCategoriesEventsHelper.eventFlow.collectLatest { sharedEvent ->
                 handleSharedEvent(sharedEvent)
                 redirectToLoginScreenFromSharedEvent(sharedEvent)
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.eventsHelper.stateFlow.collect { vmState ->
+            viewModel.usedCategoriesEventsHelper.stateFlow.collect { vmState ->
                 when (vmState) {
                     is ViewModelState.LoadingState -> Unit
-                    is ViewModelState.DataState -> vmState.data?.let { usedCategories ->
-                        bindViewToData(usedCategories)
+                    is ViewModelState.DataState -> vmState.data?.let { categories ->
+                        bindViewToData(categories)
                     }
                 }
             }
         }
     }
 
-    private fun bindViewToData(usedCategories: List<Category>) {
-        val categoryItemViewAdapters = mutableListOf<CategoryItemView.CategoryItemViewAdapter>()
-        usedCategories.map { category ->
-            CategoryItemView.CategoryItemViewAdapter(
+    private fun bindViewToData(categories: List<Category>) {
+        val categoryItemViewAdapters = mutableListOf<CategoryItemViewAdapter>()
+        categories.map { category ->
+            CategoryItemViewAdapter(
                 count = category.usedVoucherCount.formatNumber(),
                 iconName = category.categoryIcon.orEmpty(),
                 title = category.categoryShortLabel
@@ -76,9 +84,9 @@ class UsedCategoriesFragment : Fragment() {
         categoriesView?.fillViewWithData(categoryItemViewAdapters)
     }
 
-    private val categoriesViewCallback: CategoriesView.CategoriesViewCallback by lazy {
-        CategoriesView.CategoriesViewCallback { index ->
-            viewModel.eventsHelper.stateData?.let { categories ->
+    private val categoriesViewCallback: CategoriesViewCallback by lazy {
+        CategoriesViewCallback { index ->
+            viewModel.usedCategoriesEventsHelper.stateData?.let { categories ->
                 categories[index].apply {
                     UsedVouchersListFragment.newInstance(
                         this
