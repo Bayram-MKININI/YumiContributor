@@ -16,7 +16,7 @@
         android:id="@+id/background_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:alpha="0.15"
+        android:alpha=".15"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_view_background" />
 
@@ -165,7 +165,7 @@
                     android:adjustViewBounds="true"
                     android:background="@drawable/circle_primary"
                     android:clickable="true"
-                    android:padding="12dp"
+                    android:padding="7dp"
                     android:src="@drawable/ic_phone" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -206,7 +206,7 @@
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:paddingHorizontal="20dp"
-                    android:paddingVertical="6dp">
+                    android:paddingVertical="10dp">
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/location_image_view"

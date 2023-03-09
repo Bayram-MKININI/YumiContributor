@@ -94,6 +94,7 @@ class QrCodeView(context: Context, attrs: AttributeSet?) : ViewGroup(context, at
 
     fun revealQrCode() {
         layerView.isGone = true
+        qrCodeImageView.alpha = 1f
     }
 
     fun isQrCodeRevealed() = layerView.isGone
@@ -126,7 +127,7 @@ class QrCodeView(context: Context, attrs: AttributeSet?) : ViewGroup(context, at
                 convertDpToPx(25))
 
         contentView.measure(
-            MeasureSpec.makeMeasureSpec(viewWidth * 9 / 10, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(viewWidth * 95 / 100, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(parentContentViewHeight, MeasureSpec.EXACTLY)
         )
 

@@ -154,7 +154,7 @@ class VouchersDetailsContainerView(
                     convertDpToPx(25))
 
         parentContentView.measure(
-            MeasureSpec.makeMeasureSpec(viewWidth * 9 / 10, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(viewWidth * 95 / 100, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(parentContentViewHeight, MeasureSpec.EXACTLY)
         )
 

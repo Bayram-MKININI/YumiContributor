@@ -69,7 +69,13 @@ class ManagedAccountFragment : Fragment() {
     private fun setUpWelcomeMessage() {
         viewModel.accountData?.let {
             managedAccountParentView?.setUserData(
-                it.helloMessage, it.userName, it.accountCount.formatNumber()
+                helloText = it.helloMessage,
+                userName = it.userName,
+                accountBadgeValue = it.accountCount.formatNumber(),
+                accounts = resources.getQuantityString(
+                    R.plurals.accounts,
+                    it.accountCount
+                )
             )
         }
     }

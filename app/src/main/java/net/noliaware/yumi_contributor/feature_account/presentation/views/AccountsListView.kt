@@ -122,19 +122,20 @@ class AccountsListView(context: Context, attrs: AttributeSet?) : ViewGroup(conte
                 + convertDpToPx(30))
         searchAutoComplete.measure(
             MeasureSpec.makeMeasureSpec(searchAutoCompleteWidth, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(convertDpToPx(35), MeasureSpec.EXACTLY)
+            MeasureSpec.makeMeasureSpec(convertDpToPx(40), MeasureSpec.EXACTLY)
         )
 
         searchAutoCompleteLayout.measure(
             MeasureSpec.makeMeasureSpec(searchAutoCompleteLayoutWidth, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(convertDpToPx(35), MeasureSpec.EXACTLY)
+            MeasureSpec.makeMeasureSpec(convertDpToPx(40), MeasureSpec.EXACTLY)
         )
 
         titleTextView.measureWrapContent()
 
-        val contentViewWidth = viewWidth * 9 / 10
+        val contentViewWidth = viewWidth * 95 / 100
+        val sideMargin = viewWidth * 5 / 100 / 2
         val contentViewHeight = viewHeight - (searchAutoCompleteLayout.measuredHeight + titleTextView.measuredHeight
-                    + convertDpToPx(90))
+                    + sideMargin + convertDpToPx(70))
 
         contentView.measure(
             MeasureSpec.makeMeasureSpec(contentViewWidth, MeasureSpec.EXACTLY),

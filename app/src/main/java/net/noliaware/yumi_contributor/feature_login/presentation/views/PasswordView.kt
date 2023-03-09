@@ -212,7 +212,7 @@ class PasswordView(context: Context, attrs: AttributeSet?) : ElevatedCardView(co
         confirmTextView.measureWrapContent()
 
         viewHeight = inputCodeTextView.measuredHeight + descriptionTextView.measuredHeight + codeTextView.measuredHeight +
-                    padFirstDigit.measuredHeight * 2 + confirmImageView.measuredHeight + convertDpToPx(135)
+                padFirstDigit.measuredHeight * 2 + confirmImageView.measuredHeight + convertDpToPx(150)
 
         setMeasuredDimension(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
@@ -222,8 +222,8 @@ class PasswordView(context: Context, attrs: AttributeSet?) : ElevatedCardView(co
 
     private fun measurePadView(padView: View) {
         padView.measure(
-            MeasureSpec.makeMeasureSpec(convertDpToPx(38), MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(convertDpToPx(38), MeasureSpec.EXACTLY)
+            MeasureSpec.makeMeasureSpec(convertDpToPx(42), MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(convertDpToPx(42), MeasureSpec.EXACTLY)
         )
     }
 
@@ -246,7 +246,7 @@ class PasswordView(context: Context, attrs: AttributeSet?) : ElevatedCardView(co
             descriptionTextView.bottom + convertDpToPx(10)
         )
 
-        val spaceBetweenPads = convertDpToPx(7)
+        val spaceBetweenPads = convertDpToPx(10)
 
         padFirstDigit.layoutToTopLeft(
             (viewWidth - (padFirstDigit.measuredWidth * 5 + convertDpToPx(28))) / 2,
@@ -300,12 +300,12 @@ class PasswordView(context: Context, attrs: AttributeSet?) : ElevatedCardView(co
 
         deleteTextView.layoutToTopLeft(
             (viewWidth - deleteTextView.measuredWidth) / 2,
-            padTenthDigit.bottom + convertDpToPx(15)
+            padTenthDigit.bottom + convertDpToPx(20)
         )
 
         confirmImageView.layoutToTopLeft(
             (viewWidth - confirmImageView.measuredWidth) / 2,
-            deleteTextView.bottom + convertDpToPx(10)
+            deleteTextView.bottom + convertDpToPx(20)
         )
 
         confirmTextView.layoutToTopLeft(

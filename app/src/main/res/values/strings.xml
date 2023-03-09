@@ -21,6 +21,11 @@
     //Selected account
     <string name="hello">Bonjour</string>
     <string name="name_formatted">%s!</string>
+    <string name="you_have">Vous avez</string>
+    <plurals name="accounts">
+        <item quantity="one">bénéficiaire</item>
+        <item quantity="other">bénéficiaires</item>
+    </plurals>
     <string name="search_account">Rechercher un bénéficiaire</string>
     <string name="my_accounts">Mes bénéficiaires</string>
     <string name="available">Disponibles</string>
@@ -47,6 +52,7 @@
     <string name="display_voucher">Accéder au coupon</string>
     <string name="use_voucher">Utiliser ce coupon</string>
     <string name="application_not_found">Application cartographique introuvable</string>
+    <string name="use_voucher_message">CLIQUEZ SUR \"UTILISER CE COUPON\" POUR L\'ACTIVER</string>
     <string name="voucher_inexistent">Coupon inexistant</string>
     <string name="voucher_canceled">Coupon annulé</string>
     <string name="voucher_consumed">Coupon consommé</string>
@@ -63,6 +69,7 @@
     <string name="phone">Téléphone</string>
     <string name="address">Adresse</string>
     <string name="new_line">\n</string>
+    <string name="empty_value">-</string>
     <string name="get_code">Obtenir un code</string>
     <string name="bo_sign_in_description">Veuillez utiliser ce code pour vous connecter sur votre compte back office</string>
     <string name="bo_code_expiration">Ce code expire dans:</string>

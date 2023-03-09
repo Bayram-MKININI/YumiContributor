@@ -18,6 +18,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/omnes_regular"
         android:textColor="@android:color/white"
+        android:includeFontPadding="false"
         android:textSize="36sp"
         tools:text="Bonjour" />
 
@@ -25,19 +26,21 @@
         android:id="@+id/name_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
         android:fontFamily="@font/omnes_medium"
+        android:lines="1"
         android:textColor="@android:color/white"
-        android:textSize="30sp"
+        android:textSize="36sp"
         tools:text="Bayram !" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/account_image_view"
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/you_have_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:background="@drawable/circle_primary_light"
-        android:padding="12dp"
-        android:src="@drawable/ic_profile_on" />
+        android:fontFamily="@font/omnes_regular"
+        android:text="@string/you_have"
+        android:textColor="@android:color/white"
+        android:textSize="20sp" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/account_badge_text_view"
@@ -51,10 +54,17 @@
         android:minHeight="18dp"
         android:paddingHorizontal="4dp"
         android:textColor="@android:color/black"
-        android:textSize="13sp"
-        android:visibility="gone"
-        tools:text="5"
-        tools:visibility="visible" />
+        android:textSize="15sp"
+        tools:text="5" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/accounts_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/omnes_regular"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        tools:text="bénéficiaires" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/pager"

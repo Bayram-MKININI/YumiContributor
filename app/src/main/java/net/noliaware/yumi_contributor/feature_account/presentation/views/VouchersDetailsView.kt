@@ -108,8 +108,7 @@ class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(co
                 MeasureSpec.makeMeasureSpec(convertDpToPx(20), MeasureSpec.EXACTLY)
             )
 
-            val sponsorTextViewWidth =
-                sponsorBackgroundViewWidth - (sponsoredByTextView.measuredWidth + informationTextView.measuredWidth +
+            val sponsorTextViewWidth = sponsorBackgroundViewWidth - (sponsoredByTextView.measuredWidth + informationTextView.measuredWidth +
                         convertDpToPx(35))
 
             sponsorTextView.measure(
@@ -139,16 +138,16 @@ class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(co
         addressTextView.measureWrapContent()
 
         phoneImageView.measure(
-            MeasureSpec.makeMeasureSpec(convertDpToPx(40), MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(convertDpToPx(40), MeasureSpec.EXACTLY)
+            MeasureSpec.makeMeasureSpec(convertDpToPx(30), MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(convertDpToPx(30), MeasureSpec.EXACTLY)
         )
 
         phoneTextView.measureWrapContent()
 
         if (mailImageView.isVisible) {
             mailImageView.measure(
-                MeasureSpec.makeMeasureSpec(convertDpToPx(40), MeasureSpec.EXACTLY),
-                MeasureSpec.makeMeasureSpec(convertDpToPx(40), MeasureSpec.EXACTLY)
+                MeasureSpec.makeMeasureSpec(convertDpToPx(30), MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(convertDpToPx(30), MeasureSpec.EXACTLY)
             )
             mailTextView.measureWrapContent()
         }
@@ -156,9 +155,8 @@ class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(co
         openLocationLayout.measureWrapContent()
 
         val locationBackgroundViewHeight = retailerTextView.measuredHeight + addressTextView.measuredHeight +
-                    phoneImageView.measuredHeight + openLocationLayout.measuredHeight / 2 + convertDpToPx(
-                50
-            )
+                    phoneImageView.measuredHeight + openLocationLayout.measuredHeight / 2 +
+                    convertDpToPx(50)
 
         locationBackgroundView.measure(
             MeasureSpec.makeMeasureSpec(viewWidth * 9 / 10, MeasureSpec.EXACTLY),

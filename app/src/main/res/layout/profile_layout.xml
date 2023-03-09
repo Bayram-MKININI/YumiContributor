@@ -78,6 +78,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/omnes_semibold_regular"
+                    android:text="@string/empty_value"
                     android:textColor="@color/grey_2"
                     android:textSize="15sp" />
 
@@ -95,6 +96,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/omnes_semibold_regular"
+                    android:text="@string/empty_value"
                     android:textColor="@color/grey_2"
                     android:textSize="15sp" />
 
@@ -112,6 +114,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/omnes_semibold_regular"
+                    android:text="@string/empty_value"
                     android:textColor="@color/grey_2"
                     android:textSize="15sp" />
 
@@ -145,6 +148,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/omnes_semibold_regular"
+                    android:text="@string/empty_value"
                     android:textColor="@color/grey_2"
                     android:textSize="15sp" />
 
@@ -163,6 +167,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/omnes_semibold_regular"
+                    android:text="@string/empty_value"
                     android:textColor="@color/grey_2"
                     android:textSize="15sp" />
             </net.noliaware.yumi_contributor.feature_profile.presentation.views.ProfileView>

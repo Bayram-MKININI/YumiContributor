@@ -149,7 +149,7 @@ class SendMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
         val contentViewHeight = viewHeight - (headerView.measuredHeight + messageIconView.measuredHeight / 2 +
                     convertDpToPx(25))
 
-        val contentViewWidth = viewWidth * 9 / 10
+        val contentViewWidth = viewWidth * 95 / 100
         contentView.measure(
             MeasureSpec.makeMeasureSpec(contentViewWidth, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(contentViewHeight, MeasureSpec.EXACTLY)
@@ -170,7 +170,7 @@ class SendMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
                     })
 
         messageBackgroundView.measure(
-            MeasureSpec.makeMeasureSpec(contentView.measuredWidth * 9 / 10, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(contentView.measuredWidth * 95 / 100, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(messageBackgroundViewHeight, MeasureSpec.EXACTLY)
         )
 

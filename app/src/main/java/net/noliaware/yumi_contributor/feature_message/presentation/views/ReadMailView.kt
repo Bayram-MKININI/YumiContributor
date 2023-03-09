@@ -118,7 +118,7 @@ class ReadMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
         val contentViewHeight = viewHeight - (headerView.measuredHeight + messageIconView.measuredHeight / 2 +
                     convertDpToPx(25))
 
-        val contentViewWidth = viewWidth * 9 / 10
+        val contentViewWidth = viewWidth * 95 / 100
         contentView.measure(
             MeasureSpec.makeMeasureSpec(contentViewWidth, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(contentViewHeight, MeasureSpec.EXACTLY)
@@ -131,8 +131,7 @@ class ReadMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
 
         timeTextView.measureWrapContent()
 
-        val messageParentViewHeight =
-            contentView.height - (titleTextView.measuredHeight + timeTextView.measuredHeight +
+        val messageParentViewHeight = contentView.height - (titleTextView.measuredHeight + timeTextView.measuredHeight +
                     convertDpToPx(55))
 
         messageParentView.measure(
@@ -142,7 +141,8 @@ class ReadMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
 
         if (composeButton.isVisible) {
             composeButton.measureWrapContent()
-            val availableSpaceForMessage = messageParentView.measuredHeight - (composeButton.measuredHeight + convertDpToPx(30))
+            val availableSpaceForMessage = messageParentView.measuredHeight - (composeButton.measuredHeight +
+                    convertDpToPx(30))
             val extraPadding = messageTextView.measuredHeight - availableSpaceForMessage
             if (extraPadding > 0) {
                 messageParentView.updatePadding(bottom = extraPadding)

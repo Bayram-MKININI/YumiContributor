@@ -4,21 +4,20 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.presentation.views.ClipartTabView
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
-import net.noliaware.yumi_contributor.commun.util.expandViewHitArea
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
+import net.noliaware.yumi_contributor.commun.util.removeOverScroll
 import net.noliaware.yumi_contributor.commun.util.weak
 
 class SelectedAccountView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
 
-    private lateinit var backImageView: ImageView
+    private lateinit var backLayout: View
     private lateinit var titleTextView: TextView
     private lateinit var availableTabView: ClipartTabView
     private lateinit var usedTabView: ClipartTabView
@@ -39,11 +38,8 @@ class SelectedAccountView(context: Context, attrs: AttributeSet?) : ViewGroup(co
     }
 
     private fun initView() {
-        backImageView = findViewById(R.id.back_image_view)
-        post {
-            backImageView.expandViewHitArea()
-        }
-        backImageView.setOnClickListener { callback?.onBackButtonClicked() }
+        backLayout = findViewById(R.id.back_layout)
+        backLayout.setOnClickListener { callback?.onBackButtonClicked() }
         titleTextView = findViewById(R.id.title_text_view)
         availableTabView = findViewById(R.id.available_tab_layout)
         availableTabView.setTitle(context.getString(R.string.available).uppercase())
@@ -65,6 +61,7 @@ class SelectedAccountView(context: Context, attrs: AttributeSet?) : ViewGroup(co
         }
         contentView = findViewById(R.id.content_layout)
         viewPager = contentView.findViewById(R.id.pager)
+        viewPager.removeOverScroll()
         viewPager.registerOnPageChangeCallback(object : OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 when (position) {
@@ -108,9 +105,9 @@ class SelectedAccountView(context: Context, attrs: AttributeSet?) : ViewGroup(co
         val viewWidth = MeasureSpec.getSize(widthMeasureSpec)
         val viewHeight = MeasureSpec.getSize(heightMeasureSpec)
 
-        backImageView.measure(
-            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
-            MeasureSpec.makeMeasureSpec(convertDpToPx(14), MeasureSpec.EXACTLY)
+        backLayout.measure(
+            MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(convertDpToPx(44), MeasureSpec.EXACTLY)
         )
 
         titleTextView.measureWrapContent()
@@ -119,7 +116,8 @@ class SelectedAccountView(context: Context, attrs: AttributeSet?) : ViewGroup(co
         usedTabView.measureWrapContent()
         cancelledTabView.measureWrapContent()
 
-        val contentViewWidth = viewWidth * 9 / 10
+        val contentViewWidth = viewWidth * 95 / 100
+        val sideMargin = viewWidth * 5 / 100 / 2
 
         val tabWidthExtra = (contentViewWidth - (availableTabView.measuredWidth + usedTabView.measuredWidth +
                     cancelledTabView.measuredWidth + convertDpToPx(16))) / 3
@@ -148,8 +146,8 @@ class SelectedAccountView(context: Context, attrs: AttributeSet?) : ViewGroup(co
             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         )
 
-        val contentViewHeight = viewHeight - (titleTextView.measuredHeight + availableTabView.measuredHeight
-                    + convertDpToPx(50))
+        val contentViewHeight = viewHeight - (backLayout.measuredHeight + titleTextView.measuredHeight + availableTabView.measuredHeight
+                    + sideMargin + convertDpToPx(25))
 
         contentView.measure(
             MeasureSpec.makeMeasureSpec(contentViewWidth, MeasureSpec.EXACTLY),
@@ -171,14 +169,11 @@ class SelectedAccountView(context: Context, attrs: AttributeSet?) : ViewGroup(co
         val viewWidth = right - left
         val viewHeight = bottom - top
 
-        backImageView.layoutToTopLeft(
-            convertDpToPx(15),
-            convertDpToPx(15)
-        )
+        backLayout.layoutToTopLeft(0, 0)
 
         titleTextView.layoutToTopLeft(
             (viewWidth - titleTextView.measuredWidth) / 2,
-            convertDpToPx(15)
+            backLayout.bottom + convertDpToPx(10)
         )
 
         val contentViewLeft = (viewWidth - contentView.measuredWidth) / 2

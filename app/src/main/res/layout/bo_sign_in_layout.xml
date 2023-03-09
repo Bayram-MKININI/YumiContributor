@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<net.noliaware.yumi_contributor.feature_profile.presentation.views.BOSignInView
+<net.noliaware.yumi_contributor.feature_profile.presentation.views.BOSignInParentView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -35,12 +35,12 @@
         android:id="@+id/background_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:alpha="0.15"
+        android:alpha=".15"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_view_background" />
 
-    <net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView
-        android:id="@+id/content_layout"
+    <net.noliaware.yumi_contributor.feature_profile.presentation.views.BOSignInView
+        android:id="@+id/bo_sign_in_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
@@ -82,5 +82,5 @@
             android:gravity="center"
             android:textColor="@color/grey_2"
             android:textSize="35sp" />
-    </net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView>
-</net.noliaware.yumi_contributor.feature_profile.presentation.views.BOSignInView>
+    </net.noliaware.yumi_contributor.feature_profile.presentation.views.BOSignInView>
+</net.noliaware.yumi_contributor.feature_profile.presentation.views.BOSignInParentView>

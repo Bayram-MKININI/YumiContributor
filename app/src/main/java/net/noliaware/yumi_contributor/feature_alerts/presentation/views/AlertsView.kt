@@ -73,11 +73,13 @@ class AlertsView(context: Context, attrs: AttributeSet?) : ViewGroup(context, at
             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         )
 
+        val contentViewWidth = viewWidth * 95 / 100
+        val sideMargin = viewWidth * 5 / 100 / 2
         val contentViewHeight = viewHeight - (headerView.measuredHeight + notificationIconView.measuredHeight / 2 +
-                    descriptionTextView.measuredHeight + convertDpToPx(65))
+                    descriptionTextView.measuredHeight + sideMargin + convertDpToPx(45))
 
         contentView.measure(
-            MeasureSpec.makeMeasureSpec(viewWidth * 9 / 10, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(contentViewWidth, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(contentViewHeight, MeasureSpec.EXACTLY)
         )
 

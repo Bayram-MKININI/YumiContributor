@@ -14,14 +14,16 @@ import net.noliaware.yumi_contributor.commun.util.getStatusBarHeight
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.layoutToTopRight
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
+import net.noliaware.yumi_contributor.commun.util.removeOverScroll
 
 class ManagedAccountParentView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
 
     private lateinit var headerView: View
     private lateinit var helloTextView: TextView
     private lateinit var nameTextView: TextView
-    private lateinit var accountImageView: ImageView
+    private lateinit var youHaveTextView: TextView
     private lateinit var accountBadgeTextView: TextView
+    private lateinit var accountsTextView: TextView
     private lateinit var viewPager: ViewPager2
 
     val getViewPager get() = viewPager
@@ -35,8 +37,9 @@ class ManagedAccountParentView(context: Context, attrs: AttributeSet?) : ViewGro
         headerView = findViewById(R.id.header_view)
         helloTextView = findViewById(R.id.hello_text_view)
         nameTextView = findViewById(R.id.name_text_view)
-        accountImageView = findViewById(R.id.account_image_view)
+        youHaveTextView = findViewById(R.id.you_have_text_view)
         accountBadgeTextView = findViewById(R.id.account_badge_text_view)
+        accountsTextView = findViewById(R.id.accounts_text_view)
         viewPager = findViewById(R.id.pager)
         viewPager.isUserInputEnabled = false
     }
@@ -44,14 +47,13 @@ class ManagedAccountParentView(context: Context, attrs: AttributeSet?) : ViewGro
     fun setUserData(
         helloText: String,
         userName: String,
-        accountBadgeValue: String?,
+        accountBadgeValue: String,
+        accounts: String
     ) {
         helloTextView.text = helloText
         nameTextView.text = userName
-        accountBadgeValue?.let {
-            accountBadgeTextView.text = accountBadgeValue
-            accountBadgeTextView.isVisible = true
-        }
+        accountBadgeTextView.text = accountBadgeValue
+        accountsTextView.text = accounts
     }
 
     fun displayAccountListView(animated: Boolean = true) {
@@ -69,19 +71,21 @@ class ManagedAccountParentView(context: Context, attrs: AttributeSet?) : ViewGro
         headerView.measure(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(
-                getStatusBarHeight() + convertDpToPx(111), MeasureSpec.EXACTLY
+                getStatusBarHeight() + convertDpToPx(100), MeasureSpec.EXACTLY
             )
         )
 
         helloTextView.measureWrapContent()
-        nameTextView.measureWrapContent()
 
-        accountImageView.measure(
-            MeasureSpec.makeMeasureSpec(convertDpToPx(50), MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(convertDpToPx(50), MeasureSpec.EXACTLY)
+        val nameTextViewWidth = viewWidth - (helloTextView.measuredWidth + convertDpToPx(35))
+        nameTextView.measure(
+            MeasureSpec.makeMeasureSpec(nameTextViewWidth, MeasureSpec.AT_MOST),
+            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         )
 
+        youHaveTextView.measureWrapContent()
         accountBadgeTextView.measureWrapContent()
+        accountsTextView.measureWrapContent()
 
         val contentViewHeight = viewHeight - headerView.measuredHeight
 
@@ -102,26 +106,31 @@ class ManagedAccountParentView(context: Context, attrs: AttributeSet?) : ViewGro
 
         headerView.layoutToTopLeft(0, 0)
 
-        val contentHeight = helloTextView.measuredHeight + nameTextView.measuredHeight
-        val headerHeight = headerView.measuredHeight - getStatusBarHeight()
         helloTextView.layoutToTopLeft(
-            convertDpToPx(20),
-            getStatusBarHeight() + (headerHeight - contentHeight) / 2
+            convertDpToPx(15),
+            getStatusBarHeight() + convertDpToPx(10)
         )
 
         nameTextView.layoutToTopLeft(
-            helloTextView.left, helloTextView.bottom
+            helloTextView.right + convertDpToPx(5),
+            helloTextView.top
         )
 
-        accountImageView.layoutToTopRight(
-            right - convertDpToPx(30),
-            helloTextView.top + convertDpToPx(8)
+        youHaveTextView.layoutToTopLeft(
+            helloTextView.left,
+            helloTextView.bottom + convertDpToPx(5)
         )
 
         accountBadgeTextView.layoutToTopLeft(
-            accountImageView.right - accountImageView.measuredWidth * 3 / 10,
-            accountImageView.top
+            youHaveTextView.right + convertDpToPx(3),
+            youHaveTextView.top + (youHaveTextView.measuredHeight - accountBadgeTextView.measuredHeight) / 2
         )
+
+        accountsTextView.layoutToTopLeft(
+            accountBadgeTextView.right + convertDpToPx(3),
+            youHaveTextView.top
+        )
+
         viewPager.layoutToTopLeft(
             0,
             headerView.bottom

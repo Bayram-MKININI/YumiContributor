@@ -14,6 +14,7 @@ import net.noliaware.yumi_contributor.commun.util.getStatusBarHeight
 import net.noliaware.yumi_contributor.commun.util.layoutToBottomLeft
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
+import net.noliaware.yumi_contributor.commun.util.removeOverScroll
 import net.noliaware.yumi_contributor.commun.util.weak
 
 class MessagingView(context: Context, attrs: AttributeSet?) : CoordinatorLayout(context, attrs) {
@@ -61,6 +62,7 @@ class MessagingView(context: Context, attrs: AttributeSet?) : CoordinatorLayout(
         }
         contentView = findViewById(R.id.content_layout)
         viewPager = contentView.findViewById(R.id.pager)
+        viewPager.removeOverScroll()
         viewPager.registerOnPageChangeCallback(object : OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 if (position == 0) {
@@ -107,7 +109,8 @@ class MessagingView(context: Context, attrs: AttributeSet?) : CoordinatorLayout(
             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         )
 
-        val contentViewWidth = viewWidth * 9 / 10
+        val contentViewWidth = viewWidth * 95 / 100
+        val sideMargin = viewWidth * 5 / 100 / 2
 
         receivedTabView.measureWrapContent()
         sentTabView.measureWrapContent()
@@ -126,7 +129,8 @@ class MessagingView(context: Context, attrs: AttributeSet?) : CoordinatorLayout(
         )
 
         val contentViewHeight = viewHeight - (headerView.measuredHeight + messageIconView.measuredHeight / 2 +
-                receivedTabView.measuredHeight + descriptionTextView.measuredHeight + convertDpToPx(45))
+                receivedTabView.measuredHeight + descriptionTextView.measuredHeight + sideMargin +
+                convertDpToPx(25))
 
         contentView.measure(
             MeasureSpec.makeMeasureSpec(contentViewWidth, MeasureSpec.EXACTLY),

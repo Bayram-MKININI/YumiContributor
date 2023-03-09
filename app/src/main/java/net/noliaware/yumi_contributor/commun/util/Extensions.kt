@@ -15,7 +15,6 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.LayoutInflater
-import android.view.TouchDelegate
 import android.view.View
 import android.view.View.MeasureSpec
 import android.view.ViewGroup
@@ -28,13 +27,13 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
-import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.FlowCollector
@@ -55,7 +54,6 @@ import java.security.NoSuchAlgorithmException
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.max
 
 fun generateToken(timestamp: String, methodName: String, randomString: String): String {
     return "noliaware|$timestamp|${methodName}|${timestamp.reversed()}|$randomString".sha256()
@@ -298,6 +296,10 @@ fun View.getLocationRectOnScreen(): Rect {
     }
 }
 
+fun ViewPager2.removeOverScroll() {
+    (getChildAt(0) as? RecyclerView)?.overScrollMode = View.OVER_SCROLL_NEVER
+}
+
 @JvmOverloads
 @Dimension(unit = Dimension.PX)
 fun Number.dpToPx(
@@ -312,17 +314,6 @@ fun Number.pxToDp(
     metrics: DisplayMetrics = Resources.getSystem().displayMetrics
 ): Float {
     return toFloat() / metrics.density
-}
-
-fun View.expandViewHitArea() {
-    val minSize = convertDpToPx(48)
-    val viewRect = Rect()
-    getHitRect(viewRect)
-    viewRect.left = max(viewRect.left - (minSize - viewRect.width()) / 2, 0)
-    viewRect.top = max(viewRect.top - (minSize - viewRect.height()) / 2, 0)
-    viewRect.right = viewRect.left + minSize
-    viewRect.bottom = viewRect.top + minSize
-    (parent as View).touchDelegate = TouchDelegate(viewRect, this)
 }
 
 fun Context.showKeyboard() {

@@ -35,7 +35,7 @@
         android:id="@+id/background_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:alpha="0.15"
+        android:alpha=".15"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_view_background" />
 
