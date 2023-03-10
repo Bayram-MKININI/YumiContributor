@@ -1,6 +1,8 @@
 package net.noliaware.yumi_contributor.feature_message.presentation.controllers
 
 import android.content.DialogInterface
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +12,6 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.R.style
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -23,6 +24,8 @@ import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromSharedEvent
 import net.noliaware.yumi_contributor.commun.util.withArgs
 import net.noliaware.yumi_contributor.feature_login.domain.model.MessageSubject
+import net.noliaware.yumi_contributor.feature_message.presentation.views.MessageSubjectItemView
+import net.noliaware.yumi_contributor.feature_message.presentation.views.MessageSubjectsListView
 import net.noliaware.yumi_contributor.feature_message.presentation.views.SendMailView
 
 @AndroidEntryPoint
@@ -98,28 +101,51 @@ class SendMailFragment : AppCompatDialogFragment() {
 
             override fun onSubjectEditTextClicked() {
 
-                if (dialog?.isShowing == true)
+                if (dialog?.isShowing == true) {
                     return
-
-                // setup the alert builder
-                val builder = MaterialAlertDialogBuilder(
-                    requireContext(),
-                    style.ThemeOverlay_Material3_Dialog
-                )
-
-                builder.setTitle(R.string.select_subject)
-
-                viewModel.messageSubjects?.map {
-                    it.subjectLabel
-                }?.toTypedArray()?.let { messageSubjects ->
-                    builder.setItems(messageSubjects) { _, which ->
-                        selectedSubjectIndex = which
-                        sendMailView?.setSubject(messageSubjects[which])
-                    }
                 }
 
-                dialog = builder.create()
-                dialog?.show()
+                MaterialAlertDialogBuilder(
+                    requireContext()
+                ).apply {
+
+                    val messageSubjectsListView = layoutInflater.inflate(
+                        R.layout.message_subjects_list_layout,
+                        null
+                    ) as MessageSubjectsListView
+
+                    viewModel.messageSubjects?.mapIndexed { index, messageSubject ->
+                        MessageSubjectItemView.MessageSubjectItemViewAdapter(
+                            subject = messageSubject.subjectLabel,
+                            backgroundDrawable = if (index % 2 == 0) {
+                                R.drawable.rectangle_white_ripple
+                            } else {
+                                R.drawable.rectangle_grey7_ripple
+                            }
+                        )
+                    }?.let {
+                        messageSubjectsListView.fillViewWithData(it)
+                    }
+
+                    messageSubjectsListView.setMessageSubjectsListViewCallback(object :
+                        MessageSubjectsListView.MessageSubjectsListViewCallback {
+                        override fun onSubjectClickedAtIndex(index: Int) {
+                            viewModel.messageSubjects?.get(index)?.let {
+                                sendMailView?.setSubject(it.subjectLabel)
+                                dialog?.dismiss()
+                            }
+                        }
+
+                        override fun onClickOutside() {
+                            dialog?.dismiss()
+                        }
+                    })
+
+                    setView(messageSubjectsListView)
+                    dialog = create()
+                    dialog?.show()
+                    dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                }
             }
 
             override fun onClearButtonClicked() {
