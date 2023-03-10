@@ -108,7 +108,7 @@ class ManagedAccountParentView(context: Context, attrs: AttributeSet?) : ViewGro
 
         helloTextView.layoutToTopLeft(
             convertDpToPx(15),
-            getStatusBarHeight() + convertDpToPx(10)
+            getStatusBarHeight() + convertDpToPx(5)
         )
 
         nameTextView.layoutToTopLeft(

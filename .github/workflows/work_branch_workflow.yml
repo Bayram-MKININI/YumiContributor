@@ -50,17 +50,16 @@ jobs:
         run: ./gradlew app:bundleRelease
 
       - name: Set release date
-        run: |
-          echo "RELEASE_DATE=$(date --rfc-3339=date)" >> ${GITHUB_ENV}
+        run: echo "RELEASE_DATE=$(date --rfc-3339=date)" >> ${GITHUB_ENV}
 
       - name: Upload APK Release
         uses: actions/upload-artifact@v3
         with:
-          name: Release APK - ${{ env.RELEASE_DATE }}
+          name: Yumi Contributor APK - ${{ env.RELEASE_DATE }}
           path: app/build/outputs/apk/release/
 
       - name: Upload AAB Release
         uses: actions/upload-artifact@v3
         with:
-          name: Release AAB - ${{ env.RELEASE_DATE }}
+          name: Yumi Contributor AAB - ${{ env.RELEASE_DATE }}
           path: app/build/outputs/bundle/release/
