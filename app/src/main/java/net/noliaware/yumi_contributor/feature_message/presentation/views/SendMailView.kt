@@ -94,13 +94,12 @@ class SendMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
     }
 
     private fun EditText.setOnConsistentClickListener(doOnClick: (View) -> Unit) {
-        val gestureDetector =
-            GestureDetectorCompat(context, object : GestureDetector.SimpleOnGestureListener() {
-                override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-                    doOnClick(this@setOnConsistentClickListener)
-                    return false
-                }
-            })
+        val gestureDetector = GestureDetectorCompat(context, object : GestureDetector.SimpleOnGestureListener() {
+            override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                doOnClick(this@setOnConsistentClickListener)
+                return false
+            }
+        })
 
         this.setOnTouchListener { _, motionEvent -> gestureDetector.onTouchEvent(motionEvent) }
     }
@@ -132,7 +131,10 @@ class SendMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
 
         headerView.measure(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(getStatusBarHeight() + convertDpToPx(75), MeasureSpec.EXACTLY)
+            MeasureSpec.makeMeasureSpec(
+                getStatusBarHeight() + convertDpToPx(75),
+                MeasureSpec.EXACTLY
+            )
         )
 
         backView.measureWrapContent()
@@ -147,7 +149,7 @@ class SendMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
         )
 
         val contentViewHeight = viewHeight - (headerView.measuredHeight + messageIconView.measuredHeight / 2 +
-                    convertDpToPx(25))
+                convertDpToPx(25))
 
         val contentViewWidth = viewWidth * 95 / 100
         contentView.measure(
@@ -163,11 +165,11 @@ class SendMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
 
         val screenHeight = viewHeight - getStatusBarHeight()
         val messageBackgroundViewHeight = contentView.measuredHeight - (titleTextView.measuredHeight + sendButton.measuredHeight / 2 +
-                    if (screenHeight == visibleRect.height()) {
-                        convertDpToPx(40)
-                    } else {
-                        screenHeight - visibleRect.height() + convertDpToPx(25)
-                    })
+                if (visibleRect.height() > (screenHeight * 9 / 10)) {
+                    convertDpToPx(40)
+                } else {
+                    screenHeight - visibleRect.height() + convertDpToPx(25)
+                })
 
         messageBackgroundView.measure(
             MeasureSpec.makeMeasureSpec(contentView.measuredWidth * 95 / 100, MeasureSpec.EXACTLY),
@@ -175,7 +177,10 @@ class SendMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
         )
 
         subjectEditText.measure(
-            MeasureSpec.makeMeasureSpec(messageBackgroundView.measuredWidth - convertDpToPx(30), MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(
+                messageBackgroundView.measuredWidth - convertDpToPx(30),
+                MeasureSpec.EXACTLY
+            ),
             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         )
 
@@ -187,7 +192,7 @@ class SendMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
         )
 
         val availableHeightForBody = messageBackgroundView.measuredHeight - (subjectEditText.measuredHeight +
-                    separatorLineView.measuredHeight + convertDpToPx(50))
+                separatorLineView.measuredHeight + convertDpToPx(50))
 
         messageParentLayout.measure(
             MeasureSpec.makeMeasureSpec(subjectEditText.measuredWidth, MeasureSpec.EXACTLY),
@@ -201,7 +206,10 @@ class SendMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
 
         mailEditText.measure(
             MeasureSpec.makeMeasureSpec(messageParentLayout.measuredWidth, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(availableHeightForBody.coerceAtLeast(mailEditText.measuredHeight), MeasureSpec.EXACTLY)
+            MeasureSpec.makeMeasureSpec(
+                availableHeightForBody.coerceAtLeast(mailEditText.measuredHeight),
+                MeasureSpec.EXACTLY
+            )
         )
 
         setMeasuredDimension(
