@@ -86,25 +86,25 @@ class SelectedAccountFragment : Fragment() {
         super.onDestroyView()
         selectedAccountView = null
     }
-}
 
-class SelectedAccountFragmentStateAdapter(
-    fragmentManager: FragmentManager,
-    lifecycle: Lifecycle
-) : FragmentStateAdapter(fragmentManager, lifecycle) {
+    private class SelectedAccountFragmentStateAdapter(
+        fragmentManager: FragmentManager,
+        lifecycle: Lifecycle
+    ) : FragmentStateAdapter(fragmentManager, lifecycle) {
 
-    override fun getItemCount() = 3
+        override fun getItemCount() = 3
 
-    override fun createFragment(position: Int): Fragment {
-        return when (position) {
-            0 -> {
-                AvailableCategoriesFragment()
-            }
-            1 -> {
-                UsedCategoriesFragment()
-            }
-            else -> {
-                CancelledCategoriesFragment()
+        override fun createFragment(position: Int): Fragment {
+            return when (position) {
+                0 -> {
+                    AvailableCategoriesFragment()
+                }
+                1 -> {
+                    UsedCategoriesFragment()
+                }
+                else -> {
+                    CancelledCategoriesFragment()
+                }
             }
         }
     }

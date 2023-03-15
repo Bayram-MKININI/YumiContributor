@@ -53,8 +53,10 @@ class LoginFragmentViewModel @Inject constructor(
 
     fun saveLoginPreferences(login: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            dataStoreRepository.clearDataStore()
-            dataStoreRepository.saveLogin(login)
+            if (prefsStateData?.login != login) {
+                dataStoreRepository.clearDataStore()
+                dataStoreRepository.saveLogin(login)
+            }
         }
     }
 
