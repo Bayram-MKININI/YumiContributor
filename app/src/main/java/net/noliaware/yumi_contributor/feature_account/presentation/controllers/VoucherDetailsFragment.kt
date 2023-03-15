@@ -30,6 +30,7 @@ import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherCodeData
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus
 import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView
+import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView.*
 
 @AndroidEntryPoint
 class VoucherDetailsFragment : AppCompatDialogFragment() {
@@ -125,7 +126,7 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
         }.toString()
 
         vouchersDetailsContainerView?.fillViewWithData(
-            VouchersDetailsContainerView.VouchersDetailsViewAdapter(
+            VouchersDetailsViewAdapter(
                 title = voucher.productLabel.orEmpty(),
                 startDate = getString(
                     R.string.created_in_hyphen,
@@ -135,6 +136,7 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
                     R.string.expiry_date_value,
                     parseToShortDate(voucher.voucherExpiryDate)
                 ),
+                partnerAvailable = voucher.partnerInfoText?.isNotEmpty() == true,
                 partnerLabel = voucher.partnerInfoText,
                 voucherDescription = voucher.productDescription,
                 retailerLabel = voucher.retailerLabel.orEmpty(),
@@ -163,8 +165,8 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
         }
     }
 
-    private val vouchersDetailsViewCallback: VouchersDetailsContainerView.VouchersDetailsViewCallback by lazy {
-        object : VouchersDetailsContainerView.VouchersDetailsViewCallback {
+    private val vouchersDetailsViewCallback: VouchersDetailsViewCallback by lazy {
+        object : VouchersDetailsViewCallback {
             override fun onBackButtonClicked() {
                 dismissAllowingStateLoss()
             }

@@ -64,13 +64,14 @@ class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(co
         createdTextView.text = vouchersDetailsViewAdapter.startDate
         expiryTextView.text = vouchersDetailsViewAdapter.endDate
 
-        vouchersDetailsViewAdapter.partnerLabel?.let { label ->
+        if (vouchersDetailsViewAdapter.partnerAvailable) {
             sponsorBackgroundView.isVisible = true
             sponsoredByTextView.isVisible = true
             sponsorTextView.isVisible = true
             informationTextView.isVisible = true
-            sponsorTextView.text = label
+            sponsorTextView.text = vouchersDetailsViewAdapter.partnerLabel
         }
+
         vouchersDetailsViewAdapter.voucherDescription?.let {
             descriptionTextView.isVisible = true
             descriptionTextView.text = vouchersDetailsViewAdapter.voucherDescription

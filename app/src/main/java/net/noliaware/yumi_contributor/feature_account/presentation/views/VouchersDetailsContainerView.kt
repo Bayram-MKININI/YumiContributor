@@ -40,6 +40,7 @@ class VouchersDetailsContainerView(
         val title: String = "",
         val startDate: String = "",
         val endDate: String = "",
+        val partnerAvailable: Boolean,
         val partnerLabel: String? = null,
         val voucherDescription: String? = null,
         val retailerLabel: String = "",

@@ -13,13 +13,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.ACCOUNT_DATA
-import net.noliaware.yumi_contributor.commun.util.ViewModelState
+import net.noliaware.yumi_contributor.commun.util.ViewModelState.DataState
+import net.noliaware.yumi_contributor.commun.util.ViewModelState.LoadingState
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.inflate
 import net.noliaware.yumi_contributor.feature_account.presentation.controllers.MainActivity
 import net.noliaware.yumi_contributor.feature_login.presentation.views.LoginParentLayout
-import net.noliaware.yumi_contributor.feature_login.presentation.views.LoginView
-import net.noliaware.yumi_contributor.feature_login.presentation.views.PasswordView
+import net.noliaware.yumi_contributor.feature_login.presentation.views.LoginView.LoginViewCallback
+import net.noliaware.yumi_contributor.feature_login.presentation.views.PasswordView.PasswordViewCallback
 import java.net.NetworkInterface
 
 @AndroidEntryPoint
@@ -73,8 +74,8 @@ class LoginFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.prefsStateFlow.collectLatest { vmState ->
                 when (vmState) {
-                    is ViewModelState.LoadingState -> Unit
-                    is ViewModelState.DataState -> vmState.data?.let { userPrefs ->
+                    is LoadingState -> Unit
+                    is DataState -> vmState.data?.let { userPrefs ->
                         loginParentLayout?.setLogin(userPrefs.login)
                     }
                 }
@@ -92,11 +93,8 @@ class LoginFragment : Fragment() {
 
             viewModel.initEventsHelper.stateFlow.collect { vmState ->
                 when (vmState) {
-                    is ViewModelState.LoadingState -> loginParentLayout?.setLoginViewProgressVisible(
-                        true
-                    )
-
-                    is ViewModelState.DataState -> vmState.data?.let { initData ->
+                    is LoadingState -> loginParentLayout?.setLoginViewProgressVisible(true)
+                    is DataState -> vmState.data?.let { initData ->
                         viewModel.saveDeviceIdPreferences(initData.deviceId)
                         loginParentLayout?.setLoginViewProgressVisible(false)
                         loginParentLayout?.displayPasswordView()
@@ -121,8 +119,8 @@ class LoginFragment : Fragment() {
 
             viewModel.accountDataEventsHelper.stateFlow.collect { vmState ->
                 when (vmState) {
-                    is ViewModelState.LoadingState -> Unit
-                    is ViewModelState.DataState -> vmState.data?.let { accountData ->
+                    is LoadingState -> Unit
+                    is DataState -> vmState.data?.let { accountData ->
                         activity?.finish()
                         Intent(requireActivity(), MainActivity::class.java).apply {
                             putExtra(ACCOUNT_DATA, accountData)
@@ -134,10 +132,9 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private val loginViewCallback: LoginView.LoginViewCallback by lazy {
-        LoginView.LoginViewCallback { login ->
+    private val loginViewCallback: LoginViewCallback by lazy {
+        LoginViewCallback { login ->
             viewModel.saveLoginPreferences(login)
-
             viewModel.callInitWebservice(
                 getAndroidId(),
                 viewModel.prefsStateData?.deviceId,
@@ -146,8 +143,8 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private val passwordViewCallback: PasswordView.PasswordViewCallback by lazy {
-        object : PasswordView.PasswordViewCallback {
+    private val passwordViewCallback: PasswordViewCallback by lazy {
+        object : PasswordViewCallback {
 
             override fun onPadClickedAtIndex(index: Int) {
                 if (passwordIndexes.size >= 6)

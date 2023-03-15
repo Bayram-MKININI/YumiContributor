@@ -53,6 +53,7 @@ class LoginFragmentViewModel @Inject constructor(
 
     fun saveLoginPreferences(login: String) {
         viewModelScope.launch(Dispatchers.IO) {
+            dataStoreRepository.clearDataStore()
             dataStoreRepository.saveLogin(login)
         }
     }
@@ -60,12 +61,6 @@ class LoginFragmentViewModel @Inject constructor(
     fun saveDeviceIdPreferences(deviceId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             dataStoreRepository.saveDeviceId(deviceId)
-        }
-    }
-
-    fun clearUserPreferences() {
-        viewModelScope.launch(Dispatchers.IO) {
-            dataStoreRepository.clearDataStore()
         }
     }
 
