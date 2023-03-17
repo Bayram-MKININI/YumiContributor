@@ -58,7 +58,8 @@ class MessagingFragment : Fragment() {
                     (messagingView?.getViewPager?.adapter as MessageFragmentStateAdapter).refreshSentFragment()
                 }
             }.show(
-                childFragmentManager.beginTransaction(), SEND_MESSAGES_FRAGMENT_TAG
+                childFragmentManager.beginTransaction(),
+                SEND_MESSAGES_FRAGMENT_TAG
             )
         }
     }

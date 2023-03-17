@@ -19,10 +19,10 @@ import net.noliaware.yumi_contributor.commun.util.weak
 
 class ReadMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
 
+    private lateinit var backgroundView: View
     private lateinit var headerView: View
     private lateinit var messageIconView: View
     private lateinit var backView: View
-    private lateinit var backgroundView: View
     private lateinit var contentView: View
     private lateinit var deleteIconView: View
     private lateinit var titleTextView: TextView
@@ -52,12 +52,11 @@ class ReadMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
     }
 
     private fun initView() {
-
+        backgroundView = findViewById(R.id.background_view)
         headerView = findViewById(R.id.header_view)
         messageIconView = findViewById(R.id.message_icon_view)
         backView = findViewById(R.id.back_view)
         backView.setOnClickListener(onClickListener)
-        backgroundView = findViewById(R.id.background_view)
 
         deleteIconView = findViewById(R.id.delete_icon_view)
         deleteIconView.setOnClickListener(onClickListener)
@@ -94,6 +93,11 @@ class ReadMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
         val viewWidth = MeasureSpec.getSize(widthMeasureSpec)
         val viewHeight = MeasureSpec.getSize(heightMeasureSpec)
 
+        backgroundView.measure(
+            MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(viewHeight - getStatusBarHeight(), MeasureSpec.EXACTLY)
+        )
+
         headerView.measure(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(
@@ -106,11 +110,6 @@ class ReadMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
         messageIconView.measure(
             MeasureSpec.makeMeasureSpec(convertDpToPx(50), MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(convertDpToPx(50), MeasureSpec.EXACTLY)
-        )
-
-        backgroundView.measure(
-            MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(viewHeight - getStatusBarHeight(), MeasureSpec.EXACTLY)
         )
 
         deleteIconView.measureWrapContent()

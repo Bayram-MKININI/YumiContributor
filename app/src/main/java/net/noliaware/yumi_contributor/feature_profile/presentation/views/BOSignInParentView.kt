@@ -15,10 +15,10 @@ import net.noliaware.yumi_contributor.commun.util.weak
 
 class BOSignInParentView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
 
+    private lateinit var backgroundView: ImageView
     private lateinit var headerView: View
     private lateinit var profileIconView: View
     private lateinit var backView: View
-    private lateinit var backgroundView: ImageView
     private lateinit var boSignInView: BOSignInView
     val getBoSignInView get() = boSignInView
 
@@ -34,19 +34,22 @@ class BOSignInParentView(context: Context, attrs: AttributeSet?) : ViewGroup(con
     }
 
     private fun initView() {
-
+        backgroundView = findViewById(R.id.background_view)
         headerView = findViewById(R.id.header_view)
         profileIconView = findViewById(R.id.profile_icon_view)
         backView = findViewById(R.id.back_view)
         backView.setOnClickListener { callback?.onBackButtonClicked() }
-        backgroundView = findViewById(R.id.background_view)
-
         boSignInView = findViewById(R.id.bo_sign_in_view)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val viewWidth = MeasureSpec.getSize(widthMeasureSpec)
         val viewHeight = MeasureSpec.getSize(heightMeasureSpec)
+
+        backgroundView.measure(
+            MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(viewHeight - getStatusBarHeight(), MeasureSpec.EXACTLY)
+        )
 
         headerView.measure(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
@@ -61,11 +64,6 @@ class BOSignInParentView(context: Context, attrs: AttributeSet?) : ViewGroup(con
         profileIconView.measure(
             MeasureSpec.makeMeasureSpec(convertDpToPx(50), MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(convertDpToPx(50), MeasureSpec.EXACTLY)
-        )
-
-        backgroundView.measure(
-            MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(viewHeight - getStatusBarHeight(), MeasureSpec.EXACTLY)
         )
 
         val contentViewWidth = viewWidth * 9 / 10

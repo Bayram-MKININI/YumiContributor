@@ -19,9 +19,9 @@ import kotlin.math.roundToInt
 
 class QrCodeView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
 
+    private lateinit var backgroundView: View
     private lateinit var headerView: View
     private lateinit var backView: View
-    private lateinit var backgroundView: View
     private lateinit var categoryImageView: ImageView
     private lateinit var contentView: View
     private lateinit var titleTextView: TextView
@@ -54,10 +54,10 @@ class QrCodeView(context: Context, attrs: AttributeSet?) : ViewGroup(context, at
     }
 
     private fun initView() {
+        backgroundView = findViewById(R.id.background_view)
         headerView = findViewById(R.id.header_view)
         backView = findViewById(R.id.back_view)
         backView.setOnClickListener(onButtonClickListener)
-        backgroundView = findViewById(R.id.background_view)
         categoryImageView = findViewById(R.id.category_image_view)
         contentView = findViewById(R.id.content_layout)
 
@@ -103,6 +103,11 @@ class QrCodeView(context: Context, attrs: AttributeSet?) : ViewGroup(context, at
         val viewWidth = MeasureSpec.getSize(widthMeasureSpec)
         val viewHeight = MeasureSpec.getSize(heightMeasureSpec)
 
+        backgroundView.measure(
+            MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(viewHeight - getStatusBarHeight(), MeasureSpec.EXACTLY)
+        )
+
         headerView.measure(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(
@@ -112,11 +117,6 @@ class QrCodeView(context: Context, attrs: AttributeSet?) : ViewGroup(context, at
         )
 
         backView.measureWrapContent()
-
-        backgroundView.measure(
-            MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(viewHeight - getStatusBarHeight(), MeasureSpec.EXACTLY)
-        )
 
         categoryImageView.measure(
             MeasureSpec.makeMeasureSpec(convertDpToPx(86), MeasureSpec.EXACTLY),
