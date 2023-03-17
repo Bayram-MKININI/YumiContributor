@@ -92,7 +92,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true"
-            android:fitsSystemWindows="true"
             android:overScrollMode="never">
 
             <FrameLayout
@@ -109,6 +108,7 @@
                     android:hint="@string/mail_body"
                     android:imeOptions="actionUnspecified|flagNoExtractUi"
                     android:inputType="textMultiLine"
+                    android:paddingTop="5dp"
                     android:textColor="@color/grey_4"
                     android:textCursorDrawable="@null"
                     android:textSize="16sp" />

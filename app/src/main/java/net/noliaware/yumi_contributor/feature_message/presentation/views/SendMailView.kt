@@ -2,9 +2,10 @@ package net.noliaware.yumi_contributor.feature_message.presentation.views
 
 import android.content.Context
 import android.graphics.Rect
+import android.os.Build
 import android.text.InputType
 import android.util.AttributeSet
-import android.view.GestureDetector
+import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnClickListener
@@ -13,6 +14,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.GestureDetectorCompat
+import androidx.core.view.ViewCompat
 import androidx.core.view.isGone
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
@@ -82,6 +84,13 @@ class SendMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
 
         sendButton = findViewById(R.id.send_icon_view)
         sendButton.setOnClickListener(onClickListener)
+
+        ViewCompat.setOnApplyWindowInsetsListener(this) { _, insets ->
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                messageParentLayout.requestLayout()
+            }
+            insets
+        }
     }
 
     private val onClickListener: OnClickListener by lazy {
@@ -94,7 +103,7 @@ class SendMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
     }
 
     private fun EditText.setOnConsistentClickListener(doOnClick: (View) -> Unit) {
-        val gestureDetector = GestureDetectorCompat(context, object : GestureDetector.SimpleOnGestureListener() {
+        val gestureDetector = GestureDetectorCompat(context, object : SimpleOnGestureListener() {
             override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
                 doOnClick(this@setOnConsistentClickListener)
                 return false
@@ -126,7 +135,7 @@ class SendMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val viewWidth = View.MeasureSpec.getSize(widthMeasureSpec)
+        val viewWidth = MeasureSpec.getSize(widthMeasureSpec)
         val viewHeight = MeasureSpec.getSize(heightMeasureSpec)
 
         headerView.measure(
@@ -149,7 +158,7 @@ class SendMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
         )
 
         val contentViewHeight = viewHeight - (headerView.measuredHeight + messageIconView.measuredHeight / 2 +
-                convertDpToPx(25))
+                    convertDpToPx(25))
 
         val contentViewWidth = viewWidth * 95 / 100
         contentView.measure(
@@ -165,51 +174,41 @@ class SendMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
 
         val screenHeight = viewHeight - getStatusBarHeight()
         val messageBackgroundViewHeight = contentView.measuredHeight - (titleTextView.measuredHeight + sendButton.measuredHeight / 2 +
-                if (visibleRect.height() > (screenHeight * 9 / 10)) {
-                    convertDpToPx(40)
-                } else {
-                    screenHeight - visibleRect.height() + convertDpToPx(25)
-                })
+                    if (visibleRect.height() == screenHeight) {
+                        convertDpToPx(40)
+                    } else {
+                        screenHeight - visibleRect.height() + convertDpToPx(25)
+                    })
 
         messageBackgroundView.measure(
             MeasureSpec.makeMeasureSpec(contentView.measuredWidth * 95 / 100, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(messageBackgroundViewHeight, MeasureSpec.EXACTLY)
         )
 
+        chevronImageView.measureWrapContent()
+
+        val subjectWidth = messageBackgroundView.measuredWidth - convertDpToPx(30)
         subjectEditText.measure(
             MeasureSpec.makeMeasureSpec(
-                messageBackgroundView.measuredWidth - convertDpToPx(30),
+                subjectWidth - chevronImageView.measuredWidth,
                 MeasureSpec.EXACTLY
             ),
             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         )
 
-        chevronImageView.measureWrapContent()
-
         separatorLineView.measure(
-            MeasureSpec.makeMeasureSpec(subjectEditText.measuredWidth, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(subjectWidth, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(convertDpToPx(3), MeasureSpec.EXACTLY)
         )
 
         val availableHeightForBody = messageBackgroundView.measuredHeight - (subjectEditText.measuredHeight +
-                separatorLineView.measuredHeight + convertDpToPx(50))
+                    separatorLineView.measuredHeight + convertDpToPx(50))
+
+        mailEditText.minHeight = availableHeightForBody
 
         messageParentLayout.measure(
-            MeasureSpec.makeMeasureSpec(subjectEditText.measuredWidth, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(subjectWidth, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(availableHeightForBody, MeasureSpec.EXACTLY)
-        )
-
-        mailEditText.measure(
-            MeasureSpec.makeMeasureSpec(messageParentLayout.measuredWidth, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
-        )
-
-        mailEditText.measure(
-            MeasureSpec.makeMeasureSpec(messageParentLayout.measuredWidth, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(
-                availableHeightForBody.coerceAtLeast(mailEditText.measuredHeight),
-                MeasureSpec.EXACTLY
-            )
         )
 
         setMeasuredDimension(
@@ -256,12 +255,12 @@ class SendMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
         )
 
         subjectEditText.layoutToTopLeft(
-            (contentView.measuredWidth - subjectEditText.measuredWidth) / 2,
+            messageBackgroundView.left + convertDpToPx(15),
             messageBackgroundView.top + convertDpToPx(20)
         )
 
         chevronImageView.layoutToTopRight(
-            subjectEditText.right,
+            messageBackgroundView.right - convertDpToPx(15),
             subjectEditText.top + (subjectEditText.measuredHeight - chevronImageView.measuredHeight) / 2
         )
 
@@ -271,7 +270,7 @@ class SendMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
         )
 
         messageParentLayout.layoutToTopLeft(
-            (contentView.measuredWidth - mailEditText.measuredWidth) / 2,
+            (contentView.measuredWidth - messageParentLayout.measuredWidth) / 2,
             separatorLineView.bottom
         )
 

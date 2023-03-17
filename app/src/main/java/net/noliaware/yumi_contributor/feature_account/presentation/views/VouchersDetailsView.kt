@@ -134,7 +134,10 @@ class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(co
 
         goToTextView.measureWrapContent()
 
-        retailerTextView.measureWrapContent()
+        retailerTextView.measure(
+            MeasureSpec.makeMeasureSpec(viewWidth * 8 / 10, MeasureSpec.AT_MOST),
+            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+        )
 
         addressTextView.measureWrapContent()
 

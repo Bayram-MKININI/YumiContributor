@@ -3,8 +3,8 @@ package net.noliaware.yumi_contributor.feature_message.presentation.views
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import net.noliaware.yumi_contributor.R
@@ -17,7 +17,7 @@ import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import net.noliaware.yumi_contributor.commun.util.removeOverScroll
 import net.noliaware.yumi_contributor.commun.util.weak
 
-class MessagingView(context: Context, attrs: AttributeSet?) : CoordinatorLayout(context, attrs) {
+class MessagingView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
 
     private lateinit var headerView: View
     private lateinit var titleTextView: TextView

@@ -23,8 +23,9 @@ import net.noliaware.yumi_contributor.feature_message.presentation.views.Messagi
 class MessagingFragment : Fragment() {
 
     companion object {
-        fun newInstance(messageSubjects: List<MessageSubject>?) =
-            MessagingFragment().withArgs(MESSAGE_SUBJECTS_DATA to messageSubjects)
+        fun newInstance(
+            messageSubjects: List<MessageSubject>?
+        ) = MessagingFragment().withArgs(MESSAGE_SUBJECTS_DATA to messageSubjects)
     }
 
     private var messagingView: MessagingView? = null

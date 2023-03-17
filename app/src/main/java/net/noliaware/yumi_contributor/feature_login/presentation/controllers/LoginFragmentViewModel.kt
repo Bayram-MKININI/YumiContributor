@@ -62,7 +62,9 @@ class LoginFragmentViewModel @Inject constructor(
 
     fun saveDeviceIdPreferences(deviceId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            dataStoreRepository.saveDeviceId(deviceId)
+            if (prefsStateData?.deviceId != deviceId) {
+                dataStoreRepository.saveDeviceId(deviceId)
+            }
         }
     }
 
