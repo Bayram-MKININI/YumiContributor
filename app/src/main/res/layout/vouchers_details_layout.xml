@@ -50,6 +50,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/omnes_semibold_regular"
+                    android:text="@string/empty_value"
                     android:textColor="@color/grey_2"
                     android:textSize="19sp"
                     tools:text="Coupon Title" />
@@ -59,6 +60,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/omnes_light"
+                    android:text="@string/empty_value"
                     android:textColor="@color/grey_2"
                     android:textSize="13sp" />
 
@@ -145,7 +147,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/omnes_semibold_regular"
-                    android:text="@string/go_to_retailer"
+                    android:text="@string/empty_value"
                     android:textColor="@color/grey_2"
                     android:textSize="15sp" />
 
@@ -154,7 +156,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/omnes_regular"
-                    android:text="@string/go_to_retailer"
+                    android:text="@string/empty_value"
                     android:textColor="@color/grey_2"
                     android:textSize="14sp" />
 

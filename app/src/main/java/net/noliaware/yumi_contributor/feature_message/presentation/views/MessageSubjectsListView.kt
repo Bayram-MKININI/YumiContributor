@@ -68,7 +68,7 @@ class MessageSubjectsListView @JvmOverloads constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val viewWidth = MeasureSpec.getSize(widthMeasureSpec)
-        var viewHeight = MeasureSpec.getSize(heightMeasureSpec)
+        val viewHeight = MeasureSpec.getSize(heightMeasureSpec)
 
         val contentViewWidth = viewWidth * 9 / 10
         contentView.measure(
