@@ -9,10 +9,5 @@ data class GetVoucherStatusDTO(
     @Json(name = "userVoucherStatus")
     val voucherStatus: Int,
 ) {
-    fun toVoucherStatus() = when (voucherStatus) {
-        0 -> VoucherStatus.CANCELED
-        1 -> VoucherStatus.USABLE
-        2 -> VoucherStatus.CONSUMED
-        else -> VoucherStatus.INEXISTENT
-    }
+    fun toVoucherStatus() = VoucherStatus.fromInt(voucherStatus)
 }

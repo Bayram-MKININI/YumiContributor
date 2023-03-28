@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.commun.CATEGORY_UI
 import net.noliaware.yumi_contributor.commun.VOUCHER_ID
-import net.noliaware.yumi_contributor.commun.VOUCHER_VALIDATED
 import net.noliaware.yumi_contributor.commun.presentation.EventsHelper
 import net.noliaware.yumi_contributor.feature_account.data.repository.ManagedAccountRepository
 import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
@@ -22,7 +21,6 @@ class VoucherDetailsFragmentViewModel @Inject constructor(
     private val repository: ManagedAccountRepository
 ) : ViewModel() {
 
-    val voucherValidated get() = savedStateHandle.get<Boolean>(VOUCHER_VALIDATED)
     val categoryUI get() = savedStateHandle.get<CategoryUI>(CATEGORY_UI)
 
     val getVoucherEventsHelper = EventsHelper<Voucher>()

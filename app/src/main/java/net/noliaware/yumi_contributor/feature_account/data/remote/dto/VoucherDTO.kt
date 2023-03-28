@@ -3,13 +3,18 @@ package net.noliaware.yumi_contributor.feature_account.data.remote.dto
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus
 
 @JsonClass(generateAdapter = true)
 data class VoucherDTO(
     @Json(name = "voucherId")
     val voucherId: String,
+    @Json(name = "voucherNumber")
+    val voucherNumber: String,
     @Json(name = "voucherCode")
     val voucherCode: String?,
+    @Json(name = "voucherStatus")
+    val voucherStatus: Int?,
     @Json(name = "voucherDate")
     val voucherDate: String?,
     @Json(name = "voucherExpiryDate")
@@ -18,10 +23,6 @@ data class VoucherDTO(
     val voucherUseDate: String?,
     @Json(name = "voucherUseTime")
     val voucherUseTime: String?,
-    @Json(name = "voucherCancelDate")
-    val voucherCancelDate: String?,
-    @Json(name = "voucherCancelTime")
-    val voucherCancelTime: String?,
     @Json(name = "productLabel")
     val productLabel: String?,
     @Json(name = "productDescription")
@@ -65,13 +66,13 @@ data class VoucherDTO(
 ) {
     fun toVoucher(sessionId: String? = null) = Voucher(
         voucherId = voucherId,
+        voucherNumber = voucherNumber,
         voucherCode = voucherCode + if (!sessionId.isNullOrBlank()) sessionId else sessionId,
+        voucherStatus = VoucherStatus.fromInt(voucherStatus),
         voucherDate = voucherDate,
         voucherExpiryDate = voucherExpiryDate,
         voucherUseDate = voucherUseDate,
         voucherUseTime = voucherUseTime,
-        voucherCancelDate = voucherCancelDate,
-        voucherCancelTime = voucherCancelTime,
         productLabel = productLabel,
         productDescription = productDescription,
         productWebpage = productWebpage,

@@ -17,7 +17,6 @@ import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.CATEGORY_UI
 import net.noliaware.yumi_contributor.commun.QR_CODE_FRAGMENT_TAG
 import net.noliaware.yumi_contributor.commun.VOUCHER_ID
-import net.noliaware.yumi_contributor.commun.VOUCHER_VALIDATED
 import net.noliaware.yumi_contributor.commun.util.ViewModelState
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.makeCall
@@ -30,7 +29,8 @@ import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherCodeData
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus
 import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView
-import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView.*
+import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView.VouchersDetailsViewAdapter
+import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView.VouchersDetailsViewCallback
 
 @AndroidEntryPoint
 class VoucherDetailsFragment : AppCompatDialogFragment() {
@@ -38,12 +38,10 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
     companion object {
         fun newInstance(
             categoryUI: CategoryUI,
-            voucherId: String,
-            voucherValidated: Boolean = false
+            voucherId: String
         ) = VoucherDetailsFragment().withArgs(
             CATEGORY_UI to categoryUI,
-            VOUCHER_ID to voucherId,
-            VOUCHER_VALIDATED to voucherValidated
+            VOUCHER_ID to voucherId
         )
     }
 
@@ -141,27 +139,27 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
                 voucherDescription = voucher.productDescription,
                 retailerLabel = voucher.retailerLabel.orEmpty(),
                 retailerAddress = retailerAddress,
-                displayVoucherActionNotAvailable = viewModel.voucherValidated == true
+                displayVoucherActionNotAvailable = voucher.voucherStatus == VoucherStatus.USABLE
             )
         )
 
-        if (viewModel.voucherValidated == true) {
-            handleVoucherStatusUpdate(VoucherStatus.CONSUMED)
+        if (voucher.voucherStatus != VoucherStatus.USABLE) {
+            handleVoucherStatusUpdate(voucher.voucherStatus)
         }
     }
 
-    private fun handleVoucherStatusUpdate(voucherStatus: VoucherStatus) {
+    private fun handleVoucherStatusUpdate(voucherStatus: VoucherStatus?) {
         when (voucherStatus) {
-            VoucherStatus.INEXISTENT -> vouchersDetailsContainerView?.setVoucherStatus(
-                getString(R.string.voucher_inexistent)
-            )
-            VoucherStatus.CANCELED -> vouchersDetailsContainerView?.setVoucherStatus(
-                getString(R.string.voucher_canceled)
-            )
-            VoucherStatus.USABLE -> Unit
             VoucherStatus.CONSUMED -> vouchersDetailsContainerView?.setVoucherStatus(
                 getString(R.string.voucher_consumed)
             )
+            VoucherStatus.CANCELLED -> vouchersDetailsContainerView?.setVoucherStatus(
+                getString(R.string.voucher_canceled)
+            )
+            VoucherStatus.INEXISTENT -> vouchersDetailsContainerView?.setVoucherStatus(
+                getString(R.string.voucher_inexistent)
+            )
+            else -> Unit
         }
     }
 

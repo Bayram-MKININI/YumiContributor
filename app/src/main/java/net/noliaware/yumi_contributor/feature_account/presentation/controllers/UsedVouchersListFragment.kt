@@ -61,8 +61,7 @@ class UsedVouchersListFragment : AppCompatDialogFragment() {
                         categoryIcon = viewModel.selectedCategory?.categoryIcon,
                         categoryLabel = viewModel.selectedCategory?.categoryLabel
                     ),
-                    voucherId = voucher.voucherId,
-                    voucherValidated = true
+                    voucherId = voucher.voucherId
                 ).show(
                     childFragmentManager.beginTransaction(),
                     VOUCHER_DETAILS_FRAGMENT_TAG
@@ -80,9 +79,9 @@ class UsedVouchersListFragment : AppCompatDialogFragment() {
         vouchersListView?.fillViewWithData(
             VouchersListViewAdapter(
                 title = decorateText(
-                    title,
-                    viewModel.selectedCategory?.categoryLabel.orEmpty(),
-                    viewModel.selectedCategory?.categoryColor ?: Color.TRANSPARENT
+                    text = title,
+                    coloredText = viewModel.selectedCategory?.categoryLabel.orEmpty(),
+                    color = viewModel.selectedCategory?.categoryColor ?: Color.TRANSPARENT
                 ),
                 color = viewModel.selectedCategory?.categoryColor ?: Color.TRANSPARENT,
                 iconName = viewModel.selectedCategory?.categoryIcon
@@ -91,13 +90,20 @@ class UsedVouchersListFragment : AppCompatDialogFragment() {
         collectFlows()
     }
 
-    private fun decorateText(text: String, coloredText: String, color: Int): SpannableString {
-        return SpannableString(text).apply {
-            val colorSpan = ForegroundColorSpan(color)
-            val startIndex = text.indexOf(coloredText)
-            val endIndex = text.length
-            setSpan(colorSpan, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
+    private fun decorateText(
+        text: String,
+        coloredText: String,
+        color: Int
+    ) = SpannableString(text).apply {
+        val colorSpan = ForegroundColorSpan(color)
+        val startIndex = text.indexOf(coloredText)
+        val endIndex = text.length
+        setSpan(
+            colorSpan,
+            startIndex,
+            endIndex,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
     }
 
     private fun collectFlows() {

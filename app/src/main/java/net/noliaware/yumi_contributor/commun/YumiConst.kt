@@ -72,7 +72,6 @@ const val MESSAGE_INBOX_DAT = "message_inbox_dat"
 const val MESSAGE_OUTBOX_DAT = "message_outbox_dat"
 
 const val DATA_SHOULD_REFRESH = "dataShouldRefresh"
-const val VOUCHER_VALIDATED = "voucherValidated"
 const val SELECTED_MESSAGE_INDEX = "selectedMessageIndex"
 
 //FRAGMENT TAGS

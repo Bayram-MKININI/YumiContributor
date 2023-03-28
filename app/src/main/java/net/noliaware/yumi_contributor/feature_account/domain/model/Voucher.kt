@@ -1,16 +1,14 @@
 package net.noliaware.yumi_contributor.feature_account.domain.model
 
-import com.squareup.moshi.Json
-
 data class Voucher(
     val voucherId: String,
+    val voucherNumber: String,
     val voucherCode: String?,
+    val voucherStatus: VoucherStatus?,
     val voucherDate: String?,
     val voucherExpiryDate: String?,
     val voucherUseDate: String?,
     val voucherUseTime: String?,
-    val voucherCancelDate: String?,
-    val voucherCancelTime: String?,
     val productLabel: String?,
     val productDescription: String?,
     val productWebpage: String?,
