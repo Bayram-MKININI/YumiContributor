@@ -6,6 +6,6 @@ enum class VoucherStatus(val value: Int) {
     CANCELLED(-1),
     INEXISTENT(3);
     companion object {
-        fun fromInt(value: Int?) = VoucherStatus.values().firstOrNull { it.value == value }
+        fun fromValue(value: Int?) = VoucherStatus.values().firstOrNull { it.value == value }
     }
 }

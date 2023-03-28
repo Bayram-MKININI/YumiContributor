@@ -9,5 +9,5 @@ data class GetVoucherStatusDTO(
     @Json(name = "userVoucherStatus")
     val voucherStatus: Int,
 ) {
-    fun toVoucherStatus() = VoucherStatus.fromInt(voucherStatus)
+    fun toVoucherStatus() = VoucherStatus.fromValue(voucherStatus)
 }
