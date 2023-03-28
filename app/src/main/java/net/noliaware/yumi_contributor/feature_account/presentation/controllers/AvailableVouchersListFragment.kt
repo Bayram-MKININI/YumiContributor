@@ -31,8 +31,9 @@ import net.noliaware.yumi_contributor.feature_account.presentation.views.Voucher
 class AvailableVouchersListFragment : AppCompatDialogFragment() {
 
     companion object {
-        fun newInstance(category: Category) =
-            AvailableVouchersListFragment().withArgs(CATEGORY to category)
+        fun newInstance(
+            category: Category
+        ) = AvailableVouchersListFragment().withArgs(CATEGORY to category)
     }
 
     private var vouchersListView: VouchersListView? = null

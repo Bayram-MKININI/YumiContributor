@@ -139,7 +139,7 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
                 voucherDescription = voucher.productDescription,
                 retailerLabel = voucher.retailerLabel.orEmpty(),
                 retailerAddress = retailerAddress,
-                displayVoucherActionNotAvailable = voucher.voucherStatus == VoucherStatus.USABLE
+                displayVoucherActionNotAvailable = voucher.voucherStatus != VoucherStatus.USABLE
             )
         )
 
