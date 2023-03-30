@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.READ_MESSAGE_FRAGMENT_TAG
 import net.noliaware.yumi_contributor.commun.presentation.adapters.ListLoadStateAdapter
@@ -50,14 +51,12 @@ class SentMessagesFragment : Fragment() {
     }
 
     private fun collectFlows() {
-
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launch {
             messagesListView?.getMessageAdapter?.loadStateFlow?.collectLatest { loadState ->
                 handlePaginationError(loadState)
             }
         }
-
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.getMessages().collectLatest {
                 messagesListView?.getMessageAdapter?.withLoadStateFooter(
                     footer = ListLoadStateAdapter()

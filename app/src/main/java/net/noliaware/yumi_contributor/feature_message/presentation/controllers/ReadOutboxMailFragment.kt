@@ -8,10 +8,12 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.MESSAGE_ID
 import net.noliaware.yumi_contributor.commun.util.ViewModelState
@@ -27,8 +29,9 @@ import net.noliaware.yumi_contributor.feature_message.presentation.views.ReadMai
 class ReadOutboxMailFragment : AppCompatDialogFragment() {
 
     companion object {
-        fun newInstance(messageId: String): ReadOutboxMailFragment =
-            ReadOutboxMailFragment().withArgs(MESSAGE_ID to messageId)
+        fun newInstance(
+            messageId: String
+        ) = ReadOutboxMailFragment().withArgs(MESSAGE_ID to messageId)
     }
 
     private var readMailView: ReadMailView? = null
@@ -82,37 +85,37 @@ class ReadOutboxMailFragment : AppCompatDialogFragment() {
     }
 
     private fun collectFlows() {
-
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.getMessageEventsHelper.eventFlow.collectLatest { sharedEvent ->
-                handleSharedEvent(sharedEvent)
-                redirectToLoginScreenFromSharedEvent(sharedEvent)
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.getMessageEventsHelper.stateFlow.collect { vmState ->
-                when (vmState) {
-                    is ViewModelState.LoadingState -> Unit
-                    is ViewModelState.DataState -> vmState.data?.let { message ->
-                        bindViewToData(message)
-                    }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.getMessageEventsHelper.eventFlow.flowWithLifecycle(lifecycle)
+                .collectLatest { sharedEvent ->
+                    handleSharedEvent(sharedEvent)
+                    redirectToLoginScreenFromSharedEvent(sharedEvent)
                 }
-            }
         }
-
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.deleteMessageEventsHelper.stateFlow.collect { vmState ->
-                when (vmState) {
-                    is ViewModelState.LoadingState -> Unit
-                    is ViewModelState.DataState -> vmState.data?.let { result ->
-                        if (result) {
-                            viewModel.sentMessageListShouldRefresh = true
-                            dismissAllowingStateLoss()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.getMessageEventsHelper.stateFlow.flowWithLifecycle(lifecycle)
+                .collect { vmState ->
+                    when (vmState) {
+                        is ViewModelState.LoadingState -> Unit
+                        is ViewModelState.DataState -> vmState.data?.let { message ->
+                            bindViewToData(message)
                         }
                     }
                 }
-            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.deleteMessageEventsHelper.stateFlow.flowWithLifecycle(lifecycle)
+                .collect { vmState ->
+                    when (vmState) {
+                        is ViewModelState.LoadingState -> Unit
+                        is ViewModelState.DataState -> vmState.data?.let { result ->
+                            if (result) {
+                                viewModel.sentMessageListShouldRefresh = true
+                                dismissAllowingStateLoss()
+                            }
+                        }
+                    }
+                }
         }
     }
 

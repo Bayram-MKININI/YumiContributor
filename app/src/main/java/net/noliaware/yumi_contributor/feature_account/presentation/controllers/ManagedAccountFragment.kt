@@ -9,10 +9,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.ACCOUNT_DATA
 import net.noliaware.yumi_contributor.commun.MANAGED_ACCOUNT
@@ -88,15 +90,15 @@ class ManagedAccountFragment : Fragment() {
     }
 
     private fun collectFlow() {
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.onBackEventFlow.collectLatest {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.onBackEventFlow.flowWithLifecycle(lifecycle).collectLatest {
                 viewModel.resetSelectedManagedAccount()
                 managedAccountParentView?.displayAccountListView()
                 onBackButtonPressed?.invoke()
             }
         }
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.managedAccountFlow.collect { managedAccount ->
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.managedAccountFlow.flowWithLifecycle(lifecycle).collect { managedAccount ->
                 when (managedAccount) {
                     is SelectableData.AssignedData -> {
                         managedAccount.data?.let {

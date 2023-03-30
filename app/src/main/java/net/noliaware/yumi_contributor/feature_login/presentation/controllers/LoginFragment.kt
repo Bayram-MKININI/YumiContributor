@@ -8,9 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.ACCOUNT_DATA
 import net.noliaware.yumi_contributor.commun.util.ViewModelState.DataState
@@ -70,9 +72,8 @@ class LoginFragment : Fragment() {
         }
 
     private fun collectFlows() {
-
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.prefsStateFlow.collectLatest { vmState ->
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.prefsStateFlow.flowWithLifecycle(lifecycle).collectLatest { vmState ->
                 when (vmState) {
                     is LoadingState -> Unit
                     is DataState -> vmState.data?.let { userPrefs ->
@@ -81,17 +82,15 @@ class LoginFragment : Fragment() {
                 }
             }
         }
-
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.initEventsHelper.eventFlow.collectLatest { sharedEvent ->
-                loginParentLayout?.setLoginViewProgressVisible(false)
-                handleSharedEvent(sharedEvent)
-            }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.initEventsHelper.eventFlow.flowWithLifecycle(lifecycle)
+                .collectLatest { sharedEvent ->
+                    loginParentLayout?.setLoginViewProgressVisible(false)
+                    handleSharedEvent(sharedEvent)
+                }
         }
-
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-
-            viewModel.initEventsHelper.stateFlow.collect { vmState ->
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.initEventsHelper.stateFlow.flowWithLifecycle(lifecycle).collect { vmState ->
                 when (vmState) {
                     is LoadingState -> loginParentLayout?.setLoginViewProgressVisible(true)
                     is DataState -> vmState.data?.let { initData ->
@@ -103,32 +102,31 @@ class LoginFragment : Fragment() {
                 }
             }
         }
-
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.accountDataEventsHelper.eventFlow.collectLatest { sharedEvent ->
-                loginParentLayout?.let {
-                    it.setLoginViewProgressVisible(false)
-                    it.clearSecretDigits()
-                    passwordIndexes.clear()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.accountDataEventsHelper.eventFlow.flowWithLifecycle(lifecycle)
+                .collectLatest { sharedEvent ->
+                    loginParentLayout?.let {
+                        it.setLoginViewProgressVisible(false)
+                        it.clearSecretDigits()
+                        passwordIndexes.clear()
+                    }
+                    handleSharedEvent(sharedEvent)
                 }
-                handleSharedEvent(sharedEvent)
-            }
         }
-
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-
-            viewModel.accountDataEventsHelper.stateFlow.collect { vmState ->
-                when (vmState) {
-                    is LoadingState -> Unit
-                    is DataState -> vmState.data?.let { accountData ->
-                        activity?.finish()
-                        Intent(requireActivity(), MainActivity::class.java).apply {
-                            putExtra(ACCOUNT_DATA, accountData)
-                            startActivity(this)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.accountDataEventsHelper.stateFlow.flowWithLifecycle(lifecycle)
+                .collect { vmState ->
+                    when (vmState) {
+                        is LoadingState -> Unit
+                        is DataState -> vmState.data?.let { accountData ->
+                            activity?.finish()
+                            Intent(requireActivity(), MainActivity::class.java).apply {
+                                putExtra(ACCOUNT_DATA, accountData)
+                                startActivity(this)
+                            }
                         }
                     }
                 }
-            }
         }
     }
 

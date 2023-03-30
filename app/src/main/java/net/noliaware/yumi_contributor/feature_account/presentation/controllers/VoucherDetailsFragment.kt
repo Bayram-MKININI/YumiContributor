@@ -9,10 +9,12 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.CATEGORY_UI
 import net.noliaware.yumi_contributor.commun.QR_CODE_FRAGMENT_TAG
@@ -75,37 +77,36 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
     }
 
     private fun collectFlows() {
-
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launch {
             merge(
                 viewModel.getVoucherEventsHelper.eventFlow,
                 viewModel.getVoucherStatusEventsHelper.eventFlow
-            ).collectLatest { sharedEvent ->
+            ).flowWithLifecycle(lifecycle).collectLatest { sharedEvent ->
                 handleSharedEvent(sharedEvent)
                 redirectToLoginScreenFromSharedEvent(sharedEvent)
             }
         }
-
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.getVoucherEventsHelper.stateFlow.collect { vmState ->
-                when (vmState) {
-                    is ViewModelState.LoadingState -> Unit
-                    is ViewModelState.DataState -> vmState.data?.let { voucher ->
-                        bindViewToData(voucher)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.getVoucherEventsHelper.stateFlow.flowWithLifecycle(lifecycle)
+                .collect { vmState ->
+                    when (vmState) {
+                        is ViewModelState.LoadingState -> Unit
+                        is ViewModelState.DataState -> vmState.data?.let { voucher ->
+                            bindViewToData(voucher)
+                        }
                     }
                 }
-            }
         }
-
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.getVoucherStatusEventsHelper.stateFlow.collect { vmState ->
-                when (vmState) {
-                    is ViewModelState.LoadingState -> Unit
-                    is ViewModelState.DataState -> vmState.data?.let { voucherStatus ->
-                        handleVoucherStatusUpdate(voucherStatus)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.getVoucherStatusEventsHelper.stateFlow.flowWithLifecycle(lifecycle)
+                .collect { vmState ->
+                    when (vmState) {
+                        is ViewModelState.LoadingState -> Unit
+                        is ViewModelState.DataState -> vmState.data?.let { voucherStatus ->
+                            handleVoucherStatusUpdate(voucherStatus)
+                        }
                     }
                 }
-            }
         }
     }
 

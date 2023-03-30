@@ -7,9 +7,11 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.ViewModelState
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
@@ -56,16 +58,15 @@ class BOSignInFragment : AppCompatDialogFragment() {
     }
 
     private fun collectFlows() {
-
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.eventsHelper.eventFlow.collectLatest { sharedEvent ->
-                handleSharedEvent(sharedEvent)
-                redirectToLoginScreenFromSharedEvent(sharedEvent)
-            }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.eventsHelper.eventFlow.flowWithLifecycle(lifecycle)
+                .collectLatest { sharedEvent ->
+                    handleSharedEvent(sharedEvent)
+                    redirectToLoginScreenFromSharedEvent(sharedEvent)
+                }
         }
-
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.eventsHelper.stateFlow.collect { vmState ->
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.eventsHelper.stateFlow.flowWithLifecycle(lifecycle).collect { vmState ->
                 when (vmState) {
                     is ViewModelState.LoadingState -> Unit
                     is ViewModelState.DataState -> vmState.data?.let { boSignIn ->
@@ -75,9 +76,8 @@ class BOSignInFragment : AppCompatDialogFragment() {
                 }
             }
         }
-
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.timerStateFlow.collect { timerState ->
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.timerStateFlow.flowWithLifecycle(lifecycle).collect { timerState ->
                 boSignInView?.getBoSignInView?.displayRemainingTime(
                     timerState.secondsRemaining?.let { secondsRemaining ->
                         parseTimestampToString(secondsRemaining)

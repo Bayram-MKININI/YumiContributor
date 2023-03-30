@@ -9,9 +9,11 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.CATEGORY_UI
 import net.noliaware.yumi_contributor.commun.VOUCHER_CODE_DATA
@@ -60,8 +62,8 @@ class QrCodeFragment : AppCompatDialogFragment() {
     }
 
     private fun collectFlows() {
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.stateFlow.collect { vmState ->
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.stateFlow.flowWithLifecycle(lifecycle).collect { vmState ->
                 when (vmState) {
                     is ViewModelState.LoadingState -> Unit
                     is ViewModelState.DataState -> vmState.data?.let { qrCode ->
@@ -70,22 +72,24 @@ class QrCodeFragment : AppCompatDialogFragment() {
                 }
             }
         }
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.useVoucherEventsHelper.eventFlow.collectLatest { sharedEvent ->
-                handleSharedEvent(sharedEvent)
-                redirectToLoginScreenFromSharedEvent(sharedEvent)
-            }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.useVoucherEventsHelper.eventFlow.flowWithLifecycle(lifecycle)
+                .collectLatest { sharedEvent ->
+                    handleSharedEvent(sharedEvent)
+                    redirectToLoginScreenFromSharedEvent(sharedEvent)
+                }
         }
 
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.useVoucherEventsHelper.stateFlow.collect { vmState ->
-                when (vmState) {
-                    is ViewModelState.LoadingState -> Unit
-                    is ViewModelState.DataState -> vmState.data?.let {
-                        qrCodeView?.revealQrCode()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.useVoucherEventsHelper.stateFlow.flowWithLifecycle(lifecycle)
+                .collect { vmState ->
+                    when (vmState) {
+                        is ViewModelState.LoadingState -> Unit
+                        is ViewModelState.DataState -> vmState.data?.let {
+                            qrCodeView?.revealQrCode()
+                        }
                     }
                 }
-            }
         }
     }
 
