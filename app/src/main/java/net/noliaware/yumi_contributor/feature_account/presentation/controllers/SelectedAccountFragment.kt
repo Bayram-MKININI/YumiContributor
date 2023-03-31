@@ -95,20 +95,12 @@ class SelectedAccountFragment : Fragment() {
         fragmentManager: FragmentManager,
         lifecycle: Lifecycle
     ) : FragmentStateAdapter(fragmentManager, lifecycle) {
-
         override fun getItemCount() = 3
-
         override fun createFragment(position: Int): Fragment {
             return when (position) {
-                0 -> {
-                    AvailableCategoriesFragment()
-                }
-                1 -> {
-                    UsedCategoriesFragment()
-                }
-                else -> {
-                    CancelledCategoriesFragment()
-                }
+                0 -> AvailableCategoriesFragment()
+                1 -> UsedCategoriesFragment()
+                else -> CancelledCategoriesFragment()
             }
         }
     }

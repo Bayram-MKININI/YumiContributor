@@ -74,9 +74,7 @@ class MessagingFragment : Fragment() {
         lifecycle: Lifecycle
     ) : FragmentStateAdapter(fragmentManager, lifecycle) {
         var fragments = Array<Fragment?>(2) { null }
-
         override fun getItemCount() = 2
-
         override fun createFragment(position: Int): Fragment {
             return when (position) {
                 0 -> {
@@ -89,7 +87,6 @@ class MessagingFragment : Fragment() {
                 }
             }
         }
-
         fun refreshSentFragment() {
             (fragments[1] as? SentMessagesFragment)?.refreshAdapter()
         }
