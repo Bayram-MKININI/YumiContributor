@@ -59,7 +59,6 @@ class AccountsListFragment : Fragment() {
                 handlePaginationError(loadState)
             }
         }
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.getUsersEventsHelper.eventFlow.flowWithLifecycle(lifecycle)
                 .collectLatest { sharedEvent ->
@@ -67,7 +66,6 @@ class AccountsListFragment : Fragment() {
                     redirectToLoginScreenFromSharedEvent(sharedEvent)
                 }
         }
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.getUsersEventsHelper.stateFlow.flowWithLifecycle(lifecycle)
                 .collect { vmState ->
@@ -83,7 +81,6 @@ class AccountsListFragment : Fragment() {
                     }
                 }
         }
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.getFilteredAccountEventsHelper.stateFlow.flowWithLifecycle(lifecycle)
                 .collect { vmState ->
@@ -102,7 +99,6 @@ class AccountsListFragment : Fragment() {
                     }
                 }
         }
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.getManagedAccounts().collectLatest {
                 accountsListView?.paginatedManagedAccountsAdapter?.withLoadStateFooter(

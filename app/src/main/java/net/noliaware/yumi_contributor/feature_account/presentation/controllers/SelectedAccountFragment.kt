@@ -50,7 +50,6 @@ class SelectedAccountFragment : Fragment() {
                     redirectToLoginScreenFromSharedEvent(sharedEvent)
                 }
         }
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.selectAccountEventsHelper.stateFlow.flowWithLifecycle(lifecycle)
                 .collect { vmState ->

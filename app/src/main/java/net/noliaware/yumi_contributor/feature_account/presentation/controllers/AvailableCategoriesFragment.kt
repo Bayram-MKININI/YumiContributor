@@ -46,7 +46,6 @@ class AvailableCategoriesFragment : Fragment() {
     }
 
     private fun collectFlows() {
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.availableCategoriesEventsHelper.eventFlow.flowWithLifecycle(lifecycle)
                 .collectLatest { sharedEvent ->
@@ -54,7 +53,6 @@ class AvailableCategoriesFragment : Fragment() {
                     redirectToLoginScreenFromSharedEvent(sharedEvent)
                 }
         }
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.availableCategoriesEventsHelper.stateFlow.flowWithLifecycle(lifecycle)
                 .collect { vmState ->
