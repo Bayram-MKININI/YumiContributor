@@ -14,6 +14,7 @@ import net.noliaware.yumi_contributor.commun.util.*
 class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
 
     private lateinit var titleTextView: TextView
+    private lateinit var crossOutView: View
     private lateinit var createdTextView: TextView
     private lateinit var expiryTextView: TextView
     private lateinit var separatorView: View
@@ -39,6 +40,7 @@ class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(co
 
     private fun initView() {
         titleTextView = findViewById(R.id.title_text_view)
+        crossOutView = findViewById(R.id.cross_out_view)
         createdTextView = findViewById(R.id.created_text_view)
         expiryTextView = findViewById(R.id.expiry_text_view)
         separatorView = findViewById(R.id.separator_view)
@@ -61,6 +63,7 @@ class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(co
     fun fillViewWithData(vouchersDetailsViewAdapter: VouchersDetailsContainerView.VouchersDetailsViewAdapter) {
 
         titleTextView.text = vouchersDetailsViewAdapter.title
+        crossOutView.isVisible = vouchersDetailsViewAdapter.displayVoucherActionNotAvailable
         createdTextView.text = vouchersDetailsViewAdapter.startDate
         expiryTextView.text = vouchersDetailsViewAdapter.endDate
 
@@ -90,6 +93,16 @@ class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(co
             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         )
 
+        if (crossOutView.isVisible) {
+            crossOutView.measure(
+                MeasureSpec.makeMeasureSpec(
+                    titleTextView.measuredWidth * 105 / 100,
+                    MeasureSpec.EXACTLY
+                ),
+                MeasureSpec.makeMeasureSpec(convertDpToPx(3), MeasureSpec.EXACTLY)
+            )
+        }
+
         createdTextView.measureWrapContent()
         expiryTextView.measureWrapContent()
 
@@ -109,8 +122,8 @@ class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(co
                 MeasureSpec.makeMeasureSpec(convertDpToPx(20), MeasureSpec.EXACTLY)
             )
 
-            val sponsorTextViewWidth = sponsorBackgroundViewWidth - (sponsoredByTextView.measuredWidth + informationTextView.measuredWidth +
-                        convertDpToPx(35))
+            val sponsorTextViewWidth = sponsorBackgroundViewWidth - (sponsoredByTextView.measuredWidth +
+                    informationTextView.measuredWidth + convertDpToPx(35))
 
             sponsorTextView.measure(
                 MeasureSpec.makeMeasureSpec(sponsorTextViewWidth, MeasureSpec.AT_MOST),
@@ -150,17 +163,18 @@ class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(co
 
         if (mailImageView.isVisible) {
             mailImageView.measure(
-                MeasureSpec.makeMeasureSpec(convertDpToPx(30), MeasureSpec.EXACTLY),
-                MeasureSpec.makeMeasureSpec(convertDpToPx(30), MeasureSpec.EXACTLY)
+                MeasureSpec.makeMeasureSpec(convertDpToPx(40), MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(convertDpToPx(40), MeasureSpec.EXACTLY)
             )
+
             mailTextView.measureWrapContent()
         }
 
         openLocationLayout.measureWrapContent()
 
         val locationBackgroundViewHeight = retailerTextView.measuredHeight + addressTextView.measuredHeight +
-                    phoneImageView.measuredHeight + openLocationLayout.measuredHeight / 2 +
-                    convertDpToPx(50)
+                phoneImageView.measuredHeight + openLocationLayout.measuredHeight / 2 +
+                convertDpToPx(50)
 
         locationBackgroundView.measure(
             MeasureSpec.makeMeasureSpec(viewWidth * 9 / 10, MeasureSpec.EXACTLY),
@@ -168,18 +182,18 @@ class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(co
         )
 
         val contentHeight = titleTextView.measuredHeight + createdTextView.measuredHeight + separatorView.measuredHeight +
-                    if (sponsorTextView.isVisible) {
-                        sponsorBackgroundView.measuredHeight + convertDpToPx(15)
-                    } else {
-                        0
-                    } +
-                    if (descriptionTextView.isVisible) {
-                        descriptionTextView.measuredHeight + convertDpToPx(15)
-                    } else {
-                        0
-                    } +
-                    goToTextView.measuredHeight + locationBackgroundView.measuredHeight + openLocationLayout.measuredHeight / 2 +
-                    convertDpToPx(130)
+                if (sponsorTextView.isVisible) {
+                    sponsorBackgroundView.measuredHeight + convertDpToPx(15)
+                } else {
+                    0
+                } +
+                if (descriptionTextView.isVisible) {
+                    descriptionTextView.measuredHeight + convertDpToPx(15)
+                } else {
+                    0
+                } +
+                goToTextView.measuredHeight + locationBackgroundView.measuredHeight + openLocationLayout.measuredHeight / 2 +
+                convertDpToPx(130)
 
 
         viewHeight = Integer.max(contentHeight, viewHeight)
@@ -199,6 +213,13 @@ class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(co
             convertDpToPx(20),
             0
         )
+
+        if (crossOutView.isVisible) {
+            crossOutView.layoutToTopLeft(
+                titleTextView.left + (titleTextView.measuredWidth - crossOutView.measuredWidth) / 2,
+                titleTextView.top + (titleTextView.measuredHeight - crossOutView.measuredHeight) / 2
+            )
+        }
 
         createdTextView.layoutToTopLeft(
             titleTextView.left,

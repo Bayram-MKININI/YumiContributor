@@ -29,3 +29,15 @@ enum class AppMessageLevel(val value: Int) {
         fun fromInt(value: Int) = values().find { response -> response.value == value }
     }
 }
+
+enum class Priority(val value: Int) {
+    INFORMATION(1),
+    WARNING(2),
+    IMPORTANT(3),
+    CRITICAL(4);
+
+    companion object {
+        @JvmStatic
+        fun fromValue(value: Int?) = Priority.values().firstOrNull { it.value == value }
+    }
+}

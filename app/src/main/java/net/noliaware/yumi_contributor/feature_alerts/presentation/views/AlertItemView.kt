@@ -3,7 +3,9 @@ package net.noliaware.yumi_contributor.feature_alerts.presentation.views
 import android.content.Context
 import android.util.AttributeSet
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.DrawableRes
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
@@ -11,10 +13,13 @@ import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 
 class AlertItemView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
 
+    private lateinit var iconImageView: ImageView
     private lateinit var timeTextView: TextView
     private lateinit var bodyTextView: TextView
 
     data class AlertItemViewAdapter(
+        @DrawableRes
+        val priorityIconRes: Int?,
         val time: String,
         val body: String
     )
@@ -25,11 +30,13 @@ class AlertItemView(context: Context, attrs: AttributeSet?) : ViewGroup(context,
     }
 
     private fun initView() {
+        iconImageView = findViewById(R.id.icon_image_view)
         timeTextView = findViewById(R.id.time_text_view)
         bodyTextView = findViewById(R.id.body_text_view)
     }
 
     fun fillViewWithData(alertItemViewAdapter: AlertItemViewAdapter) {
+        alertItemViewAdapter.priorityIconRes?.let { iconImageView.setImageResource(it) }
         timeTextView.text = alertItemViewAdapter.time
         bodyTextView.text = alertItemViewAdapter.body
     }
@@ -38,10 +45,13 @@ class AlertItemView(context: Context, attrs: AttributeSet?) : ViewGroup(context,
         val viewWidth = MeasureSpec.getSize(widthMeasureSpec)
         var viewHeight = MeasureSpec.getSize(heightMeasureSpec)
 
+        iconImageView.measureWrapContent()
+
         timeTextView.measureWrapContent()
 
+        val bodyTextViewWidth = viewWidth * 9 / 10 - (iconImageView.measuredWidth + convertDpToPx(2))
         bodyTextView.measure(
-            MeasureSpec.makeMeasureSpec(viewWidth * 9 / 10, MeasureSpec.AT_MOST),
+            MeasureSpec.makeMeasureSpec(bodyTextViewWidth, MeasureSpec.AT_MOST),
             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         )
 
@@ -57,10 +67,13 @@ class AlertItemView(context: Context, attrs: AttributeSet?) : ViewGroup(context,
         val viewWidth = right - left
         val viewHeight = bottom - top
 
-        val leftEdge = viewWidth * 1 / 20
+        iconImageView.layoutToTopLeft(
+            convertDpToPx(5),
+            convertDpToPx(5)
+        )
 
         timeTextView.layoutToTopLeft(
-            leftEdge,
+            iconImageView.right + convertDpToPx(2),
             convertDpToPx(10)
         )
 

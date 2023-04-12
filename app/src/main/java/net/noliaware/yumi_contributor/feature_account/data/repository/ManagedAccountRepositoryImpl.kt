@@ -27,7 +27,7 @@ import net.noliaware.yumi_contributor.commun.util.handleSessionWithNoFailure
 import net.noliaware.yumi_contributor.feature_account.domain.model.Category
 import net.noliaware.yumi_contributor.feature_account.domain.model.ManagedAccount
 import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
-import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStateData
 import okio.IOException
 import retrofit2.HttpException
 import java.util.UUID
@@ -401,8 +401,9 @@ class ManagedAccountRepositoryImpl(
         }
     }
 
-    override fun getVoucherStatusById(voucherId: String): Flow<Resource<VoucherStatus>> = flow {
-
+    override fun getVoucherStateDataById(
+        voucherId: String
+    ): Flow<Resource<VoucherStateData>> = flow {
         emit(Resource.Loading())
 
         try {
@@ -433,7 +434,7 @@ class ManagedAccountRepositoryImpl(
                 remoteData.data?.let { getVoucherStatusDTO ->
                     emit(
                         Resource.Success(
-                            data = getVoucherStatusDTO.toVoucherStatus() ?: VoucherStatus.INEXISTENT,
+                            data = getVoucherStatusDTO.toVoucherStateData(),
                             appMessage = remoteData.message?.toAppMessage()
                         )
                     )

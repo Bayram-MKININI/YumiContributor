@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <net.noliaware.yumi_contributor.feature_alerts.presentation.views.AlertItemView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mail_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/rectangle_rounded_grey1">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/icon_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        tools:src="@drawable/ic_critical" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/time_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/omnes_regular"
-        android:textColor="@color/grey_2" />
+        android:textColor="@color/grey_2"
+        tools:text="08 mars 2023" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/body_text_view"
@@ -19,5 +28,6 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/omnes_semibold_regular"
         android:textColor="@color/grey_2"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        tools:text="Coupon alimentaire consommé" />
 </net.noliaware.yumi_contributor.feature_alerts.presentation.views.AlertItemView>

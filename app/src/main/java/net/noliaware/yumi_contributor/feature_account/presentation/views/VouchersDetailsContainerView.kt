@@ -8,12 +8,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.drawableIdByName
+import net.noliaware.yumi_contributor.commun.util.getDrawableCompat
 import net.noliaware.yumi_contributor.commun.util.getStatusBarHeight
 import net.noliaware.yumi_contributor.commun.util.layoutToBottomLeft
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
@@ -45,7 +45,8 @@ class VouchersDetailsContainerView(
         val voucherDescription: String? = null,
         val retailerLabel: String = "",
         val retailerAddress: String = "",
-        val displayVoucherActionNotAvailable: Boolean = false
+        val displayVoucherActionNotAvailable: Boolean = false,
+        val voucherStatus: String = ""
     )
 
     interface VouchersDetailsViewCallback {
@@ -99,8 +100,7 @@ class VouchersDetailsContainerView(
     }
 
     private fun setUpPrimaryColor(color: Int) {
-        displayVoucherLayout.background = ContextCompat.getDrawable(
-            context,
+        displayVoucherLayout.background = context.getDrawableCompat(
             R.drawable.rectangle_rounded_22dp
         )?.tint(color)
     }
@@ -111,16 +111,11 @@ class VouchersDetailsContainerView(
         if (vouchersDetailsViewAdapter.displayVoucherActionNotAvailable) {
             voucherStatusTextView.isVisible = true
             displayVoucherLayout.isGone = true
+            voucherStatusTextView.text = vouchersDetailsViewAdapter.voucherStatus
         } else {
             displayVoucherLayout.isVisible = true
             voucherStatusTextView.isGone = true
         }
-    }
-
-    fun setVoucherStatus(voucherStatus: String) {
-        voucherStatusTextView.isVisible = true
-        displayVoucherLayout.isGone = true
-        voucherStatusTextView.text = voucherStatus
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -151,7 +146,7 @@ class VouchersDetailsContainerView(
         voucherStatusTextView.measureWrapContent()
 
         val parentContentViewHeight = viewHeight - (headerView.measuredHeight + categoryImageView.measuredHeight / 2 +
-                    convertDpToPx(25))
+                convertDpToPx(25))
 
         parentContentView.measure(
             MeasureSpec.makeMeasureSpec(viewWidth * 95 / 100, MeasureSpec.EXACTLY),

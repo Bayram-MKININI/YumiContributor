@@ -2,6 +2,7 @@ package net.noliaware.yumi_contributor.feature_alerts.data.remote.dto
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import net.noliaware.yumi_contributor.commun.domain.model.Priority
 import net.noliaware.yumi_contributor.feature_alerts.domain.model.Alert
 
 @JsonClass(generateAdapter = true)
@@ -27,7 +28,7 @@ data class AlertDTO(
         alertId = alertId,
         alertDate = alertDate,
         alertTime = alertTime,
-        alertLevel = alertLevel,
-        alertText = alertText,
+        alertPriority = Priority.fromValue(alertLevel),
+        alertText = alertText
     )
 }

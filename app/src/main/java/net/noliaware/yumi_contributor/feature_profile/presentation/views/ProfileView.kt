@@ -5,11 +5,14 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.layoutToTopRight
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
+import net.noliaware.yumi_contributor.commun.util.weak
+import kotlin.math.max
 
 class ProfileView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
 
@@ -20,12 +23,16 @@ class ProfileView(context: Context, attrs: AttributeSet?) : ViewGroup(context, a
     private lateinit var surnameValueTextView: TextView
     private lateinit var nameTitleTextView: TextView
     private lateinit var nameValueTextView: TextView
-    private lateinit var separatorView: View
-    private lateinit var complementaryDataTextView: TextView
     private lateinit var phoneTitleTextView: TextView
     private lateinit var phoneValueTextView: TextView
     private lateinit var addressTitleTextView: TextView
     private lateinit var addressValueTextView: TextView
+
+    private lateinit var separatorView: View
+    private lateinit var boAccessTextView: TextView
+    private lateinit var boAccessDescriptionTextView: TextView
+    private lateinit var accessButtonLayout: LinearLayoutCompat
+    var callback: ProfileViewCallback? by weak()
 
     data class ProfileViewAdapter(
         val login: String = "",
@@ -34,6 +41,10 @@ class ProfileView(context: Context, attrs: AttributeSet?) : ViewGroup(context, a
         val phone: String = "",
         val address: String = ""
     )
+
+    fun interface ProfileViewCallback {
+        fun onGetCodeButtonClicked()
+    }
 
     override fun onFinishInflate() {
         super.onFinishInflate()
@@ -48,12 +59,16 @@ class ProfileView(context: Context, attrs: AttributeSet?) : ViewGroup(context, a
         surnameValueTextView = findViewById(R.id.surname_value_text_view)
         nameTitleTextView = findViewById(R.id.name_title_text_view)
         nameValueTextView = findViewById(R.id.name_value_text_view)
-        separatorView = findViewById(R.id.separator_view)
-        complementaryDataTextView = findViewById(R.id.complementary_data_text_view)
         phoneTitleTextView = findViewById(R.id.phone_title_text_view)
         phoneValueTextView = findViewById(R.id.phone_value_text_view)
         addressTitleTextView = findViewById(R.id.address_title_text_view)
         addressValueTextView = findViewById(R.id.address_value_text_view)
+
+        separatorView = findViewById(R.id.separator_view)
+        boAccessTextView = findViewById(R.id.bo_access_text_view)
+        boAccessDescriptionTextView = findViewById(R.id.bo_access_description_text_view)
+        accessButtonLayout = findViewById(R.id.access_button_layout)
+        accessButtonLayout.setOnClickListener { callback?.onGetCodeButtonClicked() }
     }
 
     fun fillViewWithData(profileViewAdapter: ProfileViewAdapter) {
@@ -79,22 +94,28 @@ class ProfileView(context: Context, attrs: AttributeSet?) : ViewGroup(context, a
         nameTitleTextView.measureWrapContent()
         nameValueTextView.measureWrapContent()
 
-        separatorView.measure(
-            MeasureSpec.makeMeasureSpec(viewWidth * 4 / 10, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(convertDpToPx(3), MeasureSpec.EXACTLY)
-        )
-
-        complementaryDataTextView.measureWrapContent()
-
         phoneTitleTextView.measureWrapContent()
         phoneValueTextView.measureWrapContent()
 
         addressTitleTextView.measureWrapContent()
         addressValueTextView.measureWrapContent()
 
+        separatorView.measure(
+            MeasureSpec.makeMeasureSpec(viewWidth * 4 / 10, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(convertDpToPx(3), MeasureSpec.EXACTLY)
+        )
+
+        boAccessTextView.measureWrapContent()
+        boAccessDescriptionTextView.measure(
+            MeasureSpec.makeMeasureSpec(viewWidth * 9 / 10, MeasureSpec.AT_MOST),
+            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+        )
+        accessButtonLayout.measureWrapContent()
+
         viewHeight = myDataTextView.measuredHeight + loginValueTextView.measuredHeight + surnameValueTextView.measuredHeight +
-                    nameValueTextView.measuredHeight + separatorView.measuredHeight + complementaryDataTextView.measuredHeight +
-                    phoneValueTextView.measuredHeight + addressValueTextView.measuredHeight + convertDpToPx(95)
+                    nameValueTextView.measuredHeight + phoneValueTextView.measuredHeight + addressValueTextView.measuredHeight +
+                    separatorView.measuredHeight + boAccessTextView.measuredHeight + boAccessDescriptionTextView.measuredHeight +
+                    accessButtonLayout.measuredHeight + convertDpToPx(150)
 
         setMeasuredDimension(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
@@ -143,19 +164,9 @@ class ProfileView(context: Context, attrs: AttributeSet?) : ViewGroup(context, a
             nameTitleTextView.top
         )
 
-        separatorView.layoutToTopLeft(
-            (viewWidth - separatorView.measuredWidth) / 2,
-            nameValueTextView.bottom + convertDpToPx(20)
-        )
-
-        complementaryDataTextView.layoutToTopLeft(
-            myDataTextView.left,
-            separatorView.bottom + convertDpToPx(20)
-        )
-
         phoneTitleTextView.layoutToTopRight(
             edge,
-            complementaryDataTextView.bottom + convertDpToPx(10)
+            nameTitleTextView.bottom + convertDpToPx(10)
         )
 
         phoneValueTextView.layoutToTopLeft(
@@ -171,6 +182,26 @@ class ProfileView(context: Context, attrs: AttributeSet?) : ViewGroup(context, a
         addressValueTextView.layoutToTopLeft(
             addressTitleTextView.right + convertDpToPx(15),
             addressTitleTextView.top
+        )
+
+        separatorView.layoutToTopLeft(
+            (viewWidth - separatorView.measuredWidth) / 2,
+            max(addressTitleTextView.bottom, addressValueTextView.bottom) + convertDpToPx(15)
+        )
+
+        boAccessTextView.layoutToTopLeft(
+            myDataTextView.left,
+            separatorView.bottom + convertDpToPx(15)
+        )
+
+        boAccessDescriptionTextView.layoutToTopLeft(
+            (viewWidth - boAccessDescriptionTextView.measuredWidth) / 2,
+            boAccessTextView.bottom + convertDpToPx(10)
+        )
+
+        accessButtonLayout.layoutToTopLeft(
+            (viewWidth - accessButtonLayout.measuredWidth) / 2,
+            boAccessDescriptionTextView.bottom + convertDpToPx(15)
         )
     }
 }

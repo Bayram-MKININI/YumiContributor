@@ -16,11 +16,9 @@ class UsedVoucherMapper @Inject constructor() : VoucherMapper {
     ) = VoucherItemView.VoucherItemViewAdapter(
         color = color,
         title = voucher.productLabel.orEmpty(),
-        highlightDescription = context.getString(R.string.validation_date),
+        highlightDescription = context.getString(R.string.usage_date),
         highlightValue = parseToShortDate(voucher.voucherUseDate),
-        retailer = context.getString(
-            R.string.retailer_label,
-            voucher.retailerLabel
-        )
+        retailerDescription = context.getString(R.string.retrieved),
+        retailerValue = voucher.retailerLabel
     )
 }

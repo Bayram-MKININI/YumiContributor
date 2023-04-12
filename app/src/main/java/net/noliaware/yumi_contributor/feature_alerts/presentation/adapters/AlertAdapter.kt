@@ -6,11 +6,12 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.presentation.adapters.ItemViewHolder
+import net.noliaware.yumi_contributor.commun.presentation.mappers.PriorityMapper
 import net.noliaware.yumi_contributor.commun.util.parseTimeString
 import net.noliaware.yumi_contributor.commun.util.parseToShortDate
 import net.noliaware.yumi_contributor.feature_alerts.domain.model.Alert
-import net.noliaware.yumi_contributor.feature_alerts.domain.model.AlertPriority
 import net.noliaware.yumi_contributor.feature_alerts.presentation.views.AlertItemView
+import net.noliaware.yumi_contributor.feature_alerts.presentation.views.AlertItemView.AlertItemViewAdapter
 
 class AlertAdapter : PagingDataAdapter<Alert, ItemViewHolder<AlertItemView>>(AlertComparator) {
 
@@ -32,7 +33,8 @@ class AlertAdapter : PagingDataAdapter<Alert, ItemViewHolder<AlertItemView>>(Ale
     private fun mapAdapter(
         alert: Alert,
         holder: ItemViewHolder<AlertItemView>
-    ) = AlertItemView.AlertItemViewAdapter(
+    ) = AlertItemViewAdapter(
+        priorityIconRes = PriorityMapper().mapPriorityIcon(alert.alertPriority),
         time = holder.itemView.context.getString(
             R.string.received_at,
             parseToShortDate(alert.alertDate),
@@ -40,13 +42,6 @@ class AlertAdapter : PagingDataAdapter<Alert, ItemViewHolder<AlertItemView>>(Ale
         ),
         body = alert.alertText
     )
-
-    private fun resolveAlertPriority(alertLevel: Int) = when (alertLevel) {
-        2 -> AlertPriority.WARNING
-        3 -> AlertPriority.IMPORTANT
-        4 -> AlertPriority.CRITICAL
-        else -> AlertPriority.INFORMATION
-    }
 
     object AlertComparator : DiffUtil.ItemCallback<Alert>() {
         override fun areItemsTheSame(

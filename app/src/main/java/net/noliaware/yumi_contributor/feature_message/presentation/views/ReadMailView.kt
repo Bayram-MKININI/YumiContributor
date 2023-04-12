@@ -5,7 +5,9 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.DrawableRes
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import net.noliaware.yumi_contributor.R
@@ -25,6 +27,7 @@ class ReadMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
     private lateinit var backView: View
     private lateinit var contentView: View
     private lateinit var deleteIconView: View
+    private lateinit var priorityIconImageView: ImageView
     private lateinit var titleTextView: TextView
     private lateinit var timeTextView: TextView
     private lateinit var messageParentView: View
@@ -40,6 +43,8 @@ class ReadMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
     }
 
     data class ReadMailViewAdapter(
+        @DrawableRes
+        val priorityIconRes: Int,
         val subject: String = "",
         val time: String = "",
         val message: String = "",
@@ -52,6 +57,7 @@ class ReadMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
     }
 
     private fun initView() {
+
         backgroundView = findViewById(R.id.background_view)
         headerView = findViewById(R.id.header_view)
         messageIconView = findViewById(R.id.message_icon_view)
@@ -62,6 +68,7 @@ class ReadMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
         deleteIconView.setOnClickListener(onClickListener)
 
         contentView = findViewById(R.id.content_layout)
+        priorityIconImageView = contentView.findViewById(R.id.priority_icon_image_view)
         titleTextView = contentView.findViewById(R.id.title_text_view)
         timeTextView = contentView.findViewById(R.id.time_text_view)
 
@@ -83,6 +90,7 @@ class ReadMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
     }
 
     fun fillViewWithData(readMailViewAdapter: ReadMailViewAdapter) {
+        priorityIconImageView.setImageResource(readMailViewAdapter.priorityIconRes)
         titleTextView.text = readMailViewAdapter.subject
         timeTextView.text = readMailViewAdapter.time
         messageTextView.text = readMailViewAdapter.message
@@ -123,25 +131,27 @@ class ReadMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
             MeasureSpec.makeMeasureSpec(contentViewHeight, MeasureSpec.EXACTLY)
         )
 
+        priorityIconImageView.measureWrapContent()
+
+        val titleTextViewWidth = contentViewWidth * 95 / 100 - (priorityIconImageView.measuredWidth + convertDpToPx(2))
         titleTextView.measure(
-            MeasureSpec.makeMeasureSpec(contentViewWidth * 9 / 10, MeasureSpec.AT_MOST),
+            MeasureSpec.makeMeasureSpec(titleTextViewWidth, MeasureSpec.AT_MOST),
             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         )
 
         timeTextView.measureWrapContent()
 
-        val messageParentViewHeight = contentView.height - (titleTextView.measuredHeight + timeTextView.measuredHeight +
-                    convertDpToPx(55))
-
+        val messageParentViewHeight = contentView.measuredHeight - (titleTextView.measuredHeight + timeTextView.measuredHeight +
+                    convertDpToPx(45))
         messageParentView.measure(
-            MeasureSpec.makeMeasureSpec(contentViewWidth * 9 / 10, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(contentViewWidth * 95 / 100, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(messageParentViewHeight, MeasureSpec.EXACTLY)
         )
 
         if (composeButton.isVisible) {
             composeButton.measureWrapContent()
             val availableSpaceForMessage = messageParentView.measuredHeight - (composeButton.measuredHeight +
-                    convertDpToPx(30))
+                        convertDpToPx(30))
             val extraPadding = messageTextView.measuredHeight - availableSpaceForMessage
             if (extraPadding > 0) {
                 messageParentView.updatePadding(bottom = extraPadding)
@@ -181,20 +191,24 @@ class ReadMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
             messageIconView.bottom + convertDpToPx(15)
         )
 
-        val marginLeft = contentView.measuredWidth * 1 / 20
+        priorityIconImageView.layoutToTopLeft(
+            convertDpToPx(5),
+            convertDpToPx(19)
+        )
+
         titleTextView.layoutToTopLeft(
-            marginLeft,
+            priorityIconImageView.right + convertDpToPx(2),
             convertDpToPx(20)
         )
 
         timeTextView.layoutToTopLeft(
-            marginLeft,
+            titleTextView.left,
             titleTextView.bottom + convertDpToPx(5)
         )
 
         messageParentView.layoutToTopLeft(
-            marginLeft,
-            timeTextView.bottom + convertDpToPx(15)
+            (contentView.measuredWidth - messageParentView.measuredWidth) / 2,
+            timeTextView.bottom + convertDpToPx(10)
         )
 
         deleteIconView.layoutToTopRight(

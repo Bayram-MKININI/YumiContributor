@@ -16,8 +16,10 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.MESSAGE_ID
+import net.noliaware.yumi_contributor.commun.MESSAGE_PRIORITY
 import net.noliaware.yumi_contributor.commun.MESSAGE_SUBJECT_LABEL
 import net.noliaware.yumi_contributor.commun.SEND_MESSAGES_FRAGMENT_TAG
+import net.noliaware.yumi_contributor.commun.presentation.mappers.PriorityMapper
 import net.noliaware.yumi_contributor.commun.util.ViewModelState
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.parseTimeString
@@ -26,6 +28,7 @@ import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromShare
 import net.noliaware.yumi_contributor.commun.util.withArgs
 import net.noliaware.yumi_contributor.feature_message.domain.model.Message
 import net.noliaware.yumi_contributor.feature_message.presentation.views.ReadMailView
+import net.noliaware.yumi_contributor.feature_message.presentation.views.ReadMailView.*
 
 @AndroidEntryPoint
 class ReadInboxMailFragment : AppCompatDialogFragment() {
@@ -33,10 +36,12 @@ class ReadInboxMailFragment : AppCompatDialogFragment() {
     companion object {
         fun newInstance(
             messageId: String,
-            messageSubjectLabel: String? = null
+            messageSubjectLabel: String? = null,
+            messagePriority: Int? = null
         ) = ReadInboxMailFragment().withArgs(
             MESSAGE_ID to messageId,
-            MESSAGE_SUBJECT_LABEL to messageSubjectLabel
+            MESSAGE_SUBJECT_LABEL to messageSubjectLabel,
+            MESSAGE_PRIORITY to messagePriority
         )
     }
 
@@ -57,40 +62,6 @@ class ReadInboxMailFragment : AppCompatDialogFragment() {
         return inflater.inflate(R.layout.read_mail_layout, container, false).apply {
             readMailView = this as ReadMailView
             readMailView?.callback = readMailViewCallback
-        }
-    }
-
-    private val readMailViewCallback: ReadMailView.ReadMailViewCallback by lazy {
-        object : ReadMailView.ReadMailViewCallback {
-            override fun onBackButtonClicked() {
-                dismissAllowingStateLoss()
-            }
-
-            override fun onDeleteButtonClicked() {
-                MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(R.string.delete)
-                    .setMessage(R.string.delete_mail_confirmation)
-                    .setPositiveButton(R.string.ok) { dialog, _ ->
-                        dialog.dismiss()
-                        viewModel.callDeleteInboxMessageForId()
-                    }
-                    .setNegativeButton(R.string.cancel) { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    .create()
-                    .show()
-            }
-
-            override fun onComposeButtonClicked() {
-                SendMailFragment.newInstance(
-                    messageId = viewModel.messageId,
-                    messageSubjectLabel = viewModel.messageSubjectLabel
-                ).apply {
-                    onMessageSent = { viewModel.receivedMessageListShouldRefresh = true }
-                }.show(
-                    childFragmentManager.beginTransaction(), SEND_MESSAGES_FRAGMENT_TAG
-                )
-            }
         }
     }
 
@@ -135,8 +106,9 @@ class ReadInboxMailFragment : AppCompatDialogFragment() {
     }
 
     private fun bindViewToData(message: Message) {
-        ReadMailView.ReadMailViewAdapter(
-            subject = message.messageSubject,
+        ReadMailViewAdapter(
+            priorityIconRes = PriorityMapper().mapPriorityIcon(message.messagePriority),
+            subject = "${message.messageType} ${message.messageSubject}",
             time = getString(
                 R.string.received_at,
                 parseToLongDate(message.messageDate),
@@ -146,6 +118,40 @@ class ReadInboxMailFragment : AppCompatDialogFragment() {
             replyPossible = true
         ).also {
             readMailView?.fillViewWithData(it)
+        }
+    }
+
+
+    private val readMailViewCallback: ReadMailViewCallback by lazy {
+        object : ReadMailViewCallback {
+            override fun onBackButtonClicked() {
+                dismissAllowingStateLoss()
+            }
+
+            override fun onDeleteButtonClicked() {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.delete)
+                    .setMessage(R.string.delete_mail_confirmation)
+                    .setPositiveButton(R.string.ok) { dialog, _ ->
+                        dialog.dismiss()
+                        viewModel.callDeleteInboxMessageForId()
+                    }
+                    .setNegativeButton(R.string.cancel) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .create()
+                    .show()
+            }
+
+            override fun onComposeButtonClicked() {
+                SendMailFragment.newInstance(
+                    message = viewModel.getMessageEventsHelper.stateData
+                ).apply {
+                    onMessageSent = { viewModel.receivedMessageListShouldRefresh = true }
+                }.show(
+                    childFragmentManager.beginTransaction(), SEND_MESSAGES_FRAGMENT_TAG
+                )
+            }
         }
     }
 

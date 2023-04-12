@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <net.noliaware.yumi_contributor.feature_message.presentation.views.MessageItemView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mail_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,7 +14,15 @@
         android:fontFamily="@font/omnes_regular"
         android:gravity="end"
         android:textColor="@color/grey_2"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        tools:text="08 mars 2023" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/icon_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        tools:src="@drawable/ic_critical" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/subject_text_view"
@@ -21,7 +30,8 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/omnes_semibold_regular"
         android:textColor="@color/grey_2"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        tools:text="Message relatif à un coupon" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/body_text_view"
@@ -30,5 +40,6 @@
         android:fontFamily="@font/omnes_regular"
         android:maxLines="5"
         android:textColor="@color/grey_2"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        tools:text="Message de test" />
 </net.noliaware.yumi_contributor.feature_message.presentation.views.MessageItemView>

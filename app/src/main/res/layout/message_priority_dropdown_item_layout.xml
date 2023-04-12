@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<net.noliaware.yumi_contributor.feature_message.presentation.views.MessagePriorityDropdownItemView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mail_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/priority_icon_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        tools:src="@drawable/ic_information" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/priority_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/omnes_regular"
+        android:textColor="@color/grey_4"
+        android:textSize="14sp"
+        tools:text="Priorité Normale" />
+</net.noliaware.yumi_contributor.feature_message.presentation.views.MessagePriorityDropdownItemView>

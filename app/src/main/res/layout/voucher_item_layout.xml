@@ -2,6 +2,7 @@
 <net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherItemView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -20,7 +21,7 @@
             android:id="@+id/highlight_description_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/omnes_light"
+            android:fontFamily="@font/omnes_medium"
             android:text="@string/expiry_date"
             android:textColor="@android:color/white" />
 
@@ -29,7 +30,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/omnes_semibold_regular"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            tools:text="07 nov.2023" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -39,25 +41,27 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/omnes_semibold_regular"
         android:textColor="@color/grey_2"
-        android:textSize="22sp" />
+        android:textSize="22sp"
+        tools:text="Basiques légumes" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/retrieve_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/omnes_light"
-        android:text="@string/to_retrieve"
         android:textColor="@color/grey_2"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        tools:text="@string/to_retrieve" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/retailer_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="2dp"
+        android:layout_height="72dp"
         android:ellipsize="end"
         android:fontFamily="@font/omnes_semibold_regular"
         android:lines="1"
         android:textColor="@color/colorPrimary"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        tools:text="Maraicher" />
 
 </net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherItemView>

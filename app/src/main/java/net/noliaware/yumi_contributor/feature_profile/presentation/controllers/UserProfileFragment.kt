@@ -19,8 +19,8 @@ import net.noliaware.yumi_contributor.commun.util.inflate
 import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromSharedEvent
 import net.noliaware.yumi_contributor.feature_profile.domain.model.UserProfile
 import net.noliaware.yumi_contributor.feature_profile.presentation.views.ProfileParentView
-import net.noliaware.yumi_contributor.feature_profile.presentation.views.ProfileParentView.ProfileParentViewCallback
 import net.noliaware.yumi_contributor.feature_profile.presentation.views.ProfileView.ProfileViewAdapter
+import net.noliaware.yumi_contributor.feature_profile.presentation.views.ProfileView.ProfileViewCallback
 
 @AndroidEntryPoint
 class UserProfileFragment : Fragment() {
@@ -35,7 +35,7 @@ class UserProfileFragment : Fragment() {
     ): View? {
         return container?.inflate(R.layout.profile_layout, false)?.apply {
             profileParentView = this as ProfileParentView
-            profileParentView?.callback = profileViewCallback
+            profileParentView?.getProfileView?.callback = profileViewCallback
         }
     }
 
@@ -89,8 +89,8 @@ class UserProfileFragment : Fragment() {
         }
     }
 
-    private val profileViewCallback: ProfileParentViewCallback by lazy {
-        ProfileParentViewCallback {
+    private val profileViewCallback: ProfileViewCallback by lazy {
+        ProfileViewCallback {
             BOSignInFragment.newInstance().show(
                 childFragmentManager.beginTransaction(),
                 BO_SIGN_IN_FRAGMENT_TAG

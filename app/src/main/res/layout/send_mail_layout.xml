@@ -60,26 +60,29 @@
             android:layout_height="wrap_content"
             android:background="@drawable/rectangle_rounded_grey1" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/subject_edit_text"
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/subject_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:ems="12"
-            android:focusable="false"
-            android:fontFamily="@font/omnes_medium"
-            android:hint="@string/mail_object"
-            android:inputType="textMultiLine"
-            android:textColor="@color/grey_4"
-            android:textCursorDrawable="@null"
-            android:textSize="16sp" />
+            android:background="@drawable/spinner_background"
+            android:minHeight="20dp"
+            android:spinnerMode="dropdown" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/chevron_image_view"
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/fixed_subject_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:src="@drawable/ic_chevron" />
+            android:fontFamily="@font/omnes_medium"
+            android:textColor="@color/grey_4"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/priority_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/spinner_background"
+            android:spinnerMode="dropdown" />
 
         <View
             android:id="@+id/separator_line_view"

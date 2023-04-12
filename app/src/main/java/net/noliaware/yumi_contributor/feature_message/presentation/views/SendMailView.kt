@@ -3,19 +3,17 @@ package net.noliaware.yumi_contributor.feature_message.presentation.views
 import android.content.Context
 import android.graphics.Rect
 import android.os.Build
-import android.text.InputType
 import android.util.AttributeSet
-import android.view.GestureDetector.SimpleOnGestureListener
-import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.TextView
-import androidx.core.view.GestureDetectorCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.getStatusBarHeight
@@ -34,20 +32,21 @@ class SendMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
     private lateinit var contentView: View
     private lateinit var titleTextView: TextView
     private lateinit var messageBackgroundView: View
-    private lateinit var subjectEditText: EditText
-    private lateinit var chevronImageView: ImageView
+    lateinit var subjectSpinner: Spinner
+        private set
+    private lateinit var fixedSubjectTextView: TextView
+    lateinit var prioritySpinner: Spinner
+        private set
     private lateinit var separatorLineView: View
     private lateinit var messageParentLayout: View
     private lateinit var mailEditText: EditText
     private lateinit var sendButton: View
-    private var isSubjectFixed: Boolean = false
     private val visibleRect = Rect()
 
     var callback: SendMailViewCallback? by weak()
 
     interface SendMailViewCallback {
         fun onBackButtonClicked()
-        fun onSubjectEditTextClicked()
         fun onClearButtonClicked()
         fun onSendMailClicked(text: String)
     }
@@ -58,6 +57,7 @@ class SendMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
     }
 
     private fun initView() {
+
         backgroundView = findViewById(R.id.background_view)
         headerView = findViewById(R.id.header_view)
         messageIconView = findViewById(R.id.message_icon_view)
@@ -67,16 +67,10 @@ class SendMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
 
         titleTextView = contentView.findViewById(R.id.title_text_view)
         messageBackgroundView = contentView.findViewById(R.id.message_background)
+        prioritySpinner = contentView.findViewById(R.id.priority_spinner)
 
-        subjectEditText = contentView.findViewById(R.id.subject_edit_text)
-        subjectEditText.setRawInputType(InputType.TYPE_NULL)
-        subjectEditText.setOnConsistentClickListener {
-            if (!isSubjectFixed) {
-                callback?.onSubjectEditTextClicked()
-            }
-        }
-
-        chevronImageView = contentView.findViewById(R.id.chevron_image_view)
+        subjectSpinner = contentView.findViewById(R.id.subject_spinner)
+        fixedSubjectTextView = contentView.findViewById(R.id.fixed_subject_text_view)
         separatorLineView = contentView.findViewById(R.id.separator_line_view)
         messageParentLayout = contentView.findViewById(R.id.message_parent_layout)
         mailEditText = messageParentLayout.findViewById(R.id.mail_edit_text)
@@ -101,27 +95,24 @@ class SendMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
         }
     }
 
-    private fun EditText.setOnConsistentClickListener(doOnClick: (View) -> Unit) {
-        val gestureDetector = GestureDetectorCompat(context, object : SimpleOnGestureListener() {
-            override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-                doOnClick(this@setOnConsistentClickListener)
-                return false
-            }
-        })
-
-        this.setOnTouchListener { _, motionEvent -> gestureDetector.onTouchEvent(motionEvent) }
+    fun setSelectedPriorityAtIndex(index: Int) {
+        prioritySpinner.setSelection(index)
     }
 
-    fun setSubject(subject: String) {
-        subjectEditText.text.clear()
-        subjectEditText.setText(subject)
-    }
+    fun getSelectedPriorityIndex() = prioritySpinner.selectedItemPosition
 
     fun setSubjectFixed(subject: String) {
-        setSubject(subject)
-        isSubjectFixed = true
-        chevronImageView.isGone = true
+        subjectSpinner.isGone = true
+        fixedSubjectTextView.isVisible = true
+        fixedSubjectTextView.text = subject
     }
+
+    fun getSelectedSubjectIndex() =
+        if (subjectSpinner.selectedItemPosition < subjectSpinner.adapter.count) {
+            subjectSpinner.selectedItemPosition
+        } else {
+            -1
+        }
 
     fun computeMailView() {
         post {
@@ -156,7 +147,8 @@ class SendMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
             MeasureSpec.makeMeasureSpec(convertDpToPx(50), MeasureSpec.EXACTLY)
         )
 
-        val contentViewHeight = viewHeight - (headerView.measuredHeight + messageIconView.measuredHeight / 2 +
+        val contentViewHeight =
+            viewHeight - (headerView.measuredHeight + messageIconView.measuredHeight / 2 +
                     convertDpToPx(25))
 
         val contentViewWidth = viewWidth * 95 / 100
@@ -172,7 +164,8 @@ class SendMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
         sendButton.measureWrapContent()
 
         val screenHeight = viewHeight - getStatusBarHeight()
-        val messageBackgroundViewHeight = contentView.measuredHeight - (titleTextView.measuredHeight + sendButton.measuredHeight / 2 +
+        val messageBackgroundViewHeight =
+            contentView.measuredHeight - (titleTextView.measuredHeight + sendButton.measuredHeight / 2 +
                     if (visibleRect.height() == screenHeight) {
                         convertDpToPx(40)
                     } else {
@@ -184,23 +177,36 @@ class SendMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
             MeasureSpec.makeMeasureSpec(messageBackgroundViewHeight, MeasureSpec.EXACTLY)
         )
 
-        chevronImageView.measureWrapContent()
-
         val subjectWidth = messageBackgroundView.measuredWidth - convertDpToPx(30)
-        subjectEditText.measure(
-            MeasureSpec.makeMeasureSpec(
-                subjectWidth - chevronImageView.measuredWidth,
-                MeasureSpec.EXACTLY
-            ),
+
+        prioritySpinner.measure(
+            MeasureSpec.makeMeasureSpec(convertDpToPx(50), MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         )
+
+        val subjectSpinnerWidth = subjectWidth - prioritySpinner.measuredWidth
+
+        if (subjectSpinner.isVisible) {
+            subjectSpinner.measure(
+                MeasureSpec.makeMeasureSpec(subjectSpinnerWidth, MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+            )
+        }
+
+        if (fixedSubjectTextView.isVisible) {
+            fixedSubjectTextView.measure(
+                MeasureSpec.makeMeasureSpec(subjectSpinnerWidth, MeasureSpec.AT_MOST),
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+            )
+        }
 
         separatorLineView.measure(
             MeasureSpec.makeMeasureSpec(subjectWidth, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(convertDpToPx(3), MeasureSpec.EXACTLY)
         )
 
-        val availableHeightForBody = messageBackgroundView.measuredHeight - (subjectEditText.measuredHeight +
+        val availableHeightForBody =
+            messageBackgroundView.measuredHeight - (subjectSpinner.measuredHeight +
                     separatorLineView.measuredHeight + convertDpToPx(50))
 
         mailEditText.minHeight = availableHeightForBody
@@ -253,19 +259,38 @@ class SendMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
             titleTextView.bottom + convertDpToPx(15)
         )
 
-        subjectEditText.layoutToTopLeft(
-            messageBackgroundView.left + convertDpToPx(15),
-            messageBackgroundView.top + convertDpToPx(20)
-        )
+        if (subjectSpinner.isVisible) {
+            subjectSpinner.layoutToTopLeft(
+                messageBackgroundView.left + convertDpToPx(15),
+                messageBackgroundView.top + convertDpToPx(20)
+            )
+        }
 
-        chevronImageView.layoutToTopRight(
+        if (fixedSubjectTextView.isVisible) {
+            fixedSubjectTextView.layoutToTopLeft(
+                messageBackgroundView.left + convertDpToPx(15),
+                messageBackgroundView.top + convertDpToPx(20)
+            )
+        }
+
+        val prioritySpinnerTop = if (subjectSpinner.isVisible) {
+            subjectSpinner.top + (subjectSpinner.measuredHeight - prioritySpinner.measuredHeight) / 2
+        } else {
+            fixedSubjectTextView.top + (fixedSubjectTextView.measuredHeight - prioritySpinner.measuredHeight) / 2
+        }
+        prioritySpinner.layoutToTopRight(
             messageBackgroundView.right - convertDpToPx(15),
-            subjectEditText.top + (subjectEditText.measuredHeight - chevronImageView.measuredHeight) / 2
+            prioritySpinnerTop
         )
 
+        val separatorLineViewCeil = listOf(
+            subjectSpinner.bottom,
+            fixedSubjectTextView.bottom,
+            prioritySpinner.bottom
+        ).max()
         separatorLineView.layoutToTopLeft(
             (contentView.measuredWidth - separatorLineView.measuredWidth) / 2,
-            subjectEditText.bottom + convertDpToPx(10)
+            separatorLineViewCeil + convertDpToPx(5)
         )
 
         messageParentLayout.layoutToTopLeft(

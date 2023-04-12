@@ -2,6 +2,7 @@
 <net.noliaware.yumi_contributor.feature_message.presentation.views.ReadMailView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -44,14 +45,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/priority_icon_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            tools:src="@drawable/ic_critical" />
+
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/title_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/omnes_semibold_regular"
-            android:gravity="center"
             android:textColor="@color/grey_2"
-            android:textSize="19sp" />
+            android:textSize="19sp"
+            tools:text="Message relatif à un changement de situation" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/time_text_view"
@@ -59,15 +67,18 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/omnes_regular"
             android:textColor="@color/grey_2"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            tools:text="Envoyé le 07 Avril 2023 à 12:45" />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/message_parent_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rectangle_rounded_grey1"
             android:clipToPadding="false"
             android:fillViewport="true"
-            android:overScrollMode="never">
+            android:overScrollMode="never"
+            android:padding="10dp">
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -78,6 +89,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/omnes_regular"
+                    android:text="@string/empty_value"
                     android:textColor="@color/grey_2"
                     android:textSize="16sp" />
             </FrameLayout>

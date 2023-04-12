@@ -19,6 +19,8 @@ import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.CATEGORY
 import net.noliaware.yumi_contributor.commun.VOUCHER_DETAILS_FRAGMENT_TAG
 import net.noliaware.yumi_contributor.commun.presentation.adapters.ListLoadStateAdapter
+import net.noliaware.yumi_contributor.commun.util.decorateText
+import net.noliaware.yumi_contributor.commun.util.getColorCompat
 import net.noliaware.yumi_contributor.commun.util.handlePaginationError
 import net.noliaware.yumi_contributor.commun.util.withArgs
 import net.noliaware.yumi_contributor.feature_account.domain.model.Category
@@ -74,37 +76,22 @@ class UsedVouchersListFragment : AppCompatDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val title = getString(
-            R.string.vouchers_list,
+            R.string.used_vouchers_list,
             viewModel.selectedCategory?.categoryLabel.orEmpty()
         )
         vouchersListView?.fillViewWithData(
             VouchersListViewAdapter(
-                title = decorateText(
-                    text = title,
-                    coloredText = viewModel.selectedCategory?.categoryLabel.orEmpty(),
-                    color = viewModel.selectedCategory?.categoryColor ?: Color.TRANSPARENT
+                title = title.decorateText(
+                    coloredText1 = getString(R.string.used).lowercase(),
+                    color1 = context?.getColorCompat(R.color.colorPrimary) ?: Color.TRANSPARENT,
+                    coloredText2 = viewModel.selectedCategory?.categoryLabel.orEmpty(),
+                    color2 = viewModel.selectedCategory?.categoryColor ?: Color.TRANSPARENT
                 ),
                 color = viewModel.selectedCategory?.categoryColor ?: Color.TRANSPARENT,
                 iconName = viewModel.selectedCategory?.categoryIcon
             )
         )
         collectFlows()
-    }
-
-    private fun decorateText(
-        text: String,
-        coloredText: String,
-        color: Int
-    ) = SpannableString(text).apply {
-        val colorSpan = ForegroundColorSpan(color)
-        val startIndex = text.indexOf(coloredText)
-        val endIndex = text.length
-        setSpan(
-            colorSpan,
-            startIndex,
-            endIndex,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
     }
 
     private fun collectFlows() {

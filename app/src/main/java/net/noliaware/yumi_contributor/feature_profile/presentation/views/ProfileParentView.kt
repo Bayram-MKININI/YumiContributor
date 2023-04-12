@@ -17,14 +17,8 @@ class ProfileParentView(context: Context, attrs: AttributeSet?) : ViewGroup(cont
     private lateinit var contentView: View
     private lateinit var profileDataView: View
     private lateinit var profileView: ProfileView
-    private lateinit var getCodeLayout: LinearLayoutCompat
 
     val getProfileView get() = profileView
-    var callback: ProfileParentViewCallback? by weak()
-
-    fun interface ProfileParentViewCallback {
-        fun onGetCodeButtonClicked()
-    }
 
     override fun onFinishInflate() {
         super.onFinishInflate()
@@ -38,8 +32,6 @@ class ProfileParentView(context: Context, attrs: AttributeSet?) : ViewGroup(cont
         contentView = findViewById(R.id.content_layout)
         profileDataView = contentView.findViewById(R.id.profile_data_view)
         profileView = profileDataView.findViewById(R.id.profile_view)
-        getCodeLayout = findViewById(R.id.get_code_layout)
-        getCodeLayout.setOnClickListener { callback?.onGetCodeButtonClicked() }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -59,8 +51,6 @@ class ProfileParentView(context: Context, attrs: AttributeSet?) : ViewGroup(cont
             MeasureSpec.makeMeasureSpec(convertDpToPx(50), MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(convertDpToPx(50), MeasureSpec.EXACTLY)
         )
-
-        getCodeLayout.measureWrapContent()
 
         val contentViewWidth = viewWidth * 95 / 100
         val sideMargin = viewWidth * 5 / 100 / 2
@@ -96,11 +86,6 @@ class ProfileParentView(context: Context, attrs: AttributeSet?) : ViewGroup(cont
         contentView.layoutToTopLeft(
             (viewWidth - contentView.measuredWidth) / 2,
             profileIconView.bottom + convertDpToPx(15)
-        )
-
-        getCodeLayout.layoutToBottomLeft(
-            (contentView.measuredWidth - getCodeLayout.measuredWidth) / 2,
-            contentView.measuredHeight - convertDpToPx(40)
         )
     }
 }

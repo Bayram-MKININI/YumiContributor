@@ -6,10 +6,12 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.presentation.adapters.ItemViewHolder
+import net.noliaware.yumi_contributor.commun.presentation.mappers.PriorityMapper
 import net.noliaware.yumi_contributor.commun.util.parseTimeString
 import net.noliaware.yumi_contributor.commun.util.parseToShortDate
 import net.noliaware.yumi_contributor.feature_message.domain.model.Message
 import net.noliaware.yumi_contributor.feature_message.presentation.views.MessageItemView
+import net.noliaware.yumi_contributor.feature_message.presentation.views.MessageItemView.*
 
 class MessageAdapter(
     private val onItemClicked: (Message) -> Unit
@@ -35,8 +37,9 @@ class MessageAdapter(
     private fun mapAdapter(
         message: Message,
         holder: ItemViewHolder<MessageItemView>
-    ) = MessageItemView.MessageItemViewAdapter(
-        subject = message.messageSubject,
+    ) = MessageItemViewAdapter(
+        priorityIconRes = PriorityMapper().mapPriorityIcon(message.messagePriority),
+        subject = "${message.messageType} ${message.messageSubject}",
         time = holder.itemView.context.getString(
             R.string.date_short,
             parseToShortDate(message.messageDate),

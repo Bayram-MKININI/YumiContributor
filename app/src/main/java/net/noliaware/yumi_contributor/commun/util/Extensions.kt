@@ -12,6 +12,9 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -370,9 +373,8 @@ fun String.parseHexColor(): Int {
     }
 }
 
-fun Context.getDrawableCompat(@DrawableRes drawableRes: Int): Drawable {
-    return AppCompatResources.getDrawable(this, drawableRes)!!
-}
+fun Context.getDrawableCompat(@DrawableRes drawableRes: Int) =
+    AppCompatResources.getDrawable(this, drawableRes)
 
 @CheckResult
 fun Drawable.tint(@ColorInt color: Int): Drawable {
@@ -387,6 +389,32 @@ fun Drawable.tint(context: Context, @ColorRes color: Int): Drawable {
 }
 
 fun Number.formatNumber(): String = NumberFormat.getNumberInstance(Locale.getDefault()).format(this)
+
+fun String.decorateText(
+    coloredText1: String,
+    color1: Int,
+    coloredText2: String,
+    color2: Int
+) = SpannableString(this).apply {
+    val colorSpan1 = ForegroundColorSpan(color1)
+    val startIndex1 = indexOf(coloredText1)
+    val endIndex1 = startIndex1 + coloredText1.length
+    setSpan(
+        colorSpan1,
+        startIndex1,
+        endIndex1,
+        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+    )
+    val colorSpan2 = ForegroundColorSpan(color2)
+    val startIndex2 = indexOf(coloredText2)
+    val endIndex2 = startIndex2 + coloredText2.length
+    setSpan(
+        colorSpan2,
+        startIndex2,
+        endIndex2,
+        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+    )
+}
 
 fun <T> unsafeLazy(initializer: () -> T) = lazy(LazyThreadSafetyMode.NONE, initializer)
 val <T> T.exhaustive: T get() = this

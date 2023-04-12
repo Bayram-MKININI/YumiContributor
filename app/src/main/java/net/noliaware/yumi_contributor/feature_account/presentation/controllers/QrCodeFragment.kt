@@ -79,7 +79,6 @@ class QrCodeFragment : AppCompatDialogFragment() {
                     redirectToLoginScreenFromSharedEvent(sharedEvent)
                 }
         }
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.useVoucherEventsHelper.stateFlow.flowWithLifecycle(lifecycle)
                 .collect { vmState ->

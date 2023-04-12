@@ -6,6 +6,7 @@ import net.noliaware.yumi_contributor.commun.util.Resource
 import net.noliaware.yumi_contributor.feature_account.domain.model.Category
 import net.noliaware.yumi_contributor.feature_account.domain.model.ManagedAccount
 import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStateData
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus
 
 interface ManagedAccountRepository {
@@ -33,7 +34,7 @@ interface ManagedAccountRepository {
 
     fun getVoucherById(voucherId: String): Flow<Resource<Voucher>>
 
-    fun getVoucherStatusById(voucherId: String): Flow<Resource<VoucherStatus>>
+    fun getVoucherStateDataById(voucherId: String): Flow<Resource<VoucherStateData>>
 
     fun useVoucherById(voucherId: String): Flow<Resource<Boolean>>
 }

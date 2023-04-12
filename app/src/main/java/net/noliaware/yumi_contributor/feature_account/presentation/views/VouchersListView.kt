@@ -97,7 +97,7 @@ class VouchersListView(context: Context, attrs: AttributeSet?) : ViewGroup(conte
         )
 
         val recyclerViewHeight = viewHeight - (headerView.measuredHeight + categoryImageView.measuredHeight / 2 +
-                titleTextView.measuredHeight + convertDpToPx(35))
+                titleTextView.measuredHeight + convertDpToPx(25))
 
         recyclerView.measure(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
@@ -131,6 +131,6 @@ class VouchersListView(context: Context, attrs: AttributeSet?) : ViewGroup(conte
             categoryImageView.bottom + convertDpToPx(20)
         )
 
-        recyclerView.layoutToTopLeft(0, titleTextView.bottom + convertDpToPx(15))
+        recyclerView.layoutToTopLeft(0, titleTextView.bottom + convertDpToPx(5))
     }
 }

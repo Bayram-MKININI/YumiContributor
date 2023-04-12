@@ -24,12 +24,15 @@ import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.makeCall
 import net.noliaware.yumi_contributor.commun.util.openMap
 import net.noliaware.yumi_contributor.commun.util.openWebPage
+import net.noliaware.yumi_contributor.commun.util.parseTimeString
 import net.noliaware.yumi_contributor.commun.util.parseToShortDate
 import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromSharedEvent
 import net.noliaware.yumi_contributor.commun.util.withArgs
 import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherCodeData
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStateData
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus.*
 import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView
 import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView.VouchersDetailsViewAdapter
 import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView.VouchersDetailsViewCallback
@@ -80,7 +83,7 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             merge(
                 viewModel.getVoucherEventsHelper.eventFlow,
-                viewModel.getVoucherStatusEventsHelper.eventFlow
+                viewModel.getVoucherStateDataEventsHelper.eventFlow
             ).flowWithLifecycle(lifecycle).collectLatest { sharedEvent ->
                 handleSharedEvent(sharedEvent)
                 redirectToLoginScreenFromSharedEvent(sharedEvent)
@@ -98,12 +101,12 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
                 }
         }
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.getVoucherStatusEventsHelper.stateFlow.flowWithLifecycle(lifecycle)
+            viewModel.getVoucherStateDataEventsHelper.stateFlow.flowWithLifecycle(lifecycle)
                 .collect { vmState ->
                     when (vmState) {
                         is ViewModelState.LoadingState -> Unit
-                        is ViewModelState.DataState -> vmState.data?.let { voucherStatus ->
-                            handleVoucherStatusUpdate(voucherStatus)
+                        is ViewModelState.DataState -> vmState.data?.let { voucherStateData ->
+                            handleVoucherStateDataUpdated(voucherStateData)
                         }
                     }
                 }
@@ -131,37 +134,51 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
                     R.string.created_in_hyphen,
                     parseToShortDate(voucher.voucherDate)
                 ),
-                endDate = getString(
-                    R.string.expiry_date_value,
-                    parseToShortDate(voucher.voucherExpiryDate)
-                ),
+                endDate = mapVoucherEndDate(voucher),
                 partnerAvailable = voucher.partnerInfoText?.isNotEmpty() == true,
                 partnerLabel = voucher.partnerInfoText,
                 voucherDescription = voucher.productDescription,
                 retailerLabel = voucher.retailerLabel.orEmpty(),
                 retailerAddress = retailerAddress,
-                displayVoucherActionNotAvailable = voucher.voucherStatus != VoucherStatus.USABLE
+                displayVoucherActionNotAvailable = voucher.voucherStatus != USABLE,
+                voucherStatus = mapVoucherStatus(voucher.voucherStatus)
             )
         )
-
-        if (voucher.voucherStatus != VoucherStatus.USABLE) {
-            handleVoucherStatusUpdate(voucher.voucherStatus)
-        }
     }
 
-    private fun handleVoucherStatusUpdate(voucherStatus: VoucherStatus?) {
-        when (voucherStatus) {
-            VoucherStatus.CONSUMED -> vouchersDetailsContainerView?.setVoucherStatus(
-                getString(R.string.voucher_consumed)
+    private fun mapVoucherEndDate(voucher: Voucher) =
+        when (voucher.voucherStatus) {
+            USABLE -> getString(
+                R.string.expiry_date_value, parseToShortDate(voucher.voucherExpiryDate)
             )
-            VoucherStatus.CANCELLED -> vouchersDetailsContainerView?.setVoucherStatus(
-                getString(R.string.voucher_canceled)
+            CONSUMED -> getString(
+                R.string.usage_date_value,
+                parseToShortDate(voucher.voucherUseDate),
+                parseTimeString(voucher.voucherUseTime)
             )
-            VoucherStatus.INEXISTENT -> vouchersDetailsContainerView?.setVoucherStatus(
-                getString(R.string.voucher_inexistent)
+            CANCELLED -> getString(
+                R.string.cancellation_date_value,
+                parseToShortDate(voucher.voucherUseDate),
+                parseTimeString(voucher.voucherUseTime)
             )
-            else -> Unit
+            else -> ""
         }
+
+    private fun mapVoucherStatus(voucherStatus: VoucherStatus?) =
+        when (voucherStatus) {
+            CONSUMED -> getString(R.string.voucher_consumed)
+            CANCELLED -> getString(R.string.voucher_canceled)
+            INEXISTENT -> getString(R.string.voucher_inexistent)
+            else -> ""
+        }
+
+    private fun handleVoucherStateDataUpdated(voucherStateData: VoucherStateData) {
+        val updatedVoucher = viewModel.getVoucherEventsHelper.stateData?.copy(
+            voucherStatus = voucherStateData.voucherStatus,
+            voucherUseDate = voucherStateData.voucherUseDate,
+            voucherUseTime = voucherStateData.voucherUseTime
+        )
+        updatedVoucher?.let { bindViewToData(it) }
     }
 
     private val vouchersDetailsViewCallback: VouchersDetailsViewCallback by lazy {
@@ -224,8 +241,8 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        viewModel.getVoucherStatusEventsHelper.stateData?.let { voucherStatus ->
-            if (voucherStatus == VoucherStatus.CONSUMED) {
+        viewModel.getVoucherStateDataEventsHelper.stateData?.let { voucherStateData ->
+            if (voucherStateData.voucherStatus == CONSUMED) {
                 onDataRefreshed?.invoke()
             }
         }

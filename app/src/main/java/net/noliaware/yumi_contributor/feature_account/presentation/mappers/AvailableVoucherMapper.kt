@@ -18,9 +18,7 @@ class AvailableVoucherMapper @Inject constructor() : VoucherMapper {
         title = voucher.productLabel.orEmpty(),
         highlightDescription = context.getString(R.string.expiry_date),
         highlightValue = parseToShortDate(voucher.voucherExpiryDate),
-        retailer = context.getString(
-            R.string.retailer_label,
-            voucher.retailerLabel
-        )
+        retailerDescription = context.getString(R.string.to_retrieve),
+        retailerValue = voucher.retailerLabel
     )
 }

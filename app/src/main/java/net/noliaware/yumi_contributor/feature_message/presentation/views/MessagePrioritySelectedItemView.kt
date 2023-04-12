@@ -3,20 +3,18 @@ package net.noliaware.yumi_contributor.feature_message.presentation.views
 import android.content.Context
 import android.util.AttributeSet
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.ImageView
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 
-class MessageSubjectItemView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
+class MessagePrioritySelectedItemView(
+    context: Context,
+    attrs: AttributeSet?
+) : ViewGroup(context, attrs) {
 
-    private lateinit var subjectView: TextView
-
-    data class MessageSubjectItemViewAdapter(
-        val subject: String,
-        val backgroundDrawable: Int
-    )
+    private lateinit var iconImageView: ImageView
 
     override fun onFinishInflate() {
         super.onFinishInflate()
@@ -24,20 +22,18 @@ class MessageSubjectItemView(context: Context, attrs: AttributeSet?) : ViewGroup
     }
 
     private fun initView() {
-        subjectView = findViewById(R.id.subject_text_view)
+        iconImageView = findViewById(R.id.priority_icon_image_view)
     }
 
-    fun fillViewWithData(messageSubjectItemViewAdapter: MessageSubjectItemViewAdapter) {
-        subjectView.text = messageSubjectItemViewAdapter.subject
-        setBackgroundResource(messageSubjectItemViewAdapter.backgroundDrawable)
+    fun setIconDrawable(iconDrawable: Int) {
+        iconImageView.setImageResource(iconDrawable)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val viewWidth = MeasureSpec.getSize(widthMeasureSpec)
 
-        subjectView.measureWrapContent()
-
-        val viewHeight = convertDpToPx(42)
+        iconImageView.measureWrapContent()
+        val viewHeight = convertDpToPx(37)
 
         setMeasuredDimension(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
@@ -49,9 +45,9 @@ class MessageSubjectItemView(context: Context, attrs: AttributeSet?) : ViewGroup
         val viewWidth = right - left
         val viewHeight = bottom - top
 
-        subjectView.layoutToTopLeft(
-            convertDpToPx(15),
-            (viewHeight - subjectView.measuredHeight) / 2
+        iconImageView.layoutToTopLeft(
+            viewWidth * 2 / 10,
+            convertDpToPx(5)
         )
     }
 }

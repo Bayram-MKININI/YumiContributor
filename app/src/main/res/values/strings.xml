@@ -32,16 +32,21 @@
     <string name="used">Utilisés</string>
     <string name="cancelled">Annulés</string>
     <string name="back">Retour</string>
-    <string name="vouchers_list">Liste des coupons %s</string>
+    <string name="available_vouchers_list">Liste des coupons disponibles de la catégorie %s</string>
+    <string name="used_vouchers_list">Liste des coupons utilisés de la catégorie %s</string>
+    <string name="cancelled_vouchers_list">Liste des coupons annulés de la catégorie %s</string>
     <string name="expiry_date">Valable jusqu\'au</string>
-    <string name="to_retrieve">À retirer chez</string>
+    <string name="to_retrieve">À retirer chez :</string>
+    <string name="retrieved">Retiré chez :</string>
+    <string name="retailer">Fournisseur :</string>
 
     //Vouchers
-    <string name="retailer_label">\"%s\"</string>
     <string name="created_in_hyphen">Crée le %s -</string>
     <string name="created_in">Crée le %s</string>
-    <string name="validation_date">Validé le</string>
+    <string name="usage_date">Utilisé le</string>
+    <string name="usage_date_value">Utilisé le %s à %s</string>
     <string name="cancellation_date">Annulé le</string>
+    <string name="cancellation_date_value">Annulé le %s à %s</string>
     <string name="expiry_date_value">Valable jusqu\'au %s</string>
     <string name="sponsored_by">Sponsorisé par :</string>
     <string name="information">i</string>
@@ -60,7 +65,6 @@
     //Profile
     <string name="my_profile">Mon Profil</string>
     <string name="my_data">Mes informations</string>
-    <string name="my_vouchers">Mes coupons</string>
     <string name="complementary_data">Informations complémentaires</string>
     <string name="my_used_vouchers">Mes coupons</string>
     <string name="login">Login</string>
@@ -68,19 +72,24 @@
     <string name="name">Prénom</string>
     <string name="phone">Téléphone</string>
     <string name="address">Adresse</string>
+    <string name="bo_access">Accès gestionnaire web</string>
+    <string name="bo_access_description">Génerer un code d\'accès à votre compte sur le gestionnaire web</string>
+    <string name="access">Générer un code</string>
     <string name="new_line">\n</string>
     <string name="empty_value">-</string>
-    <string name="get_code">Obtenir un code</string>
     <string name="bo_sign_in_description">Veuillez utiliser ce code pour vous connecter sur votre compte back office</string>
     <string name="bo_code_expiration">Ce code expire dans:</string>
     <string name="empty_time">--:--</string>
-    <string name="usage_date">Date d\'utilisation: %s à %s</string>
 
     //Messages
     <string name="mail">Messagerie</string>
     <string name="sent">Envoyés</string>
     <string name="received">Reçus</string>
     <string name="mail_description">Communiquez avec votre agent via le centre de messagerie</string>
+    <string name="priority_information">Information</string>
+    <string name="priority_warning">Avertissement</string>
+    <string name="priority_important">Important</string>
+    <string name="priority_critical">Critique</string>
     <string name="sent_at">Envoyé le %s à %s</string>
     <string name="date_short">%s\n%s</string>
     <string name="select_subject">Sélectionner un sujet</string>

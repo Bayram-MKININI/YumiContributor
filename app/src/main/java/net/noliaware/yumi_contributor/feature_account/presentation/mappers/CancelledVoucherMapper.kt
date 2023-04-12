@@ -18,9 +18,7 @@ class CancelledVoucherMapper @Inject constructor() : VoucherMapper {
         title = voucher.productLabel.orEmpty(),
         highlightDescription = context.getString(R.string.cancellation_date),
         highlightValue = parseToShortDate(voucher.voucherUseDate),
-        retailer = context.getString(
-            R.string.retailer_label,
-            voucher.retailerLabel
-        )
+        retailerDescription = context.getString(R.string.retailer),
+        retailerValue = voucher.retailerLabel
     )
 }

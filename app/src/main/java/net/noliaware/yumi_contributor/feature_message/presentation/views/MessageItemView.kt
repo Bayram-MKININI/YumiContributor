@@ -3,7 +3,9 @@ package net.noliaware.yumi_contributor.feature_message.presentation.views
 import android.content.Context
 import android.util.AttributeSet
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.DrawableRes
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
@@ -13,11 +15,14 @@ import java.lang.Integer.max
 
 class MessageItemView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
 
+    private lateinit var iconImageView: ImageView
     private lateinit var subjectTextView: TextView
     private lateinit var timeTextView: TextView
     private lateinit var bodyTextView: TextView
 
     data class MessageItemViewAdapter(
+        @DrawableRes
+        val priorityIconRes: Int,
         val subject: String = "",
         val time: String = "",
         val body: String = ""
@@ -29,12 +34,14 @@ class MessageItemView(context: Context, attrs: AttributeSet?) : ViewGroup(contex
     }
 
     private fun initView() {
+        iconImageView = findViewById(R.id.icon_image_view)
         subjectTextView = findViewById(R.id.subject_text_view)
         timeTextView = findViewById(R.id.time_text_view)
         bodyTextView = findViewById(R.id.body_text_view)
     }
 
     fun fillViewWithData(messageItemViewAdapter: MessageItemViewAdapter) {
+        iconImageView.setImageResource(messageItemViewAdapter.priorityIconRes)
         subjectTextView.text = messageItemViewAdapter.subject
         timeTextView.text = messageItemViewAdapter.time
         bodyTextView.text = messageItemViewAdapter.body
@@ -44,9 +51,11 @@ class MessageItemView(context: Context, attrs: AttributeSet?) : ViewGroup(contex
         val viewWidth = MeasureSpec.getSize(widthMeasureSpec)
         var viewHeight = MeasureSpec.getSize(heightMeasureSpec)
 
+        iconImageView.measureWrapContent()
         timeTextView.measureWrapContent()
 
-        val bodyTextMaxWidth = viewWidth - (timeTextView.measuredWidth + convertDpToPx(45))
+        val bodyTextMaxWidth = viewWidth - (timeTextView.measuredWidth + iconImageView.measuredWidth +
+                convertDpToPx(32))
         subjectTextView.measure(
             MeasureSpec.makeMeasureSpec(bodyTextMaxWidth, MeasureSpec.AT_MOST),
             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
@@ -72,8 +81,13 @@ class MessageItemView(context: Context, attrs: AttributeSet?) : ViewGroup(contex
         val viewWidth = right - left
         val viewHeight = bottom - top
 
+        iconImageView.layoutToTopLeft(
+            convertDpToPx(5),
+            convertDpToPx(10)
+        )
+
         subjectTextView.layoutToTopLeft(
-            convertDpToPx(15),
+            iconImageView.right + convertDpToPx(2),
             convertDpToPx(15)
         )
 
