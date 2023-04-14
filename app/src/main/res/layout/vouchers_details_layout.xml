@@ -275,7 +275,9 @@
             android:gravity="center"
             android:textColor="@color/color_bittersweet"
             android:textSize="18sp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:text="Coupon consommé"
+            tools:visibility="visible" />
 
     </net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView>
 </net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView>

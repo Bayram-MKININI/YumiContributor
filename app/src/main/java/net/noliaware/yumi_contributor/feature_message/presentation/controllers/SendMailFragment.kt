@@ -28,6 +28,7 @@ import net.noliaware.yumi_contributor.feature_message.presentation.adapters.Mess
 import net.noliaware.yumi_contributor.feature_message.presentation.adapters.MessageSubjectsAdapter
 import net.noliaware.yumi_contributor.feature_message.presentation.views.PriorityUI
 import net.noliaware.yumi_contributor.feature_message.presentation.views.SendMailView
+import net.noliaware.yumi_contributor.feature_message.presentation.views.SendMailView.*
 
 @AndroidEntryPoint
 class SendMailFragment : AppCompatDialogFragment() {
@@ -136,8 +137,8 @@ class SendMailFragment : AppCompatDialogFragment() {
         }
     }
 
-    private val sendMailViewCallback: SendMailView.SendMailViewCallback by lazy {
-        object : SendMailView.SendMailViewCallback {
+    private val sendMailViewCallback: SendMailViewCallback by lazy {
+        object : SendMailViewCallback {
             override fun onBackButtonClicked() {
                 dismissAllowingStateLoss()
             }

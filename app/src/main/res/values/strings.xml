@@ -27,7 +27,7 @@
         <item quantity="other">bénéficiaires</item>
     </plurals>
     <string name="search_account">Rechercher un bénéficiaire</string>
-    <string name="my_accounts">Mes bénéficiaires</string>
+    <string name="my_accounts">Mes bénéficiaires gérés</string>
     <string name="available">Disponibles</string>
     <string name="used">Utilisés</string>
     <string name="cancelled">Annulés</string>
