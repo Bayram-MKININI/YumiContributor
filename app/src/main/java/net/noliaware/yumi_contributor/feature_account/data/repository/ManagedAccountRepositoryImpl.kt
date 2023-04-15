@@ -431,10 +431,10 @@ class ManagedAccountRepositoryImpl(
             )
 
             if (sessionNoFailure) {
-                remoteData.data?.let { getVoucherStatusDTO ->
+                remoteData.data?.let { getVoucherStateDataDTO ->
                     emit(
                         Resource.Success(
-                            data = getVoucherStatusDTO.toVoucherStateData(),
+                            data = getVoucherStateDataDTO.voucherStateData.toVoucherStateData(),
                             appMessage = remoteData.message?.toAppMessage()
                         )
                     )

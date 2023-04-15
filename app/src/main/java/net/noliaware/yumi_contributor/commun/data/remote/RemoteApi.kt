@@ -33,7 +33,7 @@ import net.noliaware.yumi_contributor.feature_account.data.remote.dto.AvailableV
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.CancelledVouchersDTO
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.FilterAccountsDTO
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.GetVoucherDTO
-import net.noliaware.yumi_contributor.feature_account.data.remote.dto.GetVoucherStatusDTO
+import net.noliaware.yumi_contributor.feature_account.data.remote.dto.GetVoucherStateDataDTO
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.ManagedAccountsDTO
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.SelectUserDTO
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.SingleManagedAccountDTO
@@ -185,7 +185,7 @@ interface RemoteApi {
         @Path(SALT_STRING) saltString: String,
         @Path(TOKEN) token: String,
         @FieldMap params: Map<String, String>
-    ): ResponseDTO<GetVoucherStatusDTO>
+    ): ResponseDTO<GetVoucherStateDataDTO>
 
     @FormUrlEncoded
     @POST("$USE_VOUCHER/{$TIMESTAMP}/{$SALT_STRING}/{$TOKEN}")
