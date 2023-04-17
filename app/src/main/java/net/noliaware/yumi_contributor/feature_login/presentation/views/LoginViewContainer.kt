@@ -1,9 +1,11 @@
 package net.noliaware.yumi_contributor.feature_login.presentation.views
 
 import android.content.Context
+import android.os.Build
 import android.util.AttributeSet
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.view.ViewCompat
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
@@ -21,6 +23,13 @@ class LoginViewContainer(context: Context, attrs: AttributeSet?) : ViewGroup(con
     private fun initView() {
         iconView = findViewById(R.id.icon_view)
         loginView = findViewById(R.id.login_view)
+
+        ViewCompat.setOnApplyWindowInsetsListener(this) { _, insets ->
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                loginView.requestLayout()
+            }
+            insets
+        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
