@@ -115,7 +115,7 @@ class ProfileView(context: Context, attrs: AttributeSet?) : ViewGroup(context, a
         viewHeight = myDataTextView.measuredHeight + loginValueTextView.measuredHeight + surnameValueTextView.measuredHeight +
                     nameValueTextView.measuredHeight + phoneValueTextView.measuredHeight + addressValueTextView.measuredHeight +
                     separatorView.measuredHeight + boAccessTextView.measuredHeight + boAccessDescriptionTextView.measuredHeight +
-                    accessButtonLayout.measuredHeight + convertDpToPx(150)
+                    accessButtonLayout.measuredHeight + convertDpToPx(110)
 
         setMeasuredDimension(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),

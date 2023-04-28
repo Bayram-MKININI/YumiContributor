@@ -4,17 +4,14 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.view.isVisible
 import androidx.viewpager2.widget.ViewPager2
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.getStatusBarHeight
+import net.noliaware.yumi_contributor.commun.util.hideKeyboard
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
-import net.noliaware.yumi_contributor.commun.util.layoutToTopRight
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
-import net.noliaware.yumi_contributor.commun.util.removeOverScroll
 
 class ManagedAccountParentView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
 
@@ -61,6 +58,7 @@ class ManagedAccountParentView(context: Context, attrs: AttributeSet?) : ViewGro
     }
 
     fun displaySelectedAccountView(animated: Boolean = true) {
+        context.hideKeyboard()
         viewPager.setCurrentItem(1, animated)
     }
 
