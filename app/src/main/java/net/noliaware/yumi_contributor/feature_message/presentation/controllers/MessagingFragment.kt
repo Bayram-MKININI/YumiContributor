@@ -34,7 +34,7 @@ class MessagingFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        return container?.inflate(R.layout.messaging_layout, false)?.apply {
+        return container?.inflate(R.layout.messaging_layout)?.apply {
             messagingView = this as MessagingView
             messagingView?.callback = messagingViewCallback
         }

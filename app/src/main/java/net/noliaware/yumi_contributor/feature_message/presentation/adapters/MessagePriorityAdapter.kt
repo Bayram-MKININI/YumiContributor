@@ -1,26 +1,24 @@
 package net.noliaware.yumi_contributor.feature_message.presentation.adapters
 
 import android.content.Context
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import net.noliaware.yumi_contributor.R
+import net.noliaware.yumi_contributor.commun.util.inflate
 import net.noliaware.yumi_contributor.feature_message.presentation.views.MessagePriorityDropdownItemView
 import net.noliaware.yumi_contributor.feature_message.presentation.views.MessagePrioritySelectedItemView
 import net.noliaware.yumi_contributor.feature_message.presentation.views.PriorityUI
 
 class MessagePriorityAdapter(
-    private val context: Context,
+    context: Context,
     objects: List<PriorityUI>
-) : ArrayAdapter<PriorityUI>(context, R.layout.message_priority_selected_item_layout, objects) {
+) : ArrayAdapter<PriorityUI>(context, 0, objects) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val selectedView = LayoutInflater.from(context).inflate(
-            R.layout.message_priority_selected_item_layout,
-            parent,
-            false
-        ) as MessagePrioritySelectedItemView
+        val selectedView = (convertView ?: parent.inflate(
+            R.layout.message_priority_selected_item_layout
+        )) as MessagePrioritySelectedItemView
 
         getItem(position)?.resIcon?.let {
             selectedView.setIconDrawable(it)
@@ -29,11 +27,9 @@ class MessagePriorityAdapter(
     }
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val itemView = LayoutInflater.from(context).inflate(
-            R.layout.message_priority_dropdown_item_layout,
-            parent,
-            false
-        ) as MessagePriorityDropdownItemView
+        val itemView = (convertView ?: parent.inflate(
+            R.layout.message_priority_dropdown_item_layout
+        )) as MessagePriorityDropdownItemView
 
         getItem(position)?.let { priorityUI ->
             itemView.fillViewWithData(

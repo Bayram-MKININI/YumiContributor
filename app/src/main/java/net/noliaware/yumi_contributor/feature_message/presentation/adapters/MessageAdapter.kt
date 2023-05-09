@@ -1,17 +1,17 @@
 package net.noliaware.yumi_contributor.feature_message.presentation.adapters
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.presentation.adapters.ItemViewHolder
 import net.noliaware.yumi_contributor.commun.presentation.mappers.PriorityMapper
+import net.noliaware.yumi_contributor.commun.util.inflate
 import net.noliaware.yumi_contributor.commun.util.parseTimeString
 import net.noliaware.yumi_contributor.commun.util.parseToShortDate
 import net.noliaware.yumi_contributor.feature_message.domain.model.Message
 import net.noliaware.yumi_contributor.feature_message.presentation.views.MessageItemView
-import net.noliaware.yumi_contributor.feature_message.presentation.views.MessageItemView.*
+import net.noliaware.yumi_contributor.feature_message.presentation.views.MessageItemView.MessageItemViewAdapter
 
 class MessageAdapter(
     private val onItemClicked: (Message) -> Unit
@@ -21,7 +21,7 @@ class MessageAdapter(
         parent: ViewGroup,
         viewType: Int
     ) = ItemViewHolder<MessageItemView>(
-        LayoutInflater.from(parent.context).inflate(R.layout.message_item_layout, parent, false)
+        parent.inflate(R.layout.message_item_layout)
     ) { position ->
         getItem(position)?.let { onItemClicked(it) }
     }

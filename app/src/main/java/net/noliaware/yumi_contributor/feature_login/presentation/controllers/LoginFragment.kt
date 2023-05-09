@@ -37,7 +37,7 @@ class LoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return container?.inflate(R.layout.login_layout, false)
+        return container?.inflate(R.layout.login_layout)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

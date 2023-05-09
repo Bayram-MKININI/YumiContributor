@@ -85,7 +85,6 @@
     <string name="mail">Messagerie</string>
     <string name="sent">Envoyés</string>
     <string name="received">Reçus</string>
-    <string name="mail_description">Communiquez avec votre agent via le centre de messagerie</string>
     <string name="priority_information">Information</string>
     <string name="priority_warning">Avertissement</string>
     <string name="priority_important">Important</string>
@@ -103,7 +102,6 @@
 
     //Alert
     <string name="notifications">Notifications</string>
-    <string name="notification_description">Restez informer des nouveautés et mises à jour</string>
     <string name="received_at">Reçu le %s à %s</string>
 
 </resources>

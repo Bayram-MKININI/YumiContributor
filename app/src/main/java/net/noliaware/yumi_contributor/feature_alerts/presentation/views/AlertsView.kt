@@ -20,7 +20,6 @@ class AlertsView(context: Context, attrs: AttributeSet?) : ViewGroup(context, at
     private lateinit var headerView: View
     private lateinit var titleTextView: TextView
     private lateinit var notificationIconView: View
-    private lateinit var descriptionTextView: TextView
     private lateinit var contentView: View
     private lateinit var recyclerView: RecyclerView
 
@@ -40,7 +39,6 @@ class AlertsView(context: Context, attrs: AttributeSet?) : ViewGroup(context, at
         headerView = findViewById(R.id.header_view)
         titleTextView = findViewById(R.id.title_text_view)
         notificationIconView = findViewById(R.id.notification_icon_view)
-        descriptionTextView = findViewById(R.id.description_text_view)
         contentView = findViewById(R.id.content_layout)
         recyclerView = contentView.findViewById(R.id.recycler_view)
 
@@ -68,15 +66,10 @@ class AlertsView(context: Context, attrs: AttributeSet?) : ViewGroup(context, at
             MeasureSpec.makeMeasureSpec(convertDpToPx(50), MeasureSpec.EXACTLY)
         )
 
-        descriptionTextView.measure(
-            MeasureSpec.makeMeasureSpec(viewWidth * 8 / 10, MeasureSpec.AT_MOST),
-            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
-        )
-
         val contentViewWidth = viewWidth * 95 / 100
         val sideMargin = viewWidth * 5 / 100 / 2
-        val contentViewHeight = viewHeight - (headerView.measuredHeight + notificationIconView.measuredHeight / 2 +
-                    descriptionTextView.measuredHeight + sideMargin + convertDpToPx(45))
+        val contentViewHeight = viewHeight - (headerView.measuredHeight + notificationIconView.measuredHeight / 2
+                    + sideMargin + convertDpToPx(35))
 
         contentView.measure(
             MeasureSpec.makeMeasureSpec(contentViewWidth, MeasureSpec.EXACTLY),
@@ -110,14 +103,9 @@ class AlertsView(context: Context, attrs: AttributeSet?) : ViewGroup(context, at
             headerView.bottom - notificationIconView.measuredHeight / 2
         )
 
-        descriptionTextView.layoutToTopLeft(
-            (viewWidth - descriptionTextView.measuredWidth) / 2,
-            notificationIconView.bottom + convertDpToPx(10)
-        )
-
         contentView.layoutToTopLeft(
             (viewWidth - contentView.measuredWidth) / 2,
-            descriptionTextView.bottom + convertDpToPx(15)
+            notificationIconView.bottom + convertDpToPx(15)
         )
 
         recyclerView.layoutToTopLeft(0, 0)

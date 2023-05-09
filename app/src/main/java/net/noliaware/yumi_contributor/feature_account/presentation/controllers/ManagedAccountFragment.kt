@@ -48,7 +48,7 @@ class ManagedAccountFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        return container?.inflate(R.layout.managed_account_layout, false)?.apply {
+        return container?.inflate(R.layout.managed_account_layout)?.apply {
             managedAccountParentView = this as ManagedAccountParentView
         }
     }

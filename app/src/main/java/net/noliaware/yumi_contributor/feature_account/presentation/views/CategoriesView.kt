@@ -46,7 +46,7 @@ class CategoriesView(context: Context, attrs: AttributeSet?) : RecyclerView(cont
             }
 
             expressionOnCreateViewHolder = { viewGroup ->
-                viewGroup.inflate(R.layout.category_item_layout, false)
+                viewGroup.inflate(R.layout.category_item_layout)
             }
 
             onItemClicked = { position ->

@@ -2,12 +2,12 @@ package net.noliaware.yumi_contributor.commun.presentation.views
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.getColorCompat
+import net.noliaware.yumi_contributor.commun.util.inflate
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import java.lang.Integer.max
@@ -25,9 +25,10 @@ class ClipartTabView @JvmOverloads constructor(
     }
 
     private fun initView() {
-        LayoutInflater.from(context).also {
-            it.inflate(R.layout.clipart_tab_layout, this, true)
-        }
+        inflate(
+            layoutRes = R.layout.clipart_tab_layout,
+            attachToRoot = true
+        )
         setBackgroundResource(R.drawable.clipart_white)
         titleTextView = findViewById(R.id.title_text_view)
     }

@@ -33,7 +33,7 @@ class UserProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return container?.inflate(R.layout.profile_layout, false)?.apply {
+        return container?.inflate(R.layout.profile_layout)?.apply {
             profileParentView = this as ProfileParentView
             profileParentView?.getProfileView?.callback = profileViewCallback
         }

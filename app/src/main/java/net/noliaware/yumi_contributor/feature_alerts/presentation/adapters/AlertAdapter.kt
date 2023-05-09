@@ -1,12 +1,12 @@
 package net.noliaware.yumi_contributor.feature_alerts.presentation.adapters
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.presentation.adapters.ItemViewHolder
 import net.noliaware.yumi_contributor.commun.presentation.mappers.PriorityMapper
+import net.noliaware.yumi_contributor.commun.util.inflate
 import net.noliaware.yumi_contributor.commun.util.parseTimeString
 import net.noliaware.yumi_contributor.commun.util.parseToShortDate
 import net.noliaware.yumi_contributor.feature_alerts.domain.model.Alert
@@ -19,7 +19,7 @@ class AlertAdapter : PagingDataAdapter<Alert, ItemViewHolder<AlertItemView>>(Ale
         parent: ViewGroup,
         viewType: Int
     ) = ItemViewHolder<AlertItemView>(
-        LayoutInflater.from(parent.context).inflate(R.layout.alert_item_layout, parent, false)
+        parent.inflate(R.layout.alert_item_layout)
     )
 
     override fun onBindViewHolder(holder: ItemViewHolder<AlertItemView>, position: Int) {

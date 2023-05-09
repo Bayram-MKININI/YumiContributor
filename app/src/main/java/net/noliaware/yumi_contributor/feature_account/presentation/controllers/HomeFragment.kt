@@ -35,7 +35,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return container?.inflate(R.layout.home_layout, false)?.apply {
+        return container?.inflate(R.layout.home_layout)?.apply {
             homeView = this as HomeView
             homeView?.homeMenuView?.callback = homeMenuViewCallback
         }
