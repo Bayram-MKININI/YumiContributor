@@ -8,12 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.ViewModelState
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
@@ -43,16 +41,14 @@ class SelectedAccountFragment : Fragment() {
     }
 
     private fun collectFlows() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.selectAccountEventsHelper.eventFlow.flowWithLifecycle(lifecycle)
-                .collectLatest { sharedEvent ->
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.selectAccountEventsHelper.eventFlow.collectLatest { sharedEvent ->
                     handleSharedEvent(sharedEvent)
                     redirectToLoginScreenFromSharedEvent(sharedEvent)
                 }
         }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.selectAccountEventsHelper.stateFlow.flowWithLifecycle(lifecycle)
-                .collect { vmState ->
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.selectAccountEventsHelper.stateFlow.collect { vmState ->
                     when (vmState) {
                         is ViewModelState.LoadingState -> Unit
                         is ViewModelState.DataState -> vmState.data?.let { accountId ->
@@ -74,7 +70,7 @@ class SelectedAccountFragment : Fragment() {
 
     private fun setUpViewPager() {
         val viewPager = selectedAccountView?.getViewPager
-        SelectedAccountFragmentStateAdapter(childFragmentManager, lifecycle).apply {
+        SelectedAccountFragmentStateAdapter(childFragmentManager, viewLifecycleOwner.lifecycle).apply {
             viewPager?.adapter = this
         }
     }

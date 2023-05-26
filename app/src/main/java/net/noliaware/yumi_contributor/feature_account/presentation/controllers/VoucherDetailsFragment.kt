@@ -9,12 +9,10 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.CATEGORY_UI
 import net.noliaware.yumi_contributor.commun.QR_CODE_FRAGMENT_TAG
@@ -32,7 +30,10 @@ import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherCodeData
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStateData
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus
-import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus.*
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus.CANCELLED
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus.CONSUMED
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus.INEXISTENT
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus.USABLE
 import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView
 import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView.VouchersDetailsViewAdapter
 import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView.VouchersDetailsViewCallback
@@ -80,18 +81,17 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
     }
 
     private fun collectFlows() {
-        viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             merge(
                 viewModel.getVoucherEventsHelper.eventFlow,
                 viewModel.getVoucherStateDataEventsHelper.eventFlow
-            ).flowWithLifecycle(lifecycle).collectLatest { sharedEvent ->
+            ).collectLatest { sharedEvent ->
                 handleSharedEvent(sharedEvent)
                 redirectToLoginScreenFromSharedEvent(sharedEvent)
             }
         }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.getVoucherEventsHelper.stateFlow.flowWithLifecycle(lifecycle)
-                .collect { vmState ->
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.getVoucherEventsHelper.stateFlow.collect { vmState ->
                     when (vmState) {
                         is ViewModelState.LoadingState -> Unit
                         is ViewModelState.DataState -> vmState.data?.let { voucher ->
@@ -100,9 +100,8 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
                     }
                 }
         }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.getVoucherStateDataEventsHelper.stateFlow.flowWithLifecycle(lifecycle)
-                .collect { vmState ->
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.getVoucherStateDataEventsHelper.stateFlow.collect { vmState ->
                     when (vmState) {
                         is ViewModelState.LoadingState -> Unit
                         is ViewModelState.DataState -> vmState.data?.let { voucherStateData ->

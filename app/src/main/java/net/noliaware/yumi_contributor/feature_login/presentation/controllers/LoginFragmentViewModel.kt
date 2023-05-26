@@ -2,6 +2,7 @@ package net.noliaware.yumi_contributor.feature_login.presentation.controllers
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,6 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import net.noliaware.yumi_contributor.commun.presentation.EventsHelper
 import net.noliaware.yumi_contributor.commun.util.ViewModelState
 import net.noliaware.yumi_contributor.commun.util.ViewModelState.DataState
@@ -29,8 +31,9 @@ class LoginFragmentViewModel @Inject constructor(
     private val _prefsStateFlow: MutableStateFlow<ViewModelState<UserPreferences>> =
         MutableStateFlow(DataState())
     val prefsStateFlow = _prefsStateFlow.asStateFlow()
+    private var pushToken: String? = null
 
-    val prefsStateData
+    private val prefsStateData
         get() = when (prefsStateFlow.value) {
             is DataState -> (prefsStateFlow.value as DataState<UserPreferences>).data
             is ViewModelState.LoadingState -> null
@@ -68,9 +71,21 @@ class LoginFragmentViewModel @Inject constructor(
         }
     }
 
-    fun callInitWebservice(androidId: String, deviceId: String?, login: String) {
+    fun callInitWebservice(
+        androidId: String,
+        login: String
+    ) {
         viewModelScope.launch {
-            repository.getInitData(androidId, deviceId, login).onEach { result ->
+
+            if (pushToken.isNullOrBlank())
+                pushToken = FirebaseMessaging.getInstance().token.await()
+
+            repository.getInitData(
+                androidId = androidId,
+                deviceId = prefsStateData?.deviceId,
+                pushToken = pushToken,
+                login = login
+            ).onEach { result ->
                 initEventsHelper.handleResponse(result)
             }.launchIn(this)
         }

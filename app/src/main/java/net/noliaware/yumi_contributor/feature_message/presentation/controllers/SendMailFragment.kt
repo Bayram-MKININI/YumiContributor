@@ -8,11 +8,9 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.MESSAGE
 import net.noliaware.yumi_contributor.commun.MESSAGE_SUBJECTS_DATA
@@ -28,7 +26,7 @@ import net.noliaware.yumi_contributor.feature_message.presentation.adapters.Mess
 import net.noliaware.yumi_contributor.feature_message.presentation.adapters.MessageSubjectsAdapter
 import net.noliaware.yumi_contributor.feature_message.presentation.views.PriorityUI
 import net.noliaware.yumi_contributor.feature_message.presentation.views.SendMailView
-import net.noliaware.yumi_contributor.feature_message.presentation.views.SendMailView.*
+import net.noliaware.yumi_contributor.feature_message.presentation.views.SendMailView.SendMailViewCallback
 
 @AndroidEntryPoint
 class SendMailFragment : AppCompatDialogFragment() {
@@ -115,25 +113,23 @@ class SendMailFragment : AppCompatDialogFragment() {
     }
 
     private fun collectFlows() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.messageSentEventsHelper.eventFlow.flowWithLifecycle(lifecycle)
-                .collectLatest { sharedEvent ->
-                    handleSharedEvent(sharedEvent)
-                    redirectToLoginScreenFromSharedEvent(sharedEvent)
-                }
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.messageSentEventsHelper.eventFlow.collectLatest { sharedEvent ->
+                handleSharedEvent(sharedEvent)
+                redirectToLoginScreenFromSharedEvent(sharedEvent)
+            }
         }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.messageSentEventsHelper.stateFlow.flowWithLifecycle(lifecycle)
-                .collectLatest { vmState ->
-                    when (vmState) {
-                        is ViewModelState.LoadingState -> Unit
-                        is ViewModelState.DataState -> vmState.data?.let { result ->
-                            if (result) {
-                                dismiss()
-                            }
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.messageSentEventsHelper.stateFlow.collectLatest { vmState ->
+                when (vmState) {
+                    is ViewModelState.LoadingState -> Unit
+                    is ViewModelState.DataState -> vmState.data?.let { result ->
+                        if (result) {
+                            dismiss()
                         }
                     }
                 }
+            }
         }
     }
 

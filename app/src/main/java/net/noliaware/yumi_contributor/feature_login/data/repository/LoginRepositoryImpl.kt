@@ -24,6 +24,7 @@ class LoginRepositoryImpl @Inject constructor(
     override fun getInitData(
         androidId: String,
         deviceId: String?,
+        pushToken: String?,
         login: String
     ): Flow<Resource<InitData>> = flow {
 
@@ -38,7 +39,12 @@ class LoginRepositoryImpl @Inject constructor(
                 timestamp = timestamp,
                 saltString = randomString,
                 token = generateToken(timestamp, INIT, randomString),
-                params = generateInitParams(androidId, deviceId, login)
+                params = generateInitParams(
+                    androidId = androidId,
+                    deviceId = deviceId,
+                    pushToken = pushToken,
+                    login = login
+                )
             )
 
             val sessionNoFailure = handleSessionWithNoFailure(
@@ -53,7 +59,12 @@ class LoginRepositoryImpl @Inject constructor(
                 remoteData.data?.let { initDTO ->
                     sessionData.login = login
                     sessionData.deviceId = initDTO.deviceId
-                    emit(Resource.Success(data = initDTO.toInitData()))
+                    emit(
+                        Resource.Success(
+                            data = initDTO.toInitData(),
+                            appMessage = remoteData.message?.toAppMessage()
+                        )
+                    )
                 }
             }
 
@@ -67,6 +78,7 @@ class LoginRepositoryImpl @Inject constructor(
     private fun generateInitParams(
         androidId: String,
         deviceId: String?,
+        pushToken: String?,
         login: String
     ): Map<String, String> {
 
@@ -82,6 +94,10 @@ class LoginRepositoryImpl @Inject constructor(
             parameters[DEVICE_LABEL] = Build.MODEL
         } else {
             parameters[DEVICE_ID] = deviceId
+        }
+
+        pushToken?.let {
+            parameters[PUSH_TOKEN] = pushToken
         }
 
         return parameters

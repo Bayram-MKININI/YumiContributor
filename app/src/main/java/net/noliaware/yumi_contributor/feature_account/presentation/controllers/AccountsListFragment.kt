@@ -6,11 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.presentation.adapters.ListLoadStateAdapter
 import net.noliaware.yumi_contributor.commun.util.ViewModelState
@@ -54,21 +52,19 @@ class AccountsListFragment : Fragment() {
     }
 
     private fun collectFlows() {
-        viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             accountsListView?.paginatedManagedAccountsAdapter?.loadStateFlow?.collectLatest { loadState ->
                 handlePaginationError(loadState)
             }
         }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.getUsersEventsHelper.eventFlow.flowWithLifecycle(lifecycle)
-                .collectLatest { sharedEvent ->
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.getUsersEventsHelper.eventFlow.collectLatest { sharedEvent ->
                     handleSharedEvent(sharedEvent)
                     redirectToLoginScreenFromSharedEvent(sharedEvent)
                 }
         }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.getUsersEventsHelper.stateFlow.flowWithLifecycle(lifecycle)
-                .collect { vmState ->
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.getUsersEventsHelper.stateFlow.collect { vmState ->
                     when (vmState) {
                         is ViewModelState.LoadingState -> Unit
                         is ViewModelState.DataState -> vmState.data?.let { usersList ->
@@ -81,9 +77,8 @@ class AccountsListFragment : Fragment() {
                     }
                 }
         }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.getFilteredAccountEventsHelper.stateFlow.flowWithLifecycle(lifecycle)
-                .collect { vmState ->
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.getFilteredAccountEventsHelper.stateFlow.collect { vmState ->
                     when (vmState) {
                         is ViewModelState.LoadingState -> Unit
                         is ViewModelState.DataState -> vmState.data?.let { user ->
@@ -99,7 +94,7 @@ class AccountsListFragment : Fragment() {
                     }
                 }
         }
-        viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.getManagedAccounts().collectLatest {
                 accountsListView?.paginatedManagedAccountsAdapter?.withLoadStateFooter(
                     footer = ListLoadStateAdapter()

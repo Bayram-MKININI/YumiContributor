@@ -2,9 +2,6 @@ package net.noliaware.yumi_contributor.feature_account.presentation.controllers
 
 import android.graphics.Color
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +11,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.CATEGORY
 import net.noliaware.yumi_contributor.commun.VOUCHER_DETAILS_FRAGMENT_TAG
@@ -96,12 +92,12 @@ class CancelledVouchersListFragment : AppCompatDialogFragment() {
     }
 
     private fun collectFlows() {
-        viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             vouchersListView?.voucherAdapter?.loadStateFlow?.collectLatest { loadState ->
                 handlePaginationError(loadState)
             }
         }
-        viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.getVouchers()?.collectLatest {
                 vouchersListView?.voucherAdapter?.withLoadStateFooter(
                     footer = ListLoadStateAdapter()

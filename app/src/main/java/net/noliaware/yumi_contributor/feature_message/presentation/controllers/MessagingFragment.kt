@@ -44,7 +44,7 @@ class MessagingFragment : Fragment() {
 
         val viewPager = messagingView?.getViewPager
 
-        MessageFragmentStateAdapter(childFragmentManager, lifecycle).apply {
+        MessageFragmentStateAdapter(childFragmentManager, viewLifecycleOwner.lifecycle).apply {
             viewPager?.adapter = this
         }
     }

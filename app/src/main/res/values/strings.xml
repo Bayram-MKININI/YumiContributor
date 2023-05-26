@@ -3,6 +3,9 @@
     <string name="error_no_network">Erreur réseau. Vérifier vos paramètres de connexion.</string>
     <string name="error_contact_support">Une erreur est survenue, veuillez contacter le support technique.</string>
     <string name="error_message">%s Essais restants: %d</string>
+    <string name="update_app">Mise à jour disponible</string>
+    <string name="update_message">Une nouvelle version de l\'application est disponible. Veuillez la télécharger maintenant pour continuer</string>
+    <string name="update">Mettre à jour</string>
 
     //Login
     <string name="enter_login_message">Saisissez votre identifiant</string>
@@ -72,12 +75,12 @@
     <string name="name">Prénom</string>
     <string name="phone">Téléphone</string>
     <string name="address">Adresse</string>
-    <string name="bo_access">Accès gestionnaire web</string>
-    <string name="bo_access_description">Génerer un code d\'accès à votre compte sur le gestionnaire web</string>
+    <string name="bo_access">Accès application web</string>
+    <string name="bo_access_description">Génerer un code d\'accès à votre compte sur l\'application web</string>
     <string name="access">Générer un code</string>
     <string name="new_line">\n</string>
     <string name="empty_value">-</string>
-    <string name="bo_sign_in_description">Veuillez utiliser ce code pour vous connecter sur votre compte back office</string>
+    <string name="bo_sign_in_description">Veuillez utiliser ce code pour vous connecter à votre compte sur l\'application web</string>
     <string name="bo_code_expiration">Ce code expire dans:</string>
     <string name="empty_time">--:--</string>
 

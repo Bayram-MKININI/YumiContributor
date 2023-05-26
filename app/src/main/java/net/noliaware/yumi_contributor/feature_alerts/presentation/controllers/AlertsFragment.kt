@@ -9,7 +9,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.presentation.adapters.ListLoadStateAdapter
 import net.noliaware.yumi_contributor.commun.util.handlePaginationError
@@ -39,12 +38,12 @@ class AlertsFragment : Fragment() {
     }
 
     private fun collectFlows() {
-        viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             alertsView?.alertAdapter?.loadStateFlow?.collectLatest { loadState ->
                 handlePaginationError(loadState)
             }
         }
-        viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.getAlerts().collectLatest {
                 alertsView?.alertAdapter?.withLoadStateFooter(
                     footer = ListLoadStateAdapter()

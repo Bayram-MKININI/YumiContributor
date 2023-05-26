@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "381460870076",
+    "project_id": "yumi-contributor",
+    "storage_bucket": "yumi-contributor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:381460870076:android:62c63f3b13dd08db5eb1b9",
+        "android_client_info": {
+          "package_name": "net.noliaware.yumi_contributor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjm0pSuOGQC7bf2xESfXq_GWtdzeCk47s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
