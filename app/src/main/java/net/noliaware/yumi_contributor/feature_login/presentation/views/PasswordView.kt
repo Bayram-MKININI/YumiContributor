@@ -249,7 +249,7 @@ class PasswordView(context: Context, attrs: AttributeSet?) : ElevatedCardView(co
         val spaceBetweenPads = convertDpToPx(10)
 
         padFirstDigit.layoutToTopLeft(
-            (viewWidth - (padFirstDigit.measuredWidth * 5 + convertDpToPx(28))) / 2,
+            (viewWidth - (padFirstDigit.measuredWidth * 5 + spaceBetweenPads * 4)) / 2,
             codeTextView.bottom + convertDpToPx(15)
         )
 

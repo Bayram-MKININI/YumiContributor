@@ -68,7 +68,6 @@
     //Profile
     <string name="my_profile">Mon Profil</string>
     <string name="my_data">Mes informations</string>
-    <string name="complementary_data">Informations complémentaires</string>
     <string name="my_used_vouchers">Mes coupons</string>
     <string name="login">Login</string>
     <string name="surname">Nom</string>
