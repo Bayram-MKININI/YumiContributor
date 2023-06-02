@@ -22,6 +22,12 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    android {
+        buildFeatures {
+            buildConfig = true
+        }
+    }
+
     signingConfigs {
         release {
             storeFile file(System.getenv("KEYSTORE") ?: "Noliaware.jks")

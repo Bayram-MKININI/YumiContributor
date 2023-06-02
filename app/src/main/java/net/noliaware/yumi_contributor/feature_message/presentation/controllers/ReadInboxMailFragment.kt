@@ -104,7 +104,11 @@ class ReadInboxMailFragment : AppCompatDialogFragment() {
     private fun bindViewToData(message: Message) {
         ReadMailViewAdapter(
             priorityIconRes = PriorityMapper().mapPriorityIcon(message.messagePriority),
-            subject = "${message.messageType} ${message.messageSubject}",
+            subject = if (message.messageType.isNullOrEmpty()) {
+                message.messageSubject
+            } else {
+                "${message.messageType} ${message.messageSubject}"
+            },
             time = getString(
                 R.string.received_at,
                 parseToLongDate(message.messageDate),

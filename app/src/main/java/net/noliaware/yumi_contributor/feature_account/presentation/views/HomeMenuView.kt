@@ -7,6 +7,7 @@ import android.view.View.OnClickListener
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import com.google.android.material.card.MaterialCardView
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
@@ -64,16 +65,19 @@ class HomeMenuView(context: Context, attrs: AttributeSet?) : MaterialCardView(co
                     selectHomeButton()
                     callback?.onCategoryButtonClicked()
                 }
+
                 R.id.profile_image_view -> {
                     profileImageView.setBackgroundResource(R.drawable.circle_primary)
                     profileImageView.isSelected = true
                     callback?.onProfileButtonClicked()
                 }
+
                 R.id.mail_image_view -> {
                     mailImageView.setBackgroundResource(R.drawable.circle_primary)
                     mailImageView.isSelected = true
                     callback?.onMailButtonClicked()
                 }
+
                 R.id.notification_image_view -> {
                     notificationImageView.setBackgroundResource(R.drawable.circle_primary)
                     notificationImageView.isSelected = true
@@ -89,6 +93,7 @@ class HomeMenuView(context: Context, attrs: AttributeSet?) : MaterialCardView(co
     }
 
     fun setBadgeForMailButton(number: Int) {
+        mailBadgeTextView.isVisible = true
         mailBadgeTextView.text = number.toString()
     }
 
@@ -97,6 +102,7 @@ class HomeMenuView(context: Context, attrs: AttributeSet?) : MaterialCardView(co
     }
 
     fun setBadgeForNotificationButton(number: Int) {
+        notificationBadgeTextView.isVisible = true
         notificationBadgeTextView.text = number.toString()
     }
 

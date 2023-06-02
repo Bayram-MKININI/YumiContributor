@@ -7,7 +7,6 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.TextView.OnEditorActionListener
 import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.textfield.TextInputLayout
 import net.noliaware.yumi_contributor.R
@@ -45,7 +44,15 @@ class LoginView(context: Context, attrs: AttributeSet?) : ElevatedCardView(conte
         inputLayoutLogin = findViewById(R.id.input_layout_login)
 
         inputLogin = inputLayoutLogin.findViewById(R.id.input_login)
-        inputLogin.setOnEditorActionListener(onEditorActionListener)
+        inputLogin.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                if (validateLogin()) {
+                    confirmInputText()
+                }
+            }
+            false
+        }
+
         inputLogin.doAfterTextChanged {
             if (inputLogin.text.isNullOrEmpty()) {
                 inputLogin.error = null
@@ -55,7 +62,9 @@ class LoginView(context: Context, attrs: AttributeSet?) : ElevatedCardView(conte
 
         confirmImageView = findViewById(R.id.confirm_image_view)
         confirmImageView.setOnClickListener {
-            confirmInputText()
+            if (validateLogin()) {
+                confirmInputText()
+            }
         }
 
         confirmTextView = findViewById(R.id.confirm_text_view)
@@ -72,15 +81,6 @@ class LoginView(context: Context, attrs: AttributeSet?) : ElevatedCardView(conte
         } else {
             progressBar.visibility = GONE
         }
-    }
-
-    private val onEditorActionListener = OnEditorActionListener { _, actionId, _ ->
-        if (actionId == EditorInfo.IME_ACTION_DONE) {
-            if (validateLogin()) {
-                confirmInputText()
-            }
-        }
-        false
     }
 
     private fun confirmInputText() {

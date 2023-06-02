@@ -56,7 +56,7 @@
                         android:fontFamily="@font/omnes_regular"
                         android:hint="@string/hint_login"
                         android:imeOptions="actionDone|flagNoExtractUi"
-                        android:inputType="textNoSuggestions"
+                        android:inputType="textEmailAddress"
                         android:textColor="@color/grey_2" />
                 </com.google.android.material.textfield.TextInputLayout>
 

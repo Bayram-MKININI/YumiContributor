@@ -141,10 +141,10 @@ fun parseTimeString(dateStr: String?) = dateStr?.let {
     destFormatter.format(date)
 }.orEmpty()
 
-fun parseTimestampToString(periodInSeconds: Int?) = periodInSeconds?.let {
-    val simpleDateFormat = SimpleDateFormat("mm:ss", Locale.FRANCE)
-    simpleDateFormat.format(periodInSeconds * 1000L)
-}.orEmpty()
+fun Int.parseSecondsToMinutesString(): String = SimpleDateFormat(
+    "mm:ss",
+    Locale.FRANCE
+).format(this * 1000)
 
 fun Fragment.handleSharedEvent(sharedEvent: UIEvent) = context?.let {
 

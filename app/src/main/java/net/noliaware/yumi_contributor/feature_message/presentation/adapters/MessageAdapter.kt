@@ -39,7 +39,11 @@ class MessageAdapter(
         holder: ItemViewHolder<MessageItemView>
     ) = MessageItemViewAdapter(
         priorityIconRes = PriorityMapper().mapPriorityIcon(message.messagePriority),
-        subject = "${message.messageType} ${message.messageSubject}",
+        subject = if (message.messageType.isNullOrEmpty()) {
+            message.messageSubject
+        } else {
+            "${message.messageType} ${message.messageSubject}"
+        },
         time = holder.itemView.context.getString(
             R.string.date_short,
             parseToShortDate(message.messageDate),
