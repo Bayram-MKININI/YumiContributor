@@ -15,7 +15,7 @@
         android:gravity="end"
         android:textColor="@color/grey_2"
         android:textSize="15sp"
-        tools:text="08 mars 2023" />
+        tools:text="ven. 17:17" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/icon_image_view"

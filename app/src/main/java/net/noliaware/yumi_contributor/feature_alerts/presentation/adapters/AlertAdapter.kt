@@ -4,11 +4,13 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import net.noliaware.yumi_contributor.R
+import net.noliaware.yumi_contributor.commun.HOURS_TIME_FORMAT
+import net.noliaware.yumi_contributor.commun.LONG_DATE_WITH_DAY_FORMAT
 import net.noliaware.yumi_contributor.commun.presentation.adapters.ItemViewHolder
 import net.noliaware.yumi_contributor.commun.presentation.mappers.PriorityMapper
 import net.noliaware.yumi_contributor.commun.util.inflate
-import net.noliaware.yumi_contributor.commun.util.parseTimeString
-import net.noliaware.yumi_contributor.commun.util.parseToShortDate
+import net.noliaware.yumi_contributor.commun.util.parseDateToFormat
+import net.noliaware.yumi_contributor.commun.util.parseTimeToFormat
 import net.noliaware.yumi_contributor.feature_alerts.domain.model.Alert
 import net.noliaware.yumi_contributor.feature_alerts.presentation.views.AlertItemView
 import net.noliaware.yumi_contributor.feature_alerts.presentation.views.AlertItemView.AlertItemViewAdapter
@@ -37,8 +39,8 @@ class AlertAdapter : PagingDataAdapter<Alert, ItemViewHolder<AlertItemView>>(Ale
         priorityIconRes = PriorityMapper().mapPriorityIcon(alert.alertPriority),
         time = holder.itemView.context.getString(
             R.string.received_at,
-            parseToShortDate(alert.alertDate),
-            parseTimeString(alert.alertTime)
+            alert.alertDate.parseDateToFormat(LONG_DATE_WITH_DAY_FORMAT),
+            alert.alertTime.parseTimeToFormat(HOURS_TIME_FORMAT)
         ),
         body = alert.alertText
     )

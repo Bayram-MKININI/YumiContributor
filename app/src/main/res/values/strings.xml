@@ -92,7 +92,6 @@
     <string name="priority_important">Important</string>
     <string name="priority_critical">Critique</string>
     <string name="sent_at">Envoyé le %s à %s</string>
-    <string name="date_short">%s\n%s</string>
     <string name="select_subject">Sélectionner un sujet</string>
     <string name="new_mail">Nouveau message</string>
     <string name="reply">Répondre</string>

@@ -81,6 +81,18 @@ const val ACTION_PUSH_DATA = BuildConfig.APPLICATION_ID + ".action.PUSH"
 const val PUSH_TITLE = "title"
 const val PUSH_BODY = "body"
 
+const val DATE_TIME_SOURCE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSSSSS"
+const val DATE_SOURCE_FORMAT = "yyyy-MM-dd"
+const val TIME_SOURCE_FORMAT = "HH:mm:ss"
+
+const val NUMERICAL_DATE_FORMAT = "dd/MM/yyyy"
+const val SINGLE_DAY_DATE_FORMAT = "EEE"
+const val DAY_OF_MONTH_NUMERICAL_DATE_FORMAT = "dd/MM"
+const val LONG_DATE_WITH_DAY_FORMAT = "EEEE dd LLLL yyyy"
+const val SHORT_DATE_FORMAT = "dd LLL yyyy"
+const val HOURS_TIME_FORMAT = "HH:mm"
+const val MINUTES_TIME_FORMAT = "mm:ss"
+
 const val KEY_CURRENT_VERSION = "android_force_update_current_version"
 const val KEY_FORCE_UPDATE_REQUIRED = "android_force_update_required"
 const val KEY_FORCE_UPDATE_URL = "android_force_update_store_url"

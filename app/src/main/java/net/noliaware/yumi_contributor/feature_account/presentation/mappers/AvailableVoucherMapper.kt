@@ -2,9 +2,10 @@ package net.noliaware.yumi_contributor.feature_account.presentation.mappers
 
 import android.content.Context
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.util.parseToShortDate
+import net.noliaware.yumi_contributor.commun.SHORT_DATE_FORMAT
+import net.noliaware.yumi_contributor.commun.util.parseDateToFormat
 import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
-import net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherItemView.*
+import net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherItemView.VoucherItemViewAdapter
 import javax.inject.Inject
 
 class AvailableVoucherMapper @Inject constructor() : VoucherMapper {
@@ -17,7 +18,7 @@ class AvailableVoucherMapper @Inject constructor() : VoucherMapper {
         color = color,
         title = voucher.productLabel.orEmpty(),
         highlightDescription = context.getString(R.string.expiry_date),
-        highlightValue = parseToShortDate(voucher.voucherExpiryDate),
+        highlightValue = voucher.voucherExpiryDate?.parseDateToFormat(SHORT_DATE_FORMAT).orEmpty(),
         retailerDescription = context.getString(R.string.to_retrieve),
         retailerValue = voucher.retailerLabel
     )

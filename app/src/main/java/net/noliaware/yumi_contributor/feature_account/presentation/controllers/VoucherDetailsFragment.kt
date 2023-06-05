@@ -15,15 +15,17 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.merge
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.CATEGORY_UI
+import net.noliaware.yumi_contributor.commun.HOURS_TIME_FORMAT
 import net.noliaware.yumi_contributor.commun.QR_CODE_FRAGMENT_TAG
+import net.noliaware.yumi_contributor.commun.SHORT_DATE_FORMAT
 import net.noliaware.yumi_contributor.commun.VOUCHER_ID
 import net.noliaware.yumi_contributor.commun.util.ViewModelState
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.makeCall
 import net.noliaware.yumi_contributor.commun.util.openMap
 import net.noliaware.yumi_contributor.commun.util.openWebPage
-import net.noliaware.yumi_contributor.commun.util.parseTimeString
-import net.noliaware.yumi_contributor.commun.util.parseToShortDate
+import net.noliaware.yumi_contributor.commun.util.parseDateToFormat
+import net.noliaware.yumi_contributor.commun.util.parseTimeToFormat
 import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromSharedEvent
 import net.noliaware.yumi_contributor.commun.util.withArgs
 import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
@@ -131,7 +133,7 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
                 title = voucher.productLabel.orEmpty(),
                 startDate = getString(
                     R.string.created_in_hyphen,
-                    parseToShortDate(voucher.voucherDate)
+                    voucher.voucherDate?.parseDateToFormat(SHORT_DATE_FORMAT)
                 ),
                 endDate = mapVoucherEndDate(voucher),
                 partnerAvailable = voucher.partnerInfoText?.isNotEmpty() == true,
@@ -148,17 +150,17 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
     private fun mapVoucherEndDate(voucher: Voucher) =
         when (voucher.voucherStatus) {
             USABLE -> getString(
-                R.string.expiry_date_value, parseToShortDate(voucher.voucherExpiryDate)
+                R.string.expiry_date_value, voucher.voucherExpiryDate?.parseDateToFormat(SHORT_DATE_FORMAT)
             )
             CONSUMED -> getString(
                 R.string.usage_date_value,
-                parseToShortDate(voucher.voucherUseDate),
-                parseTimeString(voucher.voucherUseTime)
+                voucher.voucherUseDate?.parseDateToFormat(SHORT_DATE_FORMAT),
+                voucher.voucherUseTime?.parseTimeToFormat(HOURS_TIME_FORMAT)
             )
             CANCELLED -> getString(
                 R.string.cancellation_date_value,
-                parseToShortDate(voucher.voucherUseDate),
-                parseTimeString(voucher.voucherUseTime)
+                voucher.voucherUseDate?.parseTimeToFormat(SHORT_DATE_FORMAT),
+                voucher.voucherUseTime?.parseTimeToFormat(HOURS_TIME_FORMAT)
             )
             else -> ""
         }

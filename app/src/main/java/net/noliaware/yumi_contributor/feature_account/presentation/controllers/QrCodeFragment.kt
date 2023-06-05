@@ -14,6 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.CATEGORY_UI
+import net.noliaware.yumi_contributor.commun.LONG_DATE_WITH_DAY_FORMAT
 import net.noliaware.yumi_contributor.commun.VOUCHER_CODE_DATA
 import net.noliaware.yumi_contributor.commun.util.*
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherCodeData
@@ -72,19 +73,19 @@ class QrCodeFragment : AppCompatDialogFragment() {
         }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.useVoucherEventsHelper.eventFlow.collectLatest { sharedEvent ->
-                    handleSharedEvent(sharedEvent)
-                    redirectToLoginScreenFromSharedEvent(sharedEvent)
-                }
+                handleSharedEvent(sharedEvent)
+                redirectToLoginScreenFromSharedEvent(sharedEvent)
+            }
         }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.useVoucherEventsHelper.stateFlow.collect { vmState ->
-                    when (vmState) {
-                        is ViewModelState.LoadingState -> Unit
-                        is ViewModelState.DataState -> vmState.data?.let {
-                            qrCodeView?.revealQrCode()
-                        }
+                when (vmState) {
+                    is ViewModelState.LoadingState -> Unit
+                    is ViewModelState.DataState -> vmState.data?.let {
+                        qrCodeView?.revealQrCode()
                     }
                 }
+            }
         }
     }
 
@@ -97,11 +98,13 @@ class QrCodeFragment : AppCompatDialogFragment() {
                     title = voucherCodeData.productLabel.orEmpty(),
                     creationDate = getString(
                         R.string.created_in,
-                        parseToLongDate(voucherCodeData.voucherDate)
+                        voucherCodeData.voucherDate?.parseDateToFormat(LONG_DATE_WITH_DAY_FORMAT)
                     ),
                     expiryDate = getString(
                         R.string.expiry_date_value,
-                        parseToLongDate(voucherCodeData.voucherExpiryDate)
+                        voucherCodeData.voucherExpiryDate?.parseDateToFormat(
+                            LONG_DATE_WITH_DAY_FORMAT
+                        )
                     )
                 )
             )

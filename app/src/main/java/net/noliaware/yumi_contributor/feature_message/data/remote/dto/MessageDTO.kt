@@ -38,7 +38,7 @@ data class MessageDTO(
         messagePriority = Priority.fromValue(messagePriority),
         messageSubject = messageSubject,
         messagePreview = messagePreview,
-        messageReadStatus = messageReadStatus,
+        isMessageRead = messageReadStatus == 1,
         messageBody = messageBody
     )
 }

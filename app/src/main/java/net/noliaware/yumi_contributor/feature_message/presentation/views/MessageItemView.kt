@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
+import androidx.core.content.res.ResourcesCompat
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
@@ -20,12 +21,21 @@ class MessageItemView(context: Context, attrs: AttributeSet?) : ViewGroup(contex
     private lateinit var timeTextView: TextView
     private lateinit var bodyTextView: TextView
 
+    private val openedTypeFace by lazy {
+        ResourcesCompat.getFont(context, R.font.omnes_regular)
+    }
+
+    private val notOpenedTypeFace by lazy {
+        ResourcesCompat.getFont(context, R.font.omnes_semibold_regular)
+    }
+
     data class MessageItemViewAdapter(
         @DrawableRes
         val priorityIconRes: Int,
         val subject: String = "",
         val time: String = "",
-        val body: String = ""
+        val body: String = "",
+        val opened: Boolean = false
     )
 
     override fun onFinishInflate() {
@@ -45,6 +55,11 @@ class MessageItemView(context: Context, attrs: AttributeSet?) : ViewGroup(contex
         subjectTextView.text = messageItemViewAdapter.subject
         timeTextView.text = messageItemViewAdapter.time
         bodyTextView.text = messageItemViewAdapter.body
+        if (messageItemViewAdapter.opened) {
+            subjectTextView.typeface = openedTypeFace
+        } else {
+            subjectTextView.typeface = notOpenedTypeFace
+        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
