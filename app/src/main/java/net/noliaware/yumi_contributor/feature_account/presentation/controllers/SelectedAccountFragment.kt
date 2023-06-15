@@ -43,20 +43,20 @@ class SelectedAccountFragment : Fragment() {
     private fun collectFlows() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.selectAccountEventsHelper.eventFlow.collectLatest { sharedEvent ->
-                    handleSharedEvent(sharedEvent)
-                    redirectToLoginScreenFromSharedEvent(sharedEvent)
-                }
+                handleSharedEvent(sharedEvent)
+                redirectToLoginScreenFromSharedEvent(sharedEvent)
+            }
         }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.selectAccountEventsHelper.stateFlow.collect { vmState ->
-                    when (vmState) {
-                        is ViewModelState.LoadingState -> Unit
-                        is ViewModelState.DataState -> vmState.data?.let { accountId ->
-                            setUserName()
-                            setUpViewPager()
-                        }
+                when (vmState) {
+                    is ViewModelState.LoadingState -> Unit
+                    is ViewModelState.DataState -> vmState.data?.let { accountId ->
+                        setUserName()
+                        setUpViewPager()
                     }
                 }
+            }
         }
     }
 
@@ -69,9 +69,11 @@ class SelectedAccountFragment : Fragment() {
     }
 
     private fun setUpViewPager() {
-        val viewPager = selectedAccountView?.getViewPager
-        SelectedAccountFragmentStateAdapter(childFragmentManager, viewLifecycleOwner.lifecycle).apply {
-            viewPager?.adapter = this
+        SelectedAccountFragmentStateAdapter(
+            childFragmentManager,
+            viewLifecycleOwner.lifecycle
+        ).apply {
+            selectedAccountView?.getViewPager?.adapter = this
         }
     }
 

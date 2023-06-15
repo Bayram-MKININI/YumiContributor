@@ -81,9 +81,11 @@ class ManagedAccountFragment : Fragment() {
     }
 
     private fun setUpViewPager() {
-        val viewPager = managedAccountParentView?.getViewPager
-        ManagedAccountFragmentStateAdapter(childFragmentManager, viewLifecycleOwner.lifecycle).apply {
-            viewPager?.adapter = this
+        ManagedAccountFragmentStateAdapter(
+            childFragmentManager,
+            viewLifecycleOwner.lifecycle
+        ).apply {
+            managedAccountParentView?.getViewPager?.adapter = this
         }
     }
 
@@ -103,6 +105,7 @@ class ManagedAccountFragment : Fragment() {
                             managedAccountParentView?.displaySelectedAccountView(animated = false)
                         }
                     }
+
                     is SelectableData.SelectedData -> {
                         managedAccount.data?.let {
                             onManagedAccountSelected?.invoke(it)

@@ -41,11 +41,8 @@ class MessagingFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-        val viewPager = messagingView?.getViewPager
-
         MessageFragmentStateAdapter(childFragmentManager, viewLifecycleOwner.lifecycle).apply {
-            viewPager?.adapter = this
+            messagingView?.getViewPager?.adapter = this
         }
     }
 
@@ -81,12 +78,14 @@ class MessagingFragment : Fragment() {
                     fragments[0] = ReceivedMessagesFragment()
                     fragments[0]!!
                 }
+
                 else -> {
                     fragments[1] = SentMessagesFragment()
                     fragments[1]!!
                 }
             }
         }
+
         fun refreshSentFragment() {
             (fragments[1] as? SentMessagesFragment)?.refreshAdapter()
         }
