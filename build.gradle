@@ -4,5 +4,23 @@ plugins {
     id 'org.jetbrains.kotlin.android' version '1.8.22' apply false
     id 'com.google.dagger.hilt.android' version '2.46.1' apply false
     id 'com.google.gms.google-services' version '4.3.15' apply false
-    id 'com.google.firebase.crashlytics' version '2.9.5' apply false
+    id 'com.google.firebase.crashlytics' version '2.9.6' apply false
+    id 'com.github.ben-manes.versions' version '0.47.0'
+}
+
+def isNonStable = { String version ->
+    def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { it -> version.toUpperCase().contains(it) }
+    def regex = /^[0-9,.v-]+(-r)?$/
+    return !stableKeyword && !(version ==~ regex)
+}
+
+tasks.named("dependencyUpdates").configure {
+    rejectVersionIf {
+        isNonStable(it.candidate.version)
+    }
+    checkForGradleUpdate = true
+    revision = "release"
+    outputFormatter = "html"
+    outputDir = "./app/build/reports/"
+    reportfileName = "yumi_contributor_dependency_update_report"
 }
