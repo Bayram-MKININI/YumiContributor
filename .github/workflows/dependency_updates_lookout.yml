@@ -8,7 +8,7 @@ name: Dependency updates lookout
   # │ │ │ │ │ ┌──── day of week (0 - 6)
   # │ │ │ │ │ │
   # │ │ │ │ │ │
-# * * * * * *
+  # * * * * * *
 
 on:
   schedule:
