@@ -41,5 +41,5 @@
         android:maxLines="5"
         android:textColor="@color/grey_2"
         android:textSize="15sp"
-        tools:text="Message de test" />
+        tools:text="Nous avons le plaisir de vous informer que votre mairie a mis à disposition pour vous un programme de coupons tout au long de l'année." />
 </net.noliaware.yumi_contributor.feature_message.presentation.views.MessageItemView>

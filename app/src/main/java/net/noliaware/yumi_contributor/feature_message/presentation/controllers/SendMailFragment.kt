@@ -106,9 +106,7 @@ class SendMailFragment : AppCompatDialogFragment() {
     private fun setUpDefaultValuesIfAny() {
         viewModel.message?.let { selectedMessage ->
             sendMailView?.setSubjectFixed(selectedMessage.messageSubject)
-            selectedMessage.messagePriority?.let { priority ->
-                sendMailView?.setSelectedPriorityAtIndex(priority.ordinal)
-            }
+            sendMailView?.setPriorityFixed(PriorityMapper().mapPriorityIcon(selectedMessage.messagePriority))
         }
     }
 
@@ -144,21 +142,19 @@ class SendMailFragment : AppCompatDialogFragment() {
             }
 
             override fun onSendMailClicked(text: String) {
-                val selectedPriorityIndex = sendMailView?.getSelectedPriorityIndex() ?: 0
-                val priority = Priority.values()[selectedPriorityIndex].value
-
                 if (viewModel.message != null) {
-                    sendMailReply(priority, text)
+                    sendMailReply(text)
                 } else {
+                    val selectedPriorityIndex = sendMailView?.getSelectedPriorityIndex() ?: 0
+                    val priority = Priority.values()[selectedPriorityIndex].value
                     sendNewMail(priority, text)
                 }
             }
         }
     }
 
-    private fun sendMailReply(priority: Int, text: String) {
+    private fun sendMailReply(text: String) {
         viewModel.callSendMessage(
-            messagePriority = priority,
             messageId = viewModel.message?.messageId,
             messageBody = text
         )

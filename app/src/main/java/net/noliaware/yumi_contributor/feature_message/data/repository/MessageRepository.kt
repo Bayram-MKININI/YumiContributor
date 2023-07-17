@@ -16,7 +16,7 @@ interface MessageRepository {
     fun getOutboxMessageForId(messageId: String): Flow<Resource<Message>>
 
     fun sendMessage(
-        messagePriority: Int,
+        messagePriority: Int?,
         messageId: String?,
         messageSubjectId: String?,
         messageBody: String

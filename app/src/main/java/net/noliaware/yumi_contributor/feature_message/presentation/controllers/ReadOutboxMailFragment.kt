@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -133,7 +134,10 @@ class ReadOutboxMailFragment : AppCompatDialogFragment() {
                 message.messageDate.parseDateToFormat(LONG_DATE_WITH_DAY_FORMAT),
                 message.messageTime.parseTimeToFormat(HOURS_TIME_FORMAT)
             ),
-            message = message.messageBody.orEmpty()
+            message = HtmlCompat.fromHtml(
+                message.messageBody.orEmpty(),
+                HtmlCompat.FROM_HTML_MODE_LEGACY
+            )
         ).also {
             readMailView?.fillViewWithData(it)
         }

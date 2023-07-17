@@ -84,6 +84,13 @@
             android:background="@drawable/spinner_background"
             android:spinnerMode="dropdown" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/fixed_priority_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:visibility="gone" />
+
         <View
             android:id="@+id/separator_line_view"
             android:layout_width="wrap_content"

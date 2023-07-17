@@ -134,7 +134,7 @@ class MessageRepositoryImpl(
     }
 
     override fun sendMessage(
-        messagePriority: Int,
+        messagePriority: Int?,
         messageId: String?,
         messageSubjectId: String?,
         messageBody: String
@@ -189,15 +189,15 @@ class MessageRepositoryImpl(
     }
 
     private fun generateSendMessageParams(
-        messagePriority: Int,
+        messagePriority: Int?,
         messageSubjectId: String? = null,
         messageId: String? = null,
         messageBody: String,
         tokenKey: String
     ) = mutableMapOf(
-        MESSAGE_PRIORITY to messagePriority.toString(),
         MESSAGE_BODY to messageBody
     ).also { map ->
+        messagePriority?.let { map[MESSAGE_PRIORITY] = messagePriority.toString() }
         messageSubjectId?.let { map[MESSAGE_SUBJECT_ID] = messageSubjectId }
         messageId?.let { map[MESSAGE_ID] = messageId }
         map.plusAssign(getCommonWSParams(sessionData, tokenKey))

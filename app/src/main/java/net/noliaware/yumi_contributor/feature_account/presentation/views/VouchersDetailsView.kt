@@ -19,7 +19,6 @@ class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(co
     private lateinit var expiryTextView: TextView
     private lateinit var separatorView: View
     private lateinit var sponsorBackgroundView: View
-    private lateinit var sponsoredByTextView: TextView
     private lateinit var sponsorTextView: TextView
     lateinit var informationTextView: TextView
     private lateinit var descriptionTextView: TextView
@@ -45,7 +44,6 @@ class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(co
         expiryTextView = findViewById(R.id.expiry_text_view)
         separatorView = findViewById(R.id.separator_view)
         sponsorBackgroundView = findViewById(R.id.sponsor_background)
-        sponsoredByTextView = findViewById(R.id.sponsored_by_text_view)
         sponsorTextView = findViewById(R.id.sponsor_text_view)
         informationTextView = findViewById(R.id.information_text_view)
         descriptionTextView = findViewById(R.id.description_text_view)
@@ -69,7 +67,6 @@ class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(co
 
         if (vouchersDetailsViewAdapter.partnerAvailable) {
             sponsorBackgroundView.isVisible = true
-            sponsoredByTextView.isVisible = true
             sponsorTextView.isVisible = true
             informationTextView.isVisible = true
             sponsorTextView.text = vouchersDetailsViewAdapter.partnerLabel
@@ -115,16 +112,12 @@ class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(co
 
             val sponsorBackgroundViewWidth = viewWidth * 9 / 10
 
-            sponsoredByTextView.measureWrapContent()
-
             informationTextView.measure(
                 MeasureSpec.makeMeasureSpec(convertDpToPx(20), MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(convertDpToPx(20), MeasureSpec.EXACTLY)
             )
 
-            val sponsorTextViewWidth = sponsorBackgroundViewWidth - (sponsoredByTextView.measuredWidth +
-                    informationTextView.measuredWidth + convertDpToPx(35))
-
+            val sponsorTextViewWidth = sponsorBackgroundViewWidth - (informationTextView.measuredWidth + convertDpToPx(30))
             sponsorTextView.measure(
                 MeasureSpec.makeMeasureSpec(sponsorTextViewWidth, MeasureSpec.AT_MOST),
                 MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
@@ -243,19 +236,14 @@ class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(co
                 separatorView.bottom + convertDpToPx(15)
             )
 
-            sponsoredByTextView.layoutToTopLeft(
+            sponsorTextView.layoutToTopLeft(
                 sponsorBackgroundView.left + convertDpToPx(15),
                 sponsorBackgroundView.top + convertDpToPx(10)
             )
 
-            sponsorTextView.layoutToTopLeft(
-                sponsoredByTextView.right + convertDpToPx(5),
-                sponsoredByTextView.top
-            )
-
             informationTextView.layoutToTopRight(
                 sponsorBackgroundView.right - convertDpToPx(15),
-                sponsoredByTextView.top
+                sponsorTextView.top
             )
 
             sponsorBackgroundView.bottom

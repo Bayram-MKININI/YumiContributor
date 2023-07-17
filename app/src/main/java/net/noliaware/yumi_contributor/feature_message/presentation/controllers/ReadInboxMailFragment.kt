@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -74,32 +75,32 @@ class ReadInboxMailFragment : AppCompatDialogFragment() {
     private fun collectFlows() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.getMessageEventsHelper.eventFlow.collectLatest { sharedEvent ->
-                    handleSharedEvent(sharedEvent)
-                    redirectToLoginScreenFromSharedEvent(sharedEvent)
-                }
+                handleSharedEvent(sharedEvent)
+                redirectToLoginScreenFromSharedEvent(sharedEvent)
+            }
         }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.getMessageEventsHelper.stateFlow.collect { vmState ->
-                    when (vmState) {
-                        is ViewModelState.LoadingState -> Unit
-                        is ViewModelState.DataState -> vmState.data?.let { message ->
-                            bindViewToData(message)
-                        }
+                when (vmState) {
+                    is ViewModelState.LoadingState -> Unit
+                    is ViewModelState.DataState -> vmState.data?.let { message ->
+                        bindViewToData(message)
                     }
                 }
+            }
         }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.deleteMessageEventsHelper.stateFlow.collect { vmState ->
-                    when (vmState) {
-                        is ViewModelState.LoadingState -> Unit
-                        is ViewModelState.DataState -> vmState.data?.let { result ->
-                            if (result) {
-                                viewModel.receivedMessageListShouldRefresh = true
-                                dismissAllowingStateLoss()
-                            }
+                when (vmState) {
+                    is ViewModelState.LoadingState -> Unit
+                    is ViewModelState.DataState -> vmState.data?.let { result ->
+                        if (result) {
+                            viewModel.receivedMessageListShouldRefresh = true
+                            dismissAllowingStateLoss()
                         }
                     }
                 }
+            }
         }
     }
 
@@ -116,7 +117,10 @@ class ReadInboxMailFragment : AppCompatDialogFragment() {
                 message.messageDate.parseDateToFormat(LONG_DATE_WITH_DAY_FORMAT),
                 message.messageTime.parseTimeToFormat(HOURS_TIME_FORMAT)
             ),
-            message = message.messageBody.orEmpty(),
+            message = HtmlCompat.fromHtml(
+                message.messageBody.orEmpty(),
+                HtmlCompat.FROM_HTML_MODE_LEGACY
+            ),
             replyPossible = true
         ).also {
             readMailView?.fillViewWithData(it)

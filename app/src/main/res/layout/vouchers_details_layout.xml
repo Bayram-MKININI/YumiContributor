@@ -94,16 +94,6 @@
                     android:visibility="gone" />
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/sponsored_by_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/omnes_medium_italic"
-                    android:text="@string/sponsored_by"
-                    android:textColor="@color/grey_2"
-                    android:textSize="15sp"
-                    android:visibility="gone" />
-
-                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/sponsor_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

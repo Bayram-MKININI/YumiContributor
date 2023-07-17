@@ -1,6 +1,8 @@
 package net.noliaware.yumi_contributor.feature_message.presentation.views
 
 import android.content.Context
+import android.text.Spanned
+import android.text.SpannedString
 import android.util.AttributeSet
 import android.view.View
 import android.view.View.OnClickListener
@@ -47,7 +49,7 @@ class ReadMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, 
         val priorityIconRes: Int,
         val subject: String = "",
         val time: String = "",
-        val message: String = "",
+        val message: Spanned = SpannedString(""),
         val replyPossible: Boolean = false
     )
 
