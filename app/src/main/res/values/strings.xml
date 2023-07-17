@@ -2,7 +2,6 @@
 
     <string name="error_no_network">Erreur réseau. Vérifier vos paramètres de connexion.</string>
     <string name="error_contact_support">Une erreur est survenue, veuillez contacter le support technique.</string>
-    <string name="error_message">%s Essais restants: %d</string>
     <string name="update_app">Mise à jour disponible</string>
     <string name="update_message">Une nouvelle version de l\'application est disponible. Veuillez la télécharger maintenant pour continuer</string>
     <string name="update">Mettre à jour</string>
@@ -11,19 +10,14 @@
     <string name="enter_login_message">Saisissez votre identifiant</string>
     <string name="enter_code_message">Saisissez votre code</string>
     <string name="enter_code_description">Saisissez votre code à 6 chiffres</string>
-    <string name="enter_code_comment_message">Bienvenue %s!</string>
     <string name="login_empty_error">Le champ identifiant est vide</string>
     <string name="hint_login">Identifiant</string>
-    <string name="secret_code">Votre code secret</string>
     <string name="confirm">Valider</string>
     <string name="erase">Effacer</string>
-    <string name="correct">Corriger</string>
     <string name="ok">OK</string>
     <string name="cancel">Annuler</string>
 
     //Selected account
-    <string name="hello">Bonjour</string>
-    <string name="name_formatted">%s!</string>
     <string name="you_have">Vous avez</string>
     <plurals name="accounts">
         <item quantity="one">bénéficiaire</item>
@@ -67,7 +61,6 @@
     //Profile
     <string name="my_profile">Mon Profil</string>
     <string name="my_data">Mes informations</string>
-    <string name="my_used_vouchers">Mes coupons</string>
     <string name="login">Login</string>
     <string name="surname">Nom</string>
     <string name="name">Prénom</string>
@@ -94,8 +87,6 @@
     <string name="select_subject">Sélectionner un sujet</string>
     <string name="new_mail">Nouveau message</string>
     <string name="reply">Répondre</string>
-    <string name="send">Envoyer</string>
-    <string name="mail_object">Sélectionner l\'objet</string>
     <string name="mail_body">Message</string>
     <string name="delete">Suppression</string>
     <string name="delete_mail_confirmation">Voulez‑vous vraiment supprimer ce message ?</string>
