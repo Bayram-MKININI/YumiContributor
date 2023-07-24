@@ -7,9 +7,10 @@ import net.noliaware.yumi_contributor.feature_account.domain.model.Category
 import net.noliaware.yumi_contributor.feature_account.domain.model.ManagedAccount
 import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStateData
-import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus
 
 interface ManagedAccountRepository {
+
+    fun updatePrivacyPolicyReadStatus(): Flow<Resource<Boolean>>
 
     fun getFilterUsers(): Flow<Resource<List<ManagedAccount>>>
 
@@ -24,7 +25,6 @@ interface ManagedAccountRepository {
     fun getAvailableVoucherList(categoryId: String): Flow<PagingData<Voucher>>
 
     fun getUsedCategories(): Flow<Resource<List<Category>>>
-
 
     fun getUsedVoucherList(categoryId: String): Flow<PagingData<Voucher>>
 

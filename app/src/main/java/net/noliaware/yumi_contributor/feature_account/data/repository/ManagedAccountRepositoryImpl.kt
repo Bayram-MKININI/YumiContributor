@@ -14,6 +14,7 @@ import net.noliaware.yumi_contributor.commun.GET_VOUCHER_STATUS
 import net.noliaware.yumi_contributor.commun.LIST_PAGE_SIZE
 import net.noliaware.yumi_contributor.commun.SELECTED_USER
 import net.noliaware.yumi_contributor.commun.SELECT_USER
+import net.noliaware.yumi_contributor.commun.SET_PRIVACY_POLICY_READ_STATUS
 import net.noliaware.yumi_contributor.commun.USER_ID
 import net.noliaware.yumi_contributor.commun.USE_VOUCHER
 import net.noliaware.yumi_contributor.commun.VOUCHER_ID
@@ -36,6 +37,50 @@ class ManagedAccountRepositoryImpl(
     private val api: RemoteApi,
     private val sessionData: SessionData
 ) : ManagedAccountRepository {
+
+    override fun updatePrivacyPolicyReadStatus(): Flow<Resource<Boolean>> = flow {
+
+        emit(Resource.Loading())
+
+        try {
+
+            val timestamp = System.currentTimeMillis().toString()
+            val randomString = UUID.randomUUID().toString()
+
+            val remoteData = api.updatePrivacyPolicyReadStatus(
+                timestamp = timestamp,
+                saltString = randomString,
+                token = generateToken(
+                    timestamp = timestamp,
+                    methodName = SET_PRIVACY_POLICY_READ_STATUS,
+                    randomString = randomString
+                ),
+                params = getCommonWSParams(sessionData, SET_PRIVACY_POLICY_READ_STATUS)
+            )
+
+            val sessionNoFailure = handleSessionWithNoFailure(
+                session = remoteData.session,
+                sessionData = sessionData,
+                tokenKey = SET_PRIVACY_POLICY_READ_STATUS,
+                appMessage = remoteData.message,
+                error = remoteData.error
+            )
+
+            if (sessionNoFailure) {
+                emit(
+                    Resource.Success(
+                        data = remoteData.data?.result == 1,
+                        appMessage = remoteData.message?.toAppMessage()
+                    )
+                )
+            }
+
+        } catch (ex: HttpException) {
+            emit(Resource.Error(errorType = ErrorType.SYSTEM_ERROR))
+        } catch (ex: IOException) {
+            emit(Resource.Error(errorType = ErrorType.NETWORK_ERROR))
+        }
+    }
 
     override fun getFilterUsers(): Flow<Resource<List<ManagedAccount>>> = flow {
 

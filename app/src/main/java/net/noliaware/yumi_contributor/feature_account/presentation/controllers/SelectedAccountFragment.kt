@@ -23,7 +23,7 @@ import net.noliaware.yumi_contributor.feature_account.presentation.views.Selecte
 class SelectedAccountFragment : Fragment() {
 
     private var selectedAccountView: SelectedAccountView? = null
-    private val viewModel: ManagedAccountFragmentViewModel by activityViewModels()
+    private val viewModel by activityViewModels<ManagedAccountFragmentViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,

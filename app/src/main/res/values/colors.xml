@@ -11,7 +11,6 @@
     <color name="orange_font">#E27C4A</color>
     <color name="orange_1">#FF6D36</color>
     <color name="vivid_yellow">#FEC818</color>
-    <color name="transparent_black">#F2000000</color>
     <color name="grey_1">#F3F1F1</color>
     <color name="grey_2">#575656</color>
     <color name="grey_3">#56524D</color>
@@ -19,17 +18,14 @@
     <color name="grey_5">#DED7D7</color>
     <color name="grey_6">#655F5F</color>
     <color name="grey_7">#F6F6F6</color>
+    <color name="grey_8">#D3D3D3</color>
+    <color name="grey_9">#BEBEBE</color>
 
     <color name="green_2">#4BB94B</color>
     <color name="yellow_2">#ED9D0F</color>
-    <color name="orange_2">#DE4603</color>
     <color name="red_1">#D50000</color>
 
     <color name="color_bittersweet">#FB6E6E</color>
-
-    <color name="orange">#F7A915</color>
-    <color name="shadow_grey">#0000001A</color>
-    <color name="red">#E03010</color>
 
 </resources>
 

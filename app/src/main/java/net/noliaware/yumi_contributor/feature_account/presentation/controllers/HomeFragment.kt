@@ -6,9 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.ACCOUNT_DATA
+import net.noliaware.yumi_contributor.commun.PRIVACY_POLICY_FRAGMENT_TAG
 import net.noliaware.yumi_contributor.commun.util.inflate
 import net.noliaware.yumi_contributor.commun.util.withArgs
 import net.noliaware.yumi_contributor.feature_account.presentation.views.HomeMenuView
@@ -43,6 +47,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        displayManagedAccountFragment()
         viewModel.accountData?.let { accountData ->
             homeView?.homeMenuView?.let { homeMenuView ->
                 if (accountData.newMessageCount > 0) {
@@ -51,9 +56,20 @@ class HomeFragment : Fragment() {
                 if (accountData.newAlertCount > 0) {
                     homeMenuView.setBadgeForNotificationButton(accountData.newAlertCount)
                 }
+                if (accountData.shouldConfirmPrivacyPolicy) {
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        delay(150)
+                        PrivacyPolicyFragment.newInstance(
+                            privacyPolicyUrl = accountData.privacyPolicyUrl,
+                            isConfirmationRequired = true
+                        ).show(
+                            childFragmentManager.beginTransaction(),
+                            PRIVACY_POLICY_FRAGMENT_TAG
+                        )
+                    }
+                }
             }
         }
-        displayManagedAccountFragment()
     }
 
     private val homeMenuViewCallback: HomeMenuView.HomeMenuViewCallback by lazy {
@@ -64,7 +80,10 @@ class HomeFragment : Fragment() {
 
             override fun onProfileButtonClicked() {
                 childFragmentManager.beginTransaction().run {
-                    replace(R.id.main_fragment_container, UserProfileFragment())
+                    replace(
+                        R.id.main_fragment_container,
+                        UserProfileFragment.newInstance(viewModel.accountData)
+                    )
                     commitAllowingStateLoss()
                 }
             }
@@ -95,7 +114,6 @@ class HomeFragment : Fragment() {
             replace(
                 R.id.main_fragment_container,
                 ManagedAccountFragment.newInstance(
-                    viewModel.accountData,
                     viewModel.managedAccount
                 ).apply {
                     this.onBackButtonPressed = {

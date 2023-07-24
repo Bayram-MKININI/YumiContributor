@@ -2,6 +2,7 @@
 <net.noliaware.yumi_contributor.feature_profile.presentation.views.ProfileParentView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -176,10 +177,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/omnes_semibold_regular"
-                    android:gravity="center"
-                    android:text="@string/bo_access_description"
                     android:textColor="@color/grey_2"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    tools:text="Génerer un code d\'accès à votre compte sur l\'application web" />
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/access_button_layout"
@@ -190,7 +190,9 @@
                     android:orientation="horizontal"
                     android:paddingVertical="10dp"
                     android:paddingStart="10dp"
-                    android:paddingEnd="15dp">
+                    android:paddingEnd="15dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="wrap_content"
@@ -208,6 +210,17 @@
                         android:textSize="18sp" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/privacy_policy_link_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/omnes_regular"
+                    android:gravity="end"
+                    android:text="@string/privacy_policy_underlined"
+                    android:textColor="@color/grey_2"
+                    android:textSize="15sp" />
+
             </net.noliaware.yumi_contributor.feature_profile.presentation.views.ProfileView>
         </androidx.core.widget.NestedScrollView>
     </net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView>

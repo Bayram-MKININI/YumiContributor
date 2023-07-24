@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<net.noliaware.yumi_contributor.feature_account.presentation.views.PrivacyPolicyView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/background_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha=".15"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_view_background" />
+
+    <View
+        android:id="@+id/header_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/title_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/omnes_semibold_regular"
+        android:text="@string/privacy_policy"
+        android:textColor="@android:color/white"
+        android:textSize="22sp" />
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:indicatorColor="@color/colorPrimaryLight"
+        app:trackColor="@color/grey_7"
+        app:trackThickness="3dp"
+        tools:progress="50"
+        tools:visibility="visible" />
+
+    <net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView
+        android:id="@+id/content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <WebView
+            android:id="@+id/web_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:isScrollContainer="false"
+            android:overScrollMode="never" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/icon_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@drawable/ic_offline"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/offline_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/omnes_semibold_regular"
+            android:gravity="center"
+            android:text="@string/no_internet_connexion"
+            android:textColor="@color/grey_9"
+            android:textSize="19sp"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/confirmation_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_rounded_orange"
+            android:elevation="20dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="10dp">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/omnes_semibold_regular"
+                android:text="@string/policy_confirmation"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView>
+</net.noliaware.yumi_contributor.feature_account.presentation.views.PrivacyPolicyView>

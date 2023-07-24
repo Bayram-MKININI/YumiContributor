@@ -155,6 +155,7 @@ class LoginRepositoryImpl @Inject constructor(
     ).also { it.plusAssign(getCommonWSParams(sessionData, tokenKey)) }
 
     private fun SessionData.fillMapWithInitialToken(sessionDTO: SessionDTO) {
+        this.sessionTokens[SET_PRIVACY_POLICY_READ_STATUS] = sessionDTO.sessionToken
         this.sessionTokens[GET_FILTER_USERS_LIST] = sessionDTO.sessionToken
         this.sessionTokens[GET_SINGLE_MANAGED_ACCOUNT] = sessionDTO.sessionToken
         this.sessionTokens[GET_MANAGED_ACCOUNT_LIST] = sessionDTO.sessionToken

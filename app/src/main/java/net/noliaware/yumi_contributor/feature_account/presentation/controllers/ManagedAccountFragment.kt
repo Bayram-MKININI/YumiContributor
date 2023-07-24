@@ -30,16 +30,14 @@ class ManagedAccountFragment : Fragment() {
 
     companion object {
         fun newInstance(
-            accountData: AccountData?,
             managedAccount: ManagedAccount?
         ) = ManagedAccountFragment().withArgs(
-            ACCOUNT_DATA to accountData,
             MANAGED_ACCOUNT to managedAccount
         )
     }
 
     private var managedAccountParentView: ManagedAccountParentView? = null
-    private val viewModel: ManagedAccountFragmentViewModel by activityViewModels()
+    private val viewModel by activityViewModels<ManagedAccountFragmentViewModel>()
     var onManagedAccountSelected: ((ManagedAccount) -> Unit)? = null
     var onBackButtonPressed: (() -> Unit)? = null
 

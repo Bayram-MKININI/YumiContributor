@@ -24,7 +24,7 @@ import net.noliaware.yumi_contributor.feature_account.presentation.views.Categor
 class AvailableCategoriesFragment : Fragment() {
 
     private var categoriesView: CategoriesView? = null
-    private val viewModel: CategoriesFragmentViewModel by activityViewModels()
+    private val viewModel by activityViewModels<CategoriesFragmentViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,19 +46,19 @@ class AvailableCategoriesFragment : Fragment() {
     private fun collectFlows() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.availableCategoriesEventsHelper.eventFlow.collectLatest { sharedEvent ->
-                    handleSharedEvent(sharedEvent)
-                    redirectToLoginScreenFromSharedEvent(sharedEvent)
-                }
+                handleSharedEvent(sharedEvent)
+                redirectToLoginScreenFromSharedEvent(sharedEvent)
+            }
         }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.availableCategoriesEventsHelper.stateFlow.collect { vmState ->
-                    when (vmState) {
-                        is ViewModelState.LoadingState -> Unit
-                        is ViewModelState.DataState -> vmState.data?.let { categories ->
-                            bindViewToData(categories)
-                        }
+                when (vmState) {
+                    is ViewModelState.LoadingState -> Unit
+                    is ViewModelState.DataState -> vmState.data?.let { categories ->
+                        bindViewToData(categories)
                     }
                 }
+            }
         }
     }
 

@@ -25,6 +25,7 @@ import net.noliaware.yumi_contributor.commun.INIT
 import net.noliaware.yumi_contributor.commun.SALT_STRING
 import net.noliaware.yumi_contributor.commun.SELECT_USER
 import net.noliaware.yumi_contributor.commun.SEND_MESSAGE
+import net.noliaware.yumi_contributor.commun.SET_PRIVACY_POLICY_READ_STATUS
 import net.noliaware.yumi_contributor.commun.TIMESTAMP
 import net.noliaware.yumi_contributor.commun.TOKEN
 import net.noliaware.yumi_contributor.commun.USE_VOUCHER
@@ -37,6 +38,7 @@ import net.noliaware.yumi_contributor.feature_account.data.remote.dto.GetVoucher
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.ManagedAccountsDTO
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.SelectUserDTO
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.SingleManagedAccountDTO
+import net.noliaware.yumi_contributor.feature_account.data.remote.dto.UpdatePrivacyPolicyResponseDTO
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.UseVoucherResponseDTO
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.UsedVouchersDTO
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.VoucherAvailableCategoriesDTO
@@ -78,6 +80,15 @@ interface RemoteApi {
         @Path(TOKEN) token: String,
         @FieldMap params: Map<String, String>
     ): ResponseDTO<AccountDataDTO>
+
+    @FormUrlEncoded
+    @POST("$SET_PRIVACY_POLICY_READ_STATUS/{$TIMESTAMP}/{$SALT_STRING}/{$TOKEN}")
+    suspend fun updatePrivacyPolicyReadStatus(
+        @Path(TIMESTAMP) timestamp: String,
+        @Path(SALT_STRING) saltString: String,
+        @Path(TOKEN) token: String,
+        @FieldMap params: Map<String, String>
+    ): ResponseDTO<UpdatePrivacyPolicyResponseDTO>
 
     @FormUrlEncoded
     @POST("$GET_FILTER_USERS_LIST/{$TIMESTAMP}/{$SALT_STRING}/{$TOKEN}")

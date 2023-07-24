@@ -27,7 +27,7 @@ import net.noliaware.yumi_contributor.feature_account.presentation.views.Account
 class AccountsListFragment : Fragment() {
 
     private var accountsListView: AccountsListView? = null
-    private val viewModel: ManagedAccountFragmentViewModel by activityViewModels()
+    private val viewModel by activityViewModels<ManagedAccountFragmentViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
