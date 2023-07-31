@@ -31,8 +31,7 @@ class ReceivedMessagesFragment : Fragment() {
             messagesListView = this as MessagesListView
             messagesListView?.adapter = MessageAdapter { message ->
                 ReadInboxMailFragment.newInstance(
-                    message.messageId,
-                    message.messageSubject
+                    message.messageId
                 ).apply {
                     onReceivedMessageListRefreshed = {
                         messagesListView?.getMessageAdapter?.refresh()

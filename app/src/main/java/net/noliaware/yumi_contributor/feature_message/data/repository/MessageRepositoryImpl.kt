@@ -83,9 +83,14 @@ class MessageRepositoryImpl(
         }
     }
 
-    private fun generateGetMessageParams(messageId: String, tokenKey: String) = mutableMapOf(
+    private fun generateGetMessageParams(
+        messageId: String,
+        tokenKey: String
+    ) = mutableMapOf(
         MESSAGE_ID to messageId
-    ).also { it.plusAssign(getCommonWSParams(sessionData, tokenKey)) }
+    ).also {
+        it.plusAssign(getCommonWSParams(sessionData, tokenKey))
+    }
 
     override fun getOutboxMessageForId(messageId: String): Flow<Resource<Message>> = flow {
 
