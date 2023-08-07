@@ -15,18 +15,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import net.noliaware.yumi_contributor.BuildConfig
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.ACCOUNT_DATA
 import net.noliaware.yumi_contributor.commun.ACTION_PUSH_DATA
-import net.noliaware.yumi_contributor.commun.KEY_CURRENT_VERSION
-import net.noliaware.yumi_contributor.commun.KEY_FORCE_UPDATE_REQUIRED
-import net.noliaware.yumi_contributor.commun.KEY_FORCE_UPDATE_URL
-import net.noliaware.yumi_contributor.commun.ONE_HOUR
 import net.noliaware.yumi_contributor.commun.PUSH_BODY
 import net.noliaware.yumi_contributor.commun.PUSH_TITLE
 import net.noliaware.yumi_contributor.commun.util.ViewModelState.DataState
@@ -45,12 +38,6 @@ class LoginFragment : Fragment() {
     private val viewModel: LoginFragmentViewModel by viewModels()
     private var loginParentLayout: LoginParentLayout? = null
     private val passwordIndexes = mutableListOf<Int>()
-    private val firebaseRemoteConfig by lazy { FirebaseRemoteConfig.getInstance() }
-    private val configSettings by lazy {
-        FirebaseRemoteConfigSettings.Builder()
-            .setMinimumFetchIntervalInSeconds(if (BuildConfig.DEBUG) 0 else ONE_HOUR)
-            .build()
-    }
 
     private val messageReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent) {
@@ -69,10 +56,6 @@ class LoginFragment : Fragment() {
         }
     }
 
-    init {
-        firebaseRemoteConfig.setConfigSettingsAsync(configSettings)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -87,7 +70,6 @@ class LoginFragment : Fragment() {
         loginParentLayout?.loginView?.callback = loginViewCallback
         loginParentLayout?.passwordView?.callback = passwordViewCallback
         collectFlows()
-        checkAppVersion()
     }
 
     override fun onStart() {
@@ -110,6 +92,17 @@ class LoginFragment : Fragment() {
 
     private fun collectFlows() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.forceUpdateStateFlow.collectLatest { vmState ->
+                when (vmState) {
+                    is LoadingState -> loginParentLayout?.setLoginViewProgressVisible(true)
+                    is DataState -> vmState.data?.let {
+                        loginParentLayout?.setLoginViewProgressVisible(false)
+                        showForceUpdateDialog()
+                    }
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.prefsStateFlow.collectLatest { vmState ->
                 when (vmState) {
                     is LoadingState -> Unit
@@ -128,7 +121,7 @@ class LoginFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.initEventsHelper.stateFlow.collect { vmState ->
                 when (vmState) {
-                    is LoadingState -> loginParentLayout?.setLoginViewProgressVisible(true)
+                    is LoadingState -> Unit
                     is DataState -> vmState.data?.let { initData ->
                         viewModel.saveDeviceIdPreferences(initData.deviceId)
                         loginParentLayout?.setLoginViewProgressVisible(false)
@@ -141,7 +134,6 @@ class LoginFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.accountDataEventsHelper.eventFlow.collectLatest { sharedEvent ->
                 loginParentLayout?.let {
-                    it.setLoginViewProgressVisible(false)
                     it.clearSecretDigits()
                     passwordIndexes.clear()
                 }
@@ -164,38 +156,20 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun checkAppVersion() {
-        val appVersion = BuildConfig.VERSION_CODE
-        firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener(requireActivity()) {
-            if (it.isSuccessful) {
-                val forceUpdate = firebaseRemoteConfig.getBoolean(KEY_FORCE_UPDATE_REQUIRED)
-                val currentVersion = firebaseRemoteConfig.getLong(KEY_CURRENT_VERSION)
-                if (forceUpdate) {
-                    if (currentVersion > appVersion) {
-                        showDialog()
-                    }
-                }
-            }
-        }
-    }
-
-    private fun showDialog() {
+    private fun showForceUpdateDialog() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.update_app)
             .setMessage(R.string.update_message)
             .setPositiveButton(R.string.update) { _, _ ->
-                redirectToStoreUrl()
+                viewModel.forceUpdateUrl?.let { url ->
+                    context?.startWebBrowserAtURL(url)
+                }
             }
             .setCancelable(false)
             .create().apply {
                 setCanceledOnTouchOutside(false)
                 show()
             }
-    }
-
-    private fun redirectToStoreUrl() {
-        val updateUrl = firebaseRemoteConfig.getString(KEY_FORCE_UPDATE_URL)
-        context?.startWebBrowserAtURL(updateUrl)
     }
 
     private val loginViewCallback: LoginViewCallback by lazy {

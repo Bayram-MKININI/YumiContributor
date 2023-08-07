@@ -35,9 +35,7 @@ class ReadOutboxMailFragment : AppCompatDialogFragment() {
     companion object {
         fun newInstance(
             messageId: String
-        ) = ReadOutboxMailFragment().withArgs(
-            MESSAGE_ID to messageId
-        )
+        ) = ReadOutboxMailFragment().withArgs(MESSAGE_ID to messageId)
     }
 
     private var readMailView: ReadMailView? = null

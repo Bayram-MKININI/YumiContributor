@@ -134,9 +134,12 @@ class ProfileView(context: Context, attrs: AttributeSet?) : ViewGroup(context, a
 
         privacyPolicyLinkTextView.measureWrapContent()
 
-        viewHeight = myDataTextView.measuredHeight + loginValueTextView.measuredHeight +
-                surnameValueTextView.measuredHeight + nameValueTextView.measuredHeight +
-                phoneValueTextView.measuredHeight + addressValueTextView.measuredHeight +
+        viewHeight = myDataTextView.measuredHeight +
+                max(loginTitleTextView.measuredHeight, loginValueTextView.measuredHeight) +
+                max(surnameTitleTextView.measuredHeight, surnameValueTextView.measuredHeight) +
+                max(nameTitleTextView.measuredHeight, nameValueTextView.measuredHeight) +
+                max(phoneTitleTextView.measuredHeight, phoneValueTextView.measuredHeight) +
+                max(addressTitleTextView.measuredHeight, addressValueTextView.measuredHeight) +
                 separatorView.measuredHeight + boAccessTextView.measuredHeight +
                 boAccessDescriptionTextView.measuredHeight +
                 if (accessButtonLayout.isVisible) {

@@ -111,4 +111,3 @@ const val READ_MESSAGE_FRAGMENT_TAG = "read_message_fragment"
 const val SEND_MESSAGES_FRAGMENT_TAG = "send_messages_fragment"
 
 const val GOLDEN_RATIO = 1.6180339887
-const val ONE_HOUR = 3600L

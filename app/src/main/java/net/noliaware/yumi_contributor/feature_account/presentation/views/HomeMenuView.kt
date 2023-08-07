@@ -57,28 +57,38 @@ class HomeMenuView(context: Context, attrs: AttributeSet?) : MaterialCardView(co
 
     private val onButtonClickListener: OnClickListener by lazy {
         OnClickListener {
-
-            resetAllBackgrounds()
-
             when (it.id) {
                 R.id.home_image_view -> {
+                    if (homeImageView.isSelected) {
+                        return@OnClickListener
+                    }
+                    resetAllBackgrounds()
                     selectHomeButton()
                     callback?.onCategoryButtonClicked()
                 }
-
                 R.id.profile_image_view -> {
+                    if (profileImageView.isSelected) {
+                        return@OnClickListener
+                    }
+                    resetAllBackgrounds()
                     profileImageView.setBackgroundResource(R.drawable.circle_primary)
                     profileImageView.isSelected = true
                     callback?.onProfileButtonClicked()
                 }
-
                 R.id.mail_image_view -> {
+                    if (mailImageView.isSelected) {
+                        return@OnClickListener
+                    }
+                    resetAllBackgrounds()
                     mailImageView.setBackgroundResource(R.drawable.circle_primary)
                     mailImageView.isSelected = true
                     callback?.onMailButtonClicked()
                 }
-
                 R.id.notification_image_view -> {
+                    if (notificationImageView.isSelected) {
+                        return@OnClickListener
+                    }
+                    resetAllBackgrounds()
                     notificationImageView.setBackgroundResource(R.drawable.circle_primary)
                     notificationImageView.isSelected = true
                     callback?.onNotificationButtonClicked()
@@ -140,7 +150,7 @@ class HomeMenuView(context: Context, attrs: AttributeSet?) : MaterialCardView(co
 
         setMeasuredDimension(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(convertDpToPx(64), View.MeasureSpec.EXACTLY)
+            MeasureSpec.makeMeasureSpec(convertDpToPx(64), MeasureSpec.EXACTLY)
         )
     }
 
