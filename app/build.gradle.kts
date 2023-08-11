@@ -10,13 +10,13 @@ plugins {
 
 android {
     namespace = "net.noliaware.yumi_contributor"
-    compileSdk = 33
-    buildToolsVersion = "33.0.2"
+    compileSdk = 34
+    buildToolsVersion = "34.0.0"
 
     defaultConfig {
         applicationId = "net.noliaware.yumi_contributor"
         minSdk = 21
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 2
         versionName = "1.0"
 
@@ -93,7 +93,7 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.6.1")
     implementation("androidx.activity:activity-ktx:1.7.2")
     implementation("androidx.paging:paging-runtime-ktx:3.2.0")
-    implementation("androidx.browser:browser:1.5.0")
+    implementation("androidx.browser:browser:1.6.0")
     implementation("androidx.webkit:webkit:1.7.0")
 
     implementation("com.google.zxing:zxingorg:3.5.1")
