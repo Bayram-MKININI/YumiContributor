@@ -7,6 +7,8 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.textfield.TextInputLayout
 import net.noliaware.yumi_contributor.R
@@ -77,9 +79,9 @@ class LoginView(context: Context, attrs: AttributeSet?) : ElevatedCardView(conte
 
     fun setProgressVisible(visible: Boolean) {
         if (visible) {
-            progressBar.visibility = VISIBLE
+            progressBar.isVisible = true
         } else {
-            progressBar.visibility = GONE
+            progressBar.isGone = true
         }
     }
 
@@ -96,16 +98,11 @@ class LoginView(context: Context, attrs: AttributeSet?) : ElevatedCardView(conte
     }
 
     private fun validateLogin(): Boolean {
-
         val login = inputLogin.text.toString().trim()
-
         if (login.isEmpty()) {
-
             inputLayoutLogin.error = context.getString(R.string.login_empty_error)
             return false
-
         } else {
-
             inputLayoutLogin.isErrorEnabled = false
         }
         return true
@@ -125,7 +122,9 @@ class LoginView(context: Context, attrs: AttributeSet?) : ElevatedCardView(conte
         confirmImageView.measureWrapContent()
         confirmTextView.measureWrapContent()
 
-        progressBar.measureWrapContent()
+        if (progressBar.isVisible) {
+            progressBar.measureWrapContent()
+        }
 
         viewHeight = inputMessageTextView.measuredHeight + inputLayoutLogin.measuredHeight +
                 confirmImageView.measuredHeight + convertDpToPx(108)
@@ -160,9 +159,11 @@ class LoginView(context: Context, attrs: AttributeSet?) : ElevatedCardView(conte
             confirmImageView.top + convertDpToPx(7)
         )
 
-        progressBar.layoutToBottomLeft(
-            (viewWidth - progressBar.measuredWidth) / 2,
-            viewHeight - convertDpToPx(7)
-        )
+        if (progressBar.isVisible) {
+            progressBar.layoutToBottomLeft(
+                (viewWidth - progressBar.measuredWidth) / 2,
+                viewHeight - convertDpToPx(7)
+            )
+        }
     }
 }

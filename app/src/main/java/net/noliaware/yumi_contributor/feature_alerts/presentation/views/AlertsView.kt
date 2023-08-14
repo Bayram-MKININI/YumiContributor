@@ -5,6 +5,8 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import net.noliaware.yumi_contributor.R
@@ -22,6 +24,7 @@ class AlertsView(context: Context, attrs: AttributeSet?) : ViewGroup(context, at
     private lateinit var notificationIconView: View
     private lateinit var contentView: View
     private lateinit var recyclerView: RecyclerView
+    private lateinit var emptyView: View
 
     var alertAdapter
         get() = recyclerView.adapter as AlertAdapter
@@ -41,10 +44,21 @@ class AlertsView(context: Context, attrs: AttributeSet?) : ViewGroup(context, at
         notificationIconView = findViewById(R.id.notification_icon_view)
         contentView = findViewById(R.id.content_layout)
         recyclerView = contentView.findViewById(R.id.recycler_view)
+        emptyView = contentView.findViewById(R.id.empty_message_text_view)
 
         recyclerView.also {
             it.layoutManager = LinearLayoutManager(context)
             it.addItemDecoration(MarginItemDecoration(convertDpToPx(16)))
+        }
+    }
+
+    fun setEmptyMessageVisible(visible: Boolean) {
+        if (visible) {
+            emptyView.isVisible = true
+            recyclerView.isGone = true
+        } else {
+            emptyView.isGone = true
+            recyclerView.isVisible = true
         }
     }
 
@@ -76,10 +90,16 @@ class AlertsView(context: Context, attrs: AttributeSet?) : ViewGroup(context, at
             MeasureSpec.makeMeasureSpec(contentViewHeight, MeasureSpec.EXACTLY)
         )
 
-        recyclerView.measure(
-            MeasureSpec.makeMeasureSpec(contentView.measuredWidth, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(contentView.measuredHeight, MeasureSpec.EXACTLY)
-        )
+        if (recyclerView.isVisible) {
+            recyclerView.measure(
+                MeasureSpec.makeMeasureSpec(contentView.measuredWidth, MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(contentView.measuredHeight, MeasureSpec.EXACTLY)
+            )
+        }
+
+        if (emptyView.isVisible) {
+            emptyView.measureWrapContent()
+        }
 
         setMeasuredDimension(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
@@ -108,6 +128,13 @@ class AlertsView(context: Context, attrs: AttributeSet?) : ViewGroup(context, at
             notificationIconView.bottom + convertDpToPx(15)
         )
 
-        recyclerView.layoutToTopLeft(0, 0)
+        if (emptyView.isVisible) {
+            emptyView.layoutToTopLeft(
+                (contentView.measuredWidth - emptyView.measuredWidth) / 2,
+                (contentView.measuredHeight - emptyView.measuredHeight) / 2
+            )
+        } else {
+            recyclerView.layoutToTopLeft(0, 0)
+        }
     }
 }

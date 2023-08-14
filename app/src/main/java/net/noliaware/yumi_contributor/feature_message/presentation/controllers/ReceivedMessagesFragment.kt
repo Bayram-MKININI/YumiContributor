@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
@@ -29,12 +30,12 @@ class ReceivedMessagesFragment : Fragment() {
     ): View? {
         return inflater.inflate(R.layout.messages_list_layout, container, false).apply {
             messagesListView = this as MessagesListView
-            messagesListView?.adapter = MessageAdapter { message ->
+            messagesListView?.messageAdapter = MessageAdapter { message ->
                 ReadInboxMailFragment.newInstance(
                     message.messageId
                 ).apply {
                     onReceivedMessageListRefreshed = {
-                        messagesListView?.getMessageAdapter?.refresh()
+                        messagesListView?.messageAdapter?.refresh()
                     }
                 }.show(
                     childFragmentManager.beginTransaction(),
@@ -51,16 +52,21 @@ class ReceivedMessagesFragment : Fragment() {
 
     private fun collectFlows() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            messagesListView?.getMessageAdapter?.loadStateFlow?.collectLatest { loadState ->
+            messagesListView?.messageAdapter?.loadStateFlow?.collectLatest { loadState ->
+                if (loadState.refresh is LoadState.NotLoading) {
+                    messagesListView?.setEmptyMessageText(getString(R.string.no_received_message))
+                    val alertsCount = messagesListView?.messageAdapter?.itemCount ?: 0
+                    messagesListView?.setEmptyMessageVisible(alertsCount < 1)
+                }
                 handlePaginationError(loadState)
             }
         }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.getMessages().collectLatest {
-                messagesListView?.getMessageAdapter?.withLoadStateFooter(
+                messagesListView?.messageAdapter?.withLoadStateFooter(
                     footer = ListLoadStateAdapter()
                 )
-                messagesListView?.getMessageAdapter?.submitData(it)
+                messagesListView?.messageAdapter?.submitData(it)
             }
         }
     }

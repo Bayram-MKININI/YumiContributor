@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
@@ -40,6 +41,10 @@ class AlertsFragment : Fragment() {
     private fun collectFlows() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             alertsView?.alertAdapter?.loadStateFlow?.collectLatest { loadState ->
+                if (loadState.refresh is LoadState.NotLoading) {
+                    val alertsCount = alertsView?.alertAdapter?.itemCount ?: 0
+                    alertsView?.setEmptyMessageVisible(alertsCount < 1)
+                }
                 handlePaginationError(loadState)
             }
         }

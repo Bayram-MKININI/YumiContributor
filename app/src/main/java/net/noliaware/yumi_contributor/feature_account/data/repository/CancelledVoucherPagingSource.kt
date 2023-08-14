@@ -55,7 +55,7 @@ class CancelledVoucherPagingSource(
                 throw PaginationException(errorType)
             }
 
-            val voucherRank = remoteData.data?.voucherDTOList?.last()?.voucherRank ?: nextPage
+            val voucherRank = remoteData.data?.voucherDTOList?.lastOrNull()?.voucherRank ?: nextPage
 
             val moreItemsAvailable = remoteData.data?.voucherDTOList?.last()?.let { voucherDTO ->
                 if (voucherDTO.voucherRank != null && voucherDTO.voucherCount != null) {
@@ -77,7 +77,11 @@ class CancelledVoucherPagingSource(
         }
     }
 
-    private fun generateWSParams(categoryId: String, offset: Int, tokenKey: String) = mutableMapOf(
+    private fun generateWSParams(
+        categoryId: String,
+        offset: Int,
+        tokenKey: String
+    ) = mutableMapOf(
         CATEGORY_ID to categoryId,
         LIMIT to LIST_PAGE_SIZE.toString(),
         OFFSET to offset.toString()

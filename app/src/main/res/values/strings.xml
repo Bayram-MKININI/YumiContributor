@@ -85,6 +85,8 @@
     <string name="mail">Messagerie</string>
     <string name="sent">Envoyés</string>
     <string name="received">Reçus</string>
+    <string name="no_received_message">Aucun message reçu</string>
+    <string name="no_sent_message">Aucun message envoyé</string>
     <string name="priority_information">Information</string>
     <string name="priority_warning">Avertissement</string>
     <string name="priority_important">Important</string>
@@ -99,6 +101,7 @@
 
     //Alert
     <string name="notifications">Notifications</string>
+    <string name="no_notification">Aucune notification reçue</string>
     <string name="received_at">Reçu le %s à %s</string>
 
 </resources>

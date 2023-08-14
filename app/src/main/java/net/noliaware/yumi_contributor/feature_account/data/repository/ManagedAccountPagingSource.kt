@@ -56,9 +56,9 @@ class ManagedAccountPagingSource(
                 throw PaginationException(errorType)
             }
 
-            val profileRank = remoteData.data?.accountsDTOs?.last()?.accountRank ?: nextPage
+            val profileRank = remoteData.data?.accountsDTOs?.lastOrNull()?.accountRank ?: nextPage
 
-            val moreItemsAvailable = remoteData.data?.accountsDTOs?.last()?.let { accountDTO ->
+            val moreItemsAvailable = remoteData.data?.accountsDTOs?.lastOrNull()?.let { accountDTO ->
                 if (accountDTO.accountRank != null && accountDTO.accountCount != null) {
                     accountDTO.accountRank < accountDTO.accountCount
                 } else {

@@ -52,9 +52,9 @@ class InboxMessagePagingSource(
                 throw PaginationException(errorType)
             }
 
-            val messageRank = remoteData.data?.messageDTOList?.last()?.messageRank ?: nextPage
+            val messageRank = remoteData.data?.messageDTOList?.lastOrNull()?.messageRank ?: nextPage
 
-            val moreItemsAvailable = remoteData.data?.messageDTOList?.last()?.let { messageDTO ->
+            val moreItemsAvailable = remoteData.data?.messageDTOList?.lastOrNull()?.let { messageDTO ->
                 if (messageDTO.messageRank != null && messageDTO.messageCount != null) {
                     messageDTO.messageRank < messageDTO.messageCount
                 } else {
