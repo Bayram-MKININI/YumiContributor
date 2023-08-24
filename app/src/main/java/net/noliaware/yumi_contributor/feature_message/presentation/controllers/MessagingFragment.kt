@@ -62,8 +62,8 @@ class MessagingFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         messagingView = null
+        super.onDestroyView()
     }
 
     private class MessageFragmentStateAdapter(

@@ -41,7 +41,7 @@ jobs:
           echo KEYSTORE=Noliaware.jks >> $GITHUB_ENV
 
       - name: Execute Gradle build
-        run: ./gradlew build
+        run: ./gradlew build --warning-mode all
 
       - name: Build release APK
         run: ./gradlew assembleRelease

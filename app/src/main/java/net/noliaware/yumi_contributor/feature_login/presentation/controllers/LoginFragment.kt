@@ -81,8 +81,8 @@ class LoginFragment : Fragment() {
     }
 
     override fun onStop() {
-        super.onStop()
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(messageReceiver)
+        super.onStop()
     }
 
     private fun getAndroidId(): String = Settings.Secure.getString(
@@ -145,8 +145,8 @@ class LoginFragment : Fragment() {
                 when (vmState) {
                     is LoadingState -> Unit
                     is DataState -> vmState.data?.let { accountData ->
-                        activity?.finish()
                         Intent(requireActivity(), MainActivity::class.java).apply {
+                            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                             putExtra(ACCOUNT_DATA, accountData)
                             startActivity(this)
                         }
@@ -204,7 +204,7 @@ class LoginFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         loginParentLayout = null
+        super.onDestroyView()
     }
 }

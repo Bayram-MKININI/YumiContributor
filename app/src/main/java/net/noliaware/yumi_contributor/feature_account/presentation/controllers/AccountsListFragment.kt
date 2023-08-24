@@ -131,7 +131,7 @@ class AccountsListFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         accountsListView = null
+        super.onDestroyView()
     }
 }

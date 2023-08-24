@@ -84,8 +84,8 @@ class SelectedAccountFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         selectedAccountView = null
+        super.onDestroyView()
     }
 
     private class SelectedAccountFragmentStateAdapter(

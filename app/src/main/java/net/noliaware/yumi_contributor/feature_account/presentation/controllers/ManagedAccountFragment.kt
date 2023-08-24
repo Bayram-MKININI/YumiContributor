@@ -130,8 +130,8 @@ class ManagedAccountFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         managedAccountParentView = null
+        super.onDestroyView()
     }
 
     private class ManagedAccountFragmentStateAdapter(
