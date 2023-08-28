@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@drawable/ic_culture,@drawable/ic_energy,@drawable/ic_equipment,@drawable/ic_food,@drawable/ic_goods,@drawable/ic_health,@drawable/ic_services,@drawable/ic_sports,@drawable/ic_transport,@drawable/ic_others" />
