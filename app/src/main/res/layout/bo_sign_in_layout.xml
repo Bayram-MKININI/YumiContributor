@@ -2,6 +2,7 @@
 <net.noliaware.yumi_contributor.feature_profile.presentation.views.BOSignInParentView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:keepScreenOn="true">
@@ -62,7 +63,8 @@
             android:gravity="center"
             android:letterSpacing="0.2"
             android:textColor="@color/grey_2"
-            android:textSize="35sp" />
+            android:textSize="35sp"
+            tools:text="123456" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/bo_code_expiration"
@@ -79,8 +81,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/omnes_semibold_regular"
-            android:gravity="center"
             android:textColor="@color/grey_2"
-            android:textSize="35sp" />
+            android:textSize="35sp"
+            tools:text="05:00" />
     </net.noliaware.yumi_contributor.feature_profile.presentation.views.BOSignInView>
 </net.noliaware.yumi_contributor.feature_profile.presentation.views.BOSignInParentView>
