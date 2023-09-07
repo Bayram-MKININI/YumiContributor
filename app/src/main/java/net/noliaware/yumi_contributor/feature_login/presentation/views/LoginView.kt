@@ -5,17 +5,15 @@ import android.util.AttributeSet
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.core.view.isGone
-import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
+import com.facebook.shimmer.Shimmer
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.textfield.TextInputLayout
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.hideKeyboard
-import net.noliaware.yumi_contributor.commun.util.layoutToBottomLeft
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import net.noliaware.yumi_contributor.commun.util.weak
@@ -23,11 +21,11 @@ import net.noliaware.yumi_contributor.commun.util.weak
 class LoginView(context: Context, attrs: AttributeSet?) : ElevatedCardView(context, attrs) {
 
     private lateinit var inputMessageTextView: TextView
+    private lateinit var inputLayoutLoginShimmerView: ShimmerFrameLayout
     private lateinit var inputLayoutLogin: TextInputLayout
     private lateinit var inputLogin: EditText
     private lateinit var confirmImageView: ImageView
     private lateinit var confirmTextView: TextView
-    private lateinit var progressBar: ProgressBar
 
     var callback: LoginViewCallback? by weak()
 
@@ -43,7 +41,8 @@ class LoginView(context: Context, attrs: AttributeSet?) : ElevatedCardView(conte
     private fun initView() {
 
         inputMessageTextView = findViewById(R.id.input_message_text_view)
-        inputLayoutLogin = findViewById(R.id.input_layout_login)
+        inputLayoutLoginShimmerView = findViewById(R.id.input_layout_login_shimmer_view)
+        inputLayoutLogin = inputLayoutLoginShimmerView.findViewById(R.id.input_layout_login)
 
         inputLogin = inputLayoutLogin.findViewById(R.id.input_login)
         inputLogin.setOnEditorActionListener { _, actionId, _ ->
@@ -70,7 +69,6 @@ class LoginView(context: Context, attrs: AttributeSet?) : ElevatedCardView(conte
         }
 
         confirmTextView = findViewById(R.id.confirm_text_view)
-        progressBar = findViewById(R.id.progress_bar)
     }
 
     fun setLogin(login: String) {
@@ -78,10 +76,20 @@ class LoginView(context: Context, attrs: AttributeSet?) : ElevatedCardView(conte
     }
 
     fun setProgressVisible(visible: Boolean) {
+        inputLayoutLoginShimmerView.setShimmer(
+            Shimmer.AlphaHighlightBuilder()
+                .setBaseAlpha(if (visible) 0.4f else 1f)
+                .setDuration(resources.getInteger(R.integer.shimmer_animation_duration_ms).toLong())
+                .build()
+        )
         if (visible) {
-            progressBar.isVisible = true
+            inputLayoutLogin.isEnabled = false
+            confirmImageView.isEnabled = false
+            inputLayoutLoginShimmerView.startShimmer()
         } else {
-            progressBar.isGone = true
+            inputLayoutLoginShimmerView.stopShimmer()
+            inputLayoutLogin.isEnabled = true
+            confirmImageView.isEnabled = true
         }
     }
 
@@ -114,17 +122,13 @@ class LoginView(context: Context, attrs: AttributeSet?) : ElevatedCardView(conte
 
         inputMessageTextView.measureWrapContent()
 
-        inputLayoutLogin.measure(
+        inputLayoutLoginShimmerView.measure(
             MeasureSpec.makeMeasureSpec(viewWidth * 8 / 10, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         )
 
         confirmImageView.measureWrapContent()
         confirmTextView.measureWrapContent()
-
-        if (progressBar.isVisible) {
-            progressBar.measureWrapContent()
-        }
 
         viewHeight = inputMessageTextView.measuredHeight + inputLayoutLogin.measuredHeight +
                 confirmImageView.measuredHeight + convertDpToPx(108)
@@ -144,26 +148,19 @@ class LoginView(context: Context, attrs: AttributeSet?) : ElevatedCardView(conte
             convertDpToPx(40)
         )
 
-        inputLayoutLogin.layoutToTopLeft(
+        inputLayoutLoginShimmerView.layoutToTopLeft(
             (viewWidth - inputLayoutLogin.measuredWidth) / 2,
             inputMessageTextView.bottom + convertDpToPx(12)
         )
 
         confirmImageView.layoutToTopLeft(
             (viewWidth - confirmImageView.measuredWidth) / 2,
-            inputLayoutLogin.bottom + convertDpToPx(16)
+            inputLayoutLoginShimmerView.bottom + convertDpToPx(16)
         )
 
         confirmTextView.layoutToTopLeft(
             (viewWidth - confirmTextView.measuredWidth) / 2,
             confirmImageView.top + convertDpToPx(7)
         )
-
-        if (progressBar.isVisible) {
-            progressBar.layoutToBottomLeft(
-                (viewWidth - progressBar.measuredWidth) / 2,
-                viewHeight - convertDpToPx(7)
-            )
-        }
     }
 }

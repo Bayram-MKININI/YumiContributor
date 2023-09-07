@@ -37,28 +37,36 @@
                     android:textColor="@color/grey_2"
                     android:textSize="18sp" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/input_layout_login"
-                    android:layout_width="match_parent"
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/input_layout_login_shimmer_view"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    app:boxBackgroundColor="@color/grey_1"
-                    app:boxBackgroundMode="filled"
-                    app:boxStrokeWidth="0dp"
-                    app:boxStrokeWidthFocused="0dp"
-                    app:endIconMode="clear_text"
-                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.rounded7dp">
+                    app:shimmer_auto_start="false"
+                    app:shimmer_base_alpha="1">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/input_login"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/input_layout_login"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/omnes_regular"
-                        android:hint="@string/hint_login"
-                        android:imeOptions="actionDone|flagNoExtractUi"
-                        android:inputType="textEmailAddress"
-                        android:textColor="@color/grey_2" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_gravity="center_horizontal"
+                        app:boxBackgroundColor="@color/grey_1"
+                        app:boxBackgroundMode="filled"
+                        app:boxStrokeWidth="0dp"
+                        app:boxStrokeWidthFocused="0dp"
+                        app:endIconMode="clear_text"
+                        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.rounded7dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/input_login"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/omnes_regular"
+                            android:hint="@string/hint_login"
+                            android:imeOptions="actionDone|flagNoExtractUi"
+                            android:inputType="textEmailAddress"
+                            android:textColor="@color/grey_2" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/confirm_image_view"
@@ -75,16 +83,6 @@
                     android:text="@string/confirm"
                     android:textColor="@color/black_font"
                     android:textSize="18sp" />
-
-                <com.google.android.material.progressindicator.CircularProgressIndicator
-                    android:id="@+id/progress_bar"
-                    style="@style/Widget.MaterialComponents.CircularProgressIndicator.Small"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:indeterminate="true"
-                    android:visibility="gone"
-                    app:indicatorColor="@color/colorPrimary" />
 
             </net.noliaware.yumi_contributor.feature_login.presentation.views.LoginView>
 
@@ -126,18 +124,26 @@
                     android:textColor="@color/grey_2"
                     android:textSize="15sp" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/code_text_view"
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/code_shimmer_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/rectangle_rounded_grey1"
-                    android:fontFamily="@font/omnes_regular"
-                    android:gravity="center_horizontal"
-                    android:includeFontPadding="false"
-                    android:lines="1"
-                    android:paddingTop="2dp"
-                    android:textColor="@android:color/black"
-                    android:textSize="40sp" />
+                    app:shimmer_auto_start="false"
+                    app:shimmer_base_alpha="1">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/code_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/rectangle_rounded_grey1"
+                        android:fontFamily="@font/omnes_regular"
+                        android:gravity="center_horizontal"
+                        android:includeFontPadding="false"
+                        android:lines="1"
+                        android:paddingTop="2dp"
+                        android:textColor="@android:color/black"
+                        android:textSize="40sp" />
+                </com.facebook.shimmer.ShimmerFrameLayout>
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/pad_first_digit"

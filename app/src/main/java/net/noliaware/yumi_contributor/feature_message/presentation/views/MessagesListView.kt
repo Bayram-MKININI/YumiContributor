@@ -8,15 +8,20 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.shimmer.ShimmerFrameLayout
 import net.noliaware.yumi_contributor.R
+import net.noliaware.yumi_contributor.commun.presentation.adapters.BaseAdapter
 import net.noliaware.yumi_contributor.commun.util.MarginItemDecoration
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
+import net.noliaware.yumi_contributor.commun.util.inflate
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import net.noliaware.yumi_contributor.feature_message.presentation.adapters.MessageAdapter
 
 class MessagesListView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
 
+    private lateinit var shimmerView: ShimmerFrameLayout
+    private lateinit var shimmerRecyclerView: RecyclerView
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyView: TextView
 
@@ -32,12 +37,35 @@ class MessagesListView(context: Context, attrs: AttributeSet?) : ViewGroup(conte
     }
 
     private fun initView() {
-        recyclerView = findViewById(R.id.recycler_view)
-        emptyView = findViewById(R.id.empty_message_text_view)
+        shimmerView = findViewById(R.id.shimmer_view)
+        shimmerRecyclerView = shimmerView.findViewById(R.id.shimmer_recycler_view)
+        setUpRecyclerView(shimmerRecyclerView)
+        BaseAdapter(listOf(1)).apply {
+            expressionOnCreateViewHolder = { viewGroup ->
+                viewGroup.inflate(R.layout.message_item_placeholder_layout)
+            }
+            shimmerRecyclerView.adapter = this
+        }
 
-        recyclerView.also {
-            it.layoutManager = LinearLayoutManager(context)
-            it.addItemDecoration(MarginItemDecoration(convertDpToPx(20)))
+        recyclerView = findViewById(R.id.recycler_view)
+        setUpRecyclerView(recyclerView)
+        emptyView = findViewById(R.id.empty_message_text_view)
+    }
+
+    private fun setUpRecyclerView(recyclerView: RecyclerView) {
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            addItemDecoration(MarginItemDecoration(convertDpToPx(20)))
+        }
+    }
+
+    fun setLoadingVisible(visible: Boolean) {
+        if (visible) {
+            shimmerView.isVisible = true
+            shimmerView.startShimmer()
+        } else {
+            shimmerView.isGone = true
+            shimmerView.stopShimmer()
         }
     }
 
@@ -58,6 +86,13 @@ class MessagesListView(context: Context, attrs: AttributeSet?) : ViewGroup(conte
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val viewWidth = MeasureSpec.getSize(widthMeasureSpec)
         val viewHeight = MeasureSpec.getSize(heightMeasureSpec)
+
+        if (shimmerView.isVisible) {
+            shimmerView.measure(
+                MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+            )
+        }
 
         if (recyclerView.isVisible) {
             recyclerView.measure(
@@ -80,13 +115,19 @@ class MessagesListView(context: Context, attrs: AttributeSet?) : ViewGroup(conte
         val viewWidth = right - left
         val viewHeight = bottom - top
 
+        if (shimmerView.isVisible) {
+            shimmerView.layoutToTopLeft(0, 0)
+        }
+
+        if (recyclerView.isVisible) {
+            recyclerView.layoutToTopLeft(0, 0)
+        }
+
         if (emptyView.isVisible) {
             emptyView.layoutToTopLeft(
                 (viewWidth - emptyView.measuredWidth) / 2,
                 (viewHeight - convertDpToPx(50) - emptyView.measuredHeight) / 2
             )
-        } else {
-            recyclerView.layoutToTopLeft(0, 0)
         }
     }
 }

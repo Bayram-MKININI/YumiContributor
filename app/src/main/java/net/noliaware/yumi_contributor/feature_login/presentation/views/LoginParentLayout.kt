@@ -47,6 +47,10 @@ class LoginParentLayout(context: Context, attrs: AttributeSet?) : ViewGroup(cont
         loginView.setProgressVisible(visible)
     }
 
+    fun setPasswordViewProgressVisible(visible: Boolean) {
+        passwordView.setProgressVisible(visible)
+    }
+
     fun displayPasswordView() {
         loginViewAnimator.inAnimation = rightViewIn
         loginViewAnimator.outAnimation = rightViewOut

@@ -2,20 +2,24 @@ package net.noliaware.yumi_contributor.feature_account.presentation.views
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import net.noliaware.yumi_contributor.R
+import net.noliaware.yumi_contributor.commun.presentation.views.FillableTextWidget
 import net.noliaware.yumi_contributor.commun.util.*
+import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView.*
 
 class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
 
-    private lateinit var titleTextView: TextView
+    private lateinit var titleFillableTextWidget: FillableTextWidget
     private lateinit var crossOutView: View
-    private lateinit var createdTextView: TextView
+    private lateinit var createdFillableTextWidget: FillableTextWidget
     private lateinit var expiryTextView: TextView
     private lateinit var separatorView: View
     private lateinit var sponsorBackgroundView: View
@@ -38,9 +42,23 @@ class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(co
     }
 
     private fun initView() {
-        titleTextView = findViewById(R.id.title_text_view)
+        titleFillableTextWidget = findViewById(R.id.title_fillable_text_view)
+        titleFillableTextWidget.textView.apply {
+            typeface = ResourcesCompat.getFont(context, R.font.omnes_semibold_regular)
+            setTextColor(context.getColorCompat(R.color.grey_2))
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 19f)
+        }
+        titleFillableTextWidget.setFixedWidth(true)
+
         crossOutView = findViewById(R.id.cross_out_view)
-        createdTextView = findViewById(R.id.created_text_view)
+
+        createdFillableTextWidget = findViewById(R.id.created_fillable_text_view)
+        createdFillableTextWidget.textView.apply {
+            typeface = ResourcesCompat.getFont(context, R.font.omnes_light)
+            setTextColor(context.getColorCompat(R.color.grey_2))
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
+        }
+
         expiryTextView = findViewById(R.id.expiry_text_view)
         separatorView = findViewById(R.id.separator_view)
         sponsorBackgroundView = findViewById(R.id.sponsor_background)
@@ -58,11 +76,11 @@ class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(co
         openLocationLayout = findViewById(R.id.open_location_layout)
     }
 
-    fun fillViewWithData(vouchersDetailsViewAdapter: VouchersDetailsContainerView.VouchersDetailsViewAdapter) {
+    fun fillViewWithData(vouchersDetailsViewAdapter: VouchersDetailsViewAdapter) {
 
-        titleTextView.text = vouchersDetailsViewAdapter.title
+        titleFillableTextWidget.setText(vouchersDetailsViewAdapter.title)
         crossOutView.isVisible = vouchersDetailsViewAdapter.displayVoucherActionNotAvailable
-        createdTextView.text = vouchersDetailsViewAdapter.startDate
+        createdFillableTextWidget.setText(vouchersDetailsViewAdapter.startDate)
         expiryTextView.text = vouchersDetailsViewAdapter.endDate
 
         if (vouchersDetailsViewAdapter.partnerAvailable) {
@@ -85,22 +103,25 @@ class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(co
         val viewWidth = MeasureSpec.getSize(widthMeasureSpec)
         var viewHeight = MeasureSpec.getSize(heightMeasureSpec)
 
-        titleTextView.measure(
-            MeasureSpec.makeMeasureSpec(viewWidth * 9 / 10, MeasureSpec.AT_MOST),
-            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+        titleFillableTextWidget.measure(
+            MeasureSpec.makeMeasureSpec(viewWidth * 9 / 10, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(convertDpToPx(22), MeasureSpec.EXACTLY)
         )
 
         if (crossOutView.isVisible) {
             crossOutView.measure(
                 MeasureSpec.makeMeasureSpec(
-                    titleTextView.measuredWidth * 105 / 100,
+                    titleFillableTextWidget.measuredWidth * 105 / 100,
                     MeasureSpec.EXACTLY
                 ),
                 MeasureSpec.makeMeasureSpec(convertDpToPx(3), MeasureSpec.EXACTLY)
             )
         }
 
-        createdTextView.measureWrapContent()
+        createdFillableTextWidget.measure(
+            MeasureSpec.makeMeasureSpec(viewWidth * 5 / 10, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(convertDpToPx(15), MeasureSpec.EXACTLY)
+        )
         expiryTextView.measureWrapContent()
 
         separatorView.measure(
@@ -174,7 +195,7 @@ class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(co
             MeasureSpec.makeMeasureSpec(locationBackgroundViewHeight, MeasureSpec.EXACTLY)
         )
 
-        val contentHeight = titleTextView.measuredHeight + createdTextView.measuredHeight + separatorView.measuredHeight +
+        val contentHeight = titleFillableTextWidget.measuredHeight + createdFillableTextWidget.measuredHeight + separatorView.measuredHeight +
                 if (sponsorTextView.isVisible) {
                     sponsorBackgroundView.measuredHeight + convertDpToPx(15)
                 } else {
@@ -202,26 +223,26 @@ class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(co
         val viewWidth = right - left
         val viewHeight = bottom - top
 
-        titleTextView.layoutToTopLeft(
+        titleFillableTextWidget.layoutToTopLeft(
             convertDpToPx(20),
             0
         )
 
         if (crossOutView.isVisible) {
             crossOutView.layoutToTopLeft(
-                titleTextView.left + (titleTextView.measuredWidth - crossOutView.measuredWidth) / 2,
-                titleTextView.top + (titleTextView.measuredHeight - crossOutView.measuredHeight) / 2
+                titleFillableTextWidget.left + (titleFillableTextWidget.measuredWidth - crossOutView.measuredWidth) / 2,
+                titleFillableTextWidget.top + (titleFillableTextWidget.measuredHeight - crossOutView.measuredHeight) / 2
             )
         }
 
-        createdTextView.layoutToTopLeft(
-            titleTextView.left,
-            titleTextView.bottom + convertDpToPx(10)
+        createdFillableTextWidget.layoutToTopLeft(
+            titleFillableTextWidget.left,
+            titleFillableTextWidget.bottom + convertDpToPx(10)
         )
 
         expiryTextView.layoutToTopLeft(
-            createdTextView.right + convertDpToPx(2),
-            createdTextView.top
+            createdFillableTextWidget.right + convertDpToPx(2),
+            createdFillableTextWidget.top
         )
 
         separatorView.layoutToTopLeft(
@@ -256,7 +277,7 @@ class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(co
         val descriptionViewBottom = if (descriptionTextView.isVisible) {
 
             descriptionTextView.layoutToTopLeft(
-                titleTextView.left,
+                titleFillableTextWidget.left,
                 sponsorViewBottom + convertDpToPx(15)
             )
 
@@ -268,7 +289,7 @@ class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(co
         }
 
         goToTextView.layoutToTopLeft(
-            titleTextView.left,
+            titleFillableTextWidget.left,
             descriptionViewBottom + convertDpToPx(15)
         )
 

@@ -1,17 +1,17 @@
 package net.noliaware.yumi_contributor.feature_account.presentation.adapters
 
 import androidx.recyclerview.widget.RecyclerView
-import net.noliaware.yumi_contributor.feature_account.presentation.views.AccountsListItemView
+import net.noliaware.yumi_contributor.feature_account.presentation.views.AccountItemView
 
 class ManagedAccountViewHolder constructor(
-    accountsListItemView: AccountsListItemView,
+    accountItemView: AccountItemView,
     private val onItemClicked: (Int) -> Unit,
     private val onPhoneButtonClicked: (Int) -> Unit
-) : RecyclerView.ViewHolder(accountsListItemView) {
+) : RecyclerView.ViewHolder(accountItemView) {
 
-    val heldItemView get() = itemView as AccountsListItemView
+    val heldItemView get() = itemView as AccountItemView
 
-    private val accountsListItemViewCallback = AccountsListItemView.AccountsListItemViewCallback {
+    private val accountItemViewCallback = AccountItemView.AccountsListItemViewCallback {
         if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
             onPhoneButtonClicked(bindingAdapterPosition)
         }
@@ -23,6 +23,6 @@ class ManagedAccountViewHolder constructor(
                 onItemClicked(bindingAdapterPosition)
             }
         }
-        heldItemView.callback = accountsListItemViewCallback
+        heldItemView.callback = accountItemViewCallback
     }
 }

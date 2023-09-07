@@ -134,6 +134,7 @@ class LoginFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.accountDataEventsHelper.eventFlow.collectLatest { sharedEvent ->
                 loginParentLayout?.let {
+                    loginParentLayout?.setPasswordViewProgressVisible(false)
                     it.clearSecretDigits()
                     passwordIndexes.clear()
                 }
@@ -143,8 +144,9 @@ class LoginFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.accountDataEventsHelper.stateFlow.collect { vmState ->
                 when (vmState) {
-                    is LoadingState -> Unit
+                    is LoadingState -> loginParentLayout?.setPasswordViewProgressVisible(true)
                     is DataState -> vmState.data?.let { accountData ->
+                        loginParentLayout?.setPasswordViewProgressVisible(false)
                         Intent(requireActivity(), MainActivity::class.java).apply {
                             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                             putExtra(ACCOUNT_DATA, accountData)

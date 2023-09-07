@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<net.noliaware.yumi_contributor.feature_message.presentation.views.MessageItemPlaceholderView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rectangle_rounded_grey1">
+
+    <View
+        android:id="@+id/time_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/grey_9" />
+
+    <View
+        android:id="@+id/icon_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rectangle_rounded_yellow"
+        android:backgroundTint="@color/grey_9" />
+
+    <View
+        android:id="@+id/subject_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/grey_9" />
+
+    <View
+        android:id="@+id/body_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/grey_9" />
+</net.noliaware.yumi_contributor.feature_message.presentation.views.MessageItemPlaceholderView>

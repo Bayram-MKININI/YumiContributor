@@ -13,7 +13,8 @@ import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.ACCOUNT_DATA
 import net.noliaware.yumi_contributor.commun.BO_SIGN_IN_FRAGMENT_TAG
 import net.noliaware.yumi_contributor.commun.PRIVACY_POLICY_FRAGMENT_TAG
-import net.noliaware.yumi_contributor.commun.util.ViewModelState
+import net.noliaware.yumi_contributor.commun.util.ViewModelState.DataState
+import net.noliaware.yumi_contributor.commun.util.ViewModelState.LoadingState
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.inflate
 import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromSharedEvent
@@ -64,8 +65,9 @@ class UserProfileFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.userProfileEventsHelper.stateFlow.collect { vmState ->
                 when (vmState) {
-                    is ViewModelState.LoadingState -> Unit
-                    is ViewModelState.DataState -> vmState.data?.let { userProfile ->
+                    is LoadingState -> profileParentView?.setLoadingVisible(true)
+                    is DataState -> vmState.data?.let { userProfile ->
+                        profileParentView?.setLoadingVisible(false)
                         bindViewToData(userProfile)
                     }
                 }

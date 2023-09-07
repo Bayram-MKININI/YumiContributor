@@ -7,10 +7,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.shimmer.ShimmerFrameLayout
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.util.*
+import net.noliaware.yumi_contributor.commun.presentation.adapters.BaseAdapter
+import net.noliaware.yumi_contributor.commun.util.MarginItemDecoration
+import net.noliaware.yumi_contributor.commun.util.convertDpToPx
+import net.noliaware.yumi_contributor.commun.util.drawableIdByName
+import net.noliaware.yumi_contributor.commun.util.getStatusBarHeight
+import net.noliaware.yumi_contributor.commun.util.inflate
+import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
+import net.noliaware.yumi_contributor.commun.util.measureWrapContent
+import net.noliaware.yumi_contributor.commun.util.weak
 import net.noliaware.yumi_contributor.feature_account.presentation.adapters.VoucherAdapter
 
 class VouchersListView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
@@ -20,6 +31,8 @@ class VouchersListView(context: Context, attrs: AttributeSet?) : ViewGroup(conte
     private lateinit var backView: View
     private lateinit var categoryImageView: ImageView
     private lateinit var titleTextView: TextView
+    private lateinit var shimmerView: ShimmerFrameLayout
+    private lateinit var shimmerRecyclerView: RecyclerView
     private lateinit var recyclerView: RecyclerView
     var voucherAdapter
         get() = recyclerView.adapter as VoucherAdapter
@@ -53,11 +66,24 @@ class VouchersListView(context: Context, attrs: AttributeSet?) : ViewGroup(conte
 
         categoryImageView = findViewById(R.id.category_image_view)
         titleTextView = findViewById(R.id.title_text_view)
-        recyclerView = findViewById(R.id.recycler_view)
+        shimmerView = findViewById(R.id.shimmer_view)
+        shimmerRecyclerView = shimmerView.findViewById(R.id.shimmer_recycler_view)
+        setUpRecyclerView(shimmerRecyclerView)
+        BaseAdapter(listOf(1)).apply {
+            expressionOnCreateViewHolder = { viewGroup ->
+                viewGroup.inflate(R.layout.voucher_item_placeholder_layout)
+            }
+            shimmerRecyclerView.adapter = this
+        }
 
-        recyclerView.also {
-            it.layoutManager = LinearLayoutManager(context)
-            it.addItemDecoration(MarginItemDecoration(convertDpToPx(20)))
+        recyclerView = findViewById(R.id.recycler_view)
+        setUpRecyclerView(recyclerView)
+    }
+
+    private fun setUpRecyclerView(recyclerView: RecyclerView) {
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            addItemDecoration(MarginItemDecoration(convertDpToPx(20)))
         }
     }
 
@@ -65,6 +91,18 @@ class VouchersListView(context: Context, attrs: AttributeSet?) : ViewGroup(conte
         titleTextView.text = vouchersListViewAdapter.title
         headerView.setBackgroundColor(vouchersListViewAdapter.color)
         categoryImageView.setImageResource(context.drawableIdByName(vouchersListViewAdapter.iconName))
+    }
+
+    fun setLoadingVisible(visible: Boolean) {
+        if (visible) {
+            shimmerView.isVisible = true
+            recyclerView.isGone = true
+            shimmerView.startShimmer()
+        } else {
+            shimmerView.isGone = true
+            recyclerView.isVisible = true
+            shimmerView.stopShimmer()
+        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -99,10 +137,19 @@ class VouchersListView(context: Context, attrs: AttributeSet?) : ViewGroup(conte
         val recyclerViewHeight = viewHeight - (headerView.measuredHeight + categoryImageView.measuredHeight / 2 +
                 titleTextView.measuredHeight + convertDpToPx(25))
 
-        recyclerView.measure(
-            MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(recyclerViewHeight, MeasureSpec.EXACTLY)
-        )
+        if (shimmerView.isVisible) {
+            shimmerView.measure(
+                MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+            )
+        }
+
+        if (recyclerView.isVisible) {
+            recyclerView.measure(
+                MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(recyclerViewHeight, MeasureSpec.EXACTLY)
+            )
+        }
 
         setMeasuredDimension(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
@@ -131,6 +178,18 @@ class VouchersListView(context: Context, attrs: AttributeSet?) : ViewGroup(conte
             categoryImageView.bottom + convertDpToPx(20)
         )
 
-        recyclerView.layoutToTopLeft(0, titleTextView.bottom + convertDpToPx(5))
+        if (shimmerView.isVisible) {
+            shimmerView.layoutToTopLeft(
+                0,
+                titleTextView.bottom + convertDpToPx(5)
+            )
+        }
+
+        if (recyclerView.isVisible) {
+            recyclerView.layoutToTopLeft(
+                0,
+                titleTextView.bottom + convertDpToPx(5)
+            )
+        }
     }
 }

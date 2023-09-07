@@ -53,8 +53,9 @@ class CancelledCategoriesFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.cancelledCategoriesEventsHelper.stateFlow.collect { vmState ->
                 when (vmState) {
-                    is ViewModelState.LoadingState -> Unit
+                    is ViewModelState.LoadingState -> categoriesView?.setLoadingVisible(true)
                     is ViewModelState.DataState -> vmState.data?.let { categories ->
+                        categoriesView?.setLoadingVisible(false)
                         bindViewToData(categories)
                     }
                 }

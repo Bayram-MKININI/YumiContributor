@@ -10,6 +10,8 @@ import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import com.facebook.shimmer.Shimmer
+import com.facebook.shimmer.ShimmerFrameLayout
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.drawableIdByName
@@ -31,6 +33,7 @@ class VouchersDetailsContainerView(
     private lateinit var backView: View
     private lateinit var categoryImageView: ImageView
     private lateinit var parentContentView: View
+    private lateinit var shimmerView: ShimmerFrameLayout
     private lateinit var vouchersDetailsView: VouchersDetailsView
     private lateinit var displayVoucherLayout: LinearLayoutCompat
     private lateinit var voucherStatusTextView: TextView
@@ -70,7 +73,8 @@ class VouchersDetailsContainerView(
         categoryImageView = findViewById(R.id.category_image_view)
 
         parentContentView = findViewById(R.id.parent_content_layout)
-        vouchersDetailsView = parentContentView.findViewById(R.id.content_layout)
+        shimmerView = findViewById(R.id.shimmer_view)
+        vouchersDetailsView = shimmerView.findViewById(R.id.content_layout)
         vouchersDetailsView.informationTextView.setOnClickListener(onButtonClickListener)
         vouchersDetailsView.openLocationLayout.setOnClickListener(onButtonClickListener)
         vouchersDetailsView.phoneImageView.setOnClickListener(onButtonClickListener)
@@ -90,6 +94,20 @@ class VouchersDetailsContainerView(
                 R.id.open_location_layout -> callback?.onLocationClicked()
                 R.id.display_voucher_layout -> callback?.onDisplayVoucherButtonClicked()
             }
+        }
+    }
+
+    fun setLoadingVisible(visible: Boolean) {
+        shimmerView.setShimmer(
+            Shimmer.AlphaHighlightBuilder()
+                .setBaseAlpha(if (visible) 0.4f else 1f)
+                .setDuration(resources.getInteger(R.integer.shimmer_animation_duration_ms).toLong())
+                .build()
+        )
+        if (visible) {
+            shimmerView.startShimmer()
+        } else {
+            shimmerView.stopShimmer()
         }
     }
 
@@ -145,8 +163,9 @@ class VouchersDetailsContainerView(
         displayVoucherLayout.measureWrapContent()
         voucherStatusTextView.measureWrapContent()
 
-        val parentContentViewHeight = viewHeight - (headerView.measuredHeight + categoryImageView.measuredHeight / 2 +
-                convertDpToPx(25))
+        val parentContentViewHeight =
+            viewHeight - (headerView.measuredHeight + categoryImageView.measuredHeight / 2 +
+                    convertDpToPx(25))
 
         parentContentView.measure(
             MeasureSpec.makeMeasureSpec(viewWidth * 95 / 100, MeasureSpec.EXACTLY),
@@ -187,6 +206,7 @@ class VouchersDetailsContainerView(
                     parentContentView.height - convertDpToPx(40)
                 )
             }
+
             displayVoucherLayout.isVisible -> {
                 displayVoucherLayout.layoutToBottomLeft(
                     (parentContentView.measuredWidth - displayVoucherLayout.measuredWidth) / 2,

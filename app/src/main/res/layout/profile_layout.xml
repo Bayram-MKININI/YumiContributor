@@ -43,185 +43,170 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/profile_data_view"
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmer_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fillViewport="true"
-            android:overScrollMode="never"
-            android:paddingVertical="15dp">
+            android:orientation="vertical"
+            app:shimmer_auto_start="false"
+            app:shimmer_base_alpha="1">
 
-            <net.noliaware.yumi_contributor.feature_profile.presentation.views.ProfileView
-                android:id="@+id/profile_view"
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/scroll_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:fillViewport="true"
+                android:overScrollMode="never"
+                android:paddingVertical="15dp">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/my_data_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/omnes_semibold_regular"
-                    android:text="@string/my_data"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="19sp" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/login_title_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/omnes_regular"
-                    android:text="@string/login"
-                    android:textColor="@color/grey_2"
-                    android:textSize="15sp" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/login_value_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/omnes_semibold_regular"
-                    android:text="@string/empty_value"
-                    android:textColor="@color/grey_2"
-                    android:textSize="15sp" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/surname_title_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/omnes_regular"
-                    android:text="@string/surname"
-                    android:textColor="@color/grey_2"
-                    android:textSize="15sp" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/surname_value_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/omnes_semibold_regular"
-                    android:text="@string/empty_value"
-                    android:textColor="@color/grey_2"
-                    android:textSize="15sp" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/name_title_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/omnes_regular"
-                    android:text="@string/name"
-                    android:textColor="@color/grey_2"
-                    android:textSize="15sp" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/name_value_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/omnes_semibold_regular"
-                    android:text="@string/empty_value"
-                    android:textColor="@color/grey_2"
-                    android:textSize="15sp" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/phone_title_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/omnes_regular"
-                    android:gravity="end"
-                    android:text="@string/phone"
-                    android:textColor="@color/grey_2"
-                    android:textSize="15sp" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/phone_value_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/omnes_semibold_regular"
-                    android:text="@string/empty_value"
-                    android:textColor="@color/grey_2"
-                    android:textSize="15sp" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/address_title_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/omnes_regular"
-                    android:gravity="end"
-                    android:text="@string/address"
-                    android:textColor="@color/grey_2"
-                    android:textSize="15sp" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/address_value_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/omnes_semibold_regular"
-                    android:text="@string/empty_value"
-                    android:textColor="@color/grey_2"
-                    android:textSize="15sp" />
-
-                <View
-                    android:id="@+id/separator_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/rectangle_rounded_primary" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/bo_access_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/omnes_semibold_regular"
-                    android:text="@string/bo_access"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="19sp" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/bo_access_description_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/omnes_semibold_regular"
-                    android:textColor="@color/grey_2"
-                    android:textSize="15sp"
-                    tools:text="Génerer un code d\'accès à votre compte sur l\'application web" />
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/access_button_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/button_rounded_primary"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:paddingVertical="10dp"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="15dp"
-                    android:visibility="gone"
-                    tools:visibility="visible">
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"
-                        android:src="@drawable/ic_login" />
+                <net.noliaware.yumi_contributor.feature_profile.presentation.views.ProfileView
+                    android:id="@+id/profile_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                     <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/my_data_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
                         android:fontFamily="@font/omnes_semibold_regular"
-                        android:text="@string/access"
-                        android:textColor="@android:color/white"
-                        android:textSize="18sp" />
+                        android:text="@string/my_data"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="19sp" />
 
-                </androidx.appcompat.widget.LinearLayoutCompat>
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/login_title_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/omnes_regular"
+                        android:text="@string/login"
+                        android:textColor="@color/grey_2"
+                        android:textSize="15sp" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/privacy_policy_link_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/omnes_regular"
-                    android:gravity="end"
-                    android:text="@string/privacy_policy_underlined"
-                    android:textColor="@color/grey_2"
-                    android:textSize="15sp" />
+                    <net.noliaware.yumi_contributor.commun.presentation.views.FillableTextWidget
+                        android:id="@+id/login_value_fillable_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
 
-            </net.noliaware.yumi_contributor.feature_profile.presentation.views.ProfileView>
-        </androidx.core.widget.NestedScrollView>
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/surname_title_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/omnes_regular"
+                        android:text="@string/surname"
+                        android:textColor="@color/grey_2"
+                        android:textSize="15sp" />
+
+                    <net.noliaware.yumi_contributor.commun.presentation.views.FillableTextWidget
+                        android:id="@+id/surname_value_fillable_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/name_title_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/omnes_regular"
+                        android:text="@string/name"
+                        android:textColor="@color/grey_2"
+                        android:textSize="15sp" />
+
+                    <net.noliaware.yumi_contributor.commun.presentation.views.FillableTextWidget
+                        android:id="@+id/name_value_fillable_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/phone_title_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/omnes_regular"
+                        android:gravity="end"
+                        android:text="@string/phone"
+                        android:textColor="@color/grey_2"
+                        android:textSize="15sp" />
+
+                    <net.noliaware.yumi_contributor.commun.presentation.views.FillableTextWidget
+                        android:id="@+id/phone_value_fillable_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/address_title_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/omnes_regular"
+                        android:gravity="end"
+                        android:text="@string/address"
+                        android:textColor="@color/grey_2"
+                        android:textSize="15sp" />
+
+                    <net.noliaware.yumi_contributor.commun.presentation.views.FillableTextWidget
+                        android:id="@+id/address_value_fillable_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <View
+                        android:id="@+id/separator_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rectangle_rounded_primary" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/bo_access_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/omnes_semibold_regular"
+                        android:text="@string/bo_access"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="19sp" />
+
+                    <net.noliaware.yumi_contributor.commun.presentation.views.FillableTextWidget
+                        android:id="@+id/bo_access_description_fillable_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:id="@+id/access_button_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button_rounded_primary"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingVertical="10dp"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="15dp"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:adjustViewBounds="true"
+                            android:src="@drawable/ic_login" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:fontFamily="@font/omnes_semibold_regular"
+                            android:text="@string/access"
+                            android:textColor="@android:color/white"
+                            android:textSize="18sp" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/privacy_policy_link_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/omnes_regular"
+                        android:gravity="end"
+                        android:text="@string/privacy_policy_underlined"
+                        android:textColor="@color/grey_2"
+                        android:textSize="15sp" />
+
+                </net.noliaware.yumi_contributor.feature_profile.presentation.views.ProfileView>
+            </androidx.core.widget.NestedScrollView>
+        </com.facebook.shimmer.ShimmerFrameLayout>
     </net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView>
 </net.noliaware.yumi_contributor.feature_profile.presentation.views.ProfileParentView>

@@ -6,6 +6,8 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.widget.ImageView
 import android.widget.TextView
+import com.facebook.shimmer.Shimmer
+import com.facebook.shimmer.ShimmerFrameLayout
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
@@ -17,6 +19,7 @@ class PasswordView(context: Context, attrs: AttributeSet?) : ElevatedCardView(co
 
     private lateinit var inputCodeTextView: TextView
     private lateinit var descriptionTextView: TextView
+    private lateinit var codeShimmerView: ShimmerFrameLayout
     private lateinit var codeTextView: TextView
 
     private lateinit var padFirstDigit: View
@@ -70,7 +73,8 @@ class PasswordView(context: Context, attrs: AttributeSet?) : ElevatedCardView(co
 
         inputCodeTextView = findViewById(R.id.input_code_text_view)
         descriptionTextView = findViewById(R.id.description_text_view)
-        codeTextView = findViewById(R.id.code_text_view)
+        codeShimmerView = findViewById(R.id.code_shimmer_view)
+        codeTextView = codeShimmerView.findViewById(R.id.code_text_view)
 
         padFirstDigit = findViewById(R.id.pad_first_digit)
         padFirstDigit.setOnClickListener(onPadButtonClickListener)
@@ -181,6 +185,24 @@ class PasswordView(context: Context, attrs: AttributeSet?) : ElevatedCardView(co
             codeTextView.text = ""
     }
 
+    fun setProgressVisible(visible: Boolean) {
+        codeShimmerView.setShimmer(
+            Shimmer.AlphaHighlightBuilder()
+                .setBaseAlpha(if (visible) 0.4f else 1f)
+                .setDuration(resources.getInteger(R.integer.shimmer_animation_duration_ms).toLong())
+                .build()
+        )
+        if (visible) {
+            deleteTextView.isEnabled = false
+            confirmImageView.isEnabled = false
+            codeShimmerView.startShimmer()
+        } else {
+            codeShimmerView.stopShimmer()
+            deleteTextView.isEnabled = true
+            confirmImageView.isEnabled = true
+        }
+    }
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val viewWidth = MeasureSpec.getSize(widthMeasureSpec)
         var viewHeight = MeasureSpec.getSize(heightMeasureSpec)
@@ -191,7 +213,7 @@ class PasswordView(context: Context, attrs: AttributeSet?) : ElevatedCardView(co
 
         descriptionTextView.measureWrapContent()
 
-        codeTextView.measure(
+        codeShimmerView.measure(
             MeasureSpec.makeMeasureSpec(rectangleWidth * 8 / 10, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(convertDpToPx(42), MeasureSpec.EXACTLY)
         )
@@ -212,7 +234,7 @@ class PasswordView(context: Context, attrs: AttributeSet?) : ElevatedCardView(co
         confirmTextView.measureWrapContent()
 
         viewHeight = inputCodeTextView.measuredHeight + descriptionTextView.measuredHeight + codeTextView.measuredHeight +
-                padFirstDigit.measuredHeight * 2 + confirmImageView.measuredHeight + convertDpToPx(150)
+                    padFirstDigit.measuredHeight * 2 + confirmImageView.measuredHeight + convertDpToPx(150)
 
         setMeasuredDimension(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
@@ -241,7 +263,7 @@ class PasswordView(context: Context, attrs: AttributeSet?) : ElevatedCardView(co
             inputCodeTextView.bottom + convertDpToPx(5)
         )
 
-        codeTextView.layoutToTopLeft(
+        codeShimmerView.layoutToTopLeft(
             (viewWidth - codeTextView.measuredWidth) / 2,
             descriptionTextView.bottom + convertDpToPx(10)
         )
@@ -250,7 +272,7 @@ class PasswordView(context: Context, attrs: AttributeSet?) : ElevatedCardView(co
 
         padFirstDigit.layoutToTopLeft(
             (viewWidth - (padFirstDigit.measuredWidth * 5 + spaceBetweenPads * 4)) / 2,
-            codeTextView.bottom + convertDpToPx(15)
+            codeShimmerView.bottom + convertDpToPx(15)
         )
 
         padSecondDigit.layoutToTopLeft(

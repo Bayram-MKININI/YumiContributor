@@ -13,8 +13,11 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.shimmer.ShimmerFrameLayout
 import net.noliaware.yumi_contributor.R
+import net.noliaware.yumi_contributor.commun.presentation.adapters.BaseAdapter
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
+import net.noliaware.yumi_contributor.commun.util.inflate
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.layoutToTopRight
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
@@ -29,6 +32,8 @@ class AccountsListView(context: Context, attrs: AttributeSet?) : ViewGroup(conte
     private lateinit var closeImageView: ImageView
     private lateinit var titleTextView: TextView
     private lateinit var contentView: View
+    private lateinit var shimmerView: ShimmerFrameLayout
+    private lateinit var shimmerRecyclerView: RecyclerView
     private lateinit var accountsRecyclerView: RecyclerView
     private lateinit var filteredAccountRecyclerView: RecyclerView
     var callback: AccountsListViewCallback? by weak()
@@ -77,14 +82,27 @@ class AccountsListView(context: Context, attrs: AttributeSet?) : ViewGroup(conte
         titleTextView = findViewById(R.id.title_text_view)
 
         contentView = findViewById(R.id.content_layout)
-        accountsRecyclerView = contentView.findViewById(R.id.accounts_recycler_view)
-        accountsRecyclerView.also {
-            it.layoutManager = LinearLayoutManager(context)
+
+        shimmerView = findViewById(R.id.shimmer_view)
+        shimmerRecyclerView = shimmerView.findViewById(R.id.shimmer_recycler_view)
+        setUpRecyclerView(shimmerRecyclerView)
+        BaseAdapter((0..1).map { 0 }).apply {
+            expressionOnCreateViewHolder = { viewGroup ->
+                viewGroup.inflate(R.layout.account_item_placeholder_layout)
+            }
+            shimmerRecyclerView.adapter = this
         }
 
+        accountsRecyclerView = contentView.findViewById(R.id.accounts_recycler_view)
+        setUpRecyclerView(accountsRecyclerView)
+
         filteredAccountRecyclerView = contentView.findViewById(R.id.filtered_accounts_recycler_view)
-        filteredAccountRecyclerView.also {
-            it.layoutManager = LinearLayoutManager(context)
+        setUpRecyclerView(filteredAccountRecyclerView)
+    }
+
+    private fun setUpRecyclerView(recyclerView: RecyclerView) {
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
         }
     }
 
@@ -94,6 +112,16 @@ class AccountsListView(context: Context, attrs: AttributeSet?) : ViewGroup(conte
         return results.map {
             it.groupValues[1]
         }.joinToString()
+    }
+
+    fun setLoadingVisible(visible: Boolean) {
+        if (visible) {
+            shimmerView.isVisible = true
+            shimmerView.startShimmer()
+        } else {
+            shimmerView.isGone = true
+            shimmerView.stopShimmer()
+        }
     }
 
     fun setUpSearchAutoComplete(suggestions: List<String>) {
@@ -142,6 +170,13 @@ class AccountsListView(context: Context, attrs: AttributeSet?) : ViewGroup(conte
             MeasureSpec.makeMeasureSpec(contentViewHeight, MeasureSpec.EXACTLY)
         )
 
+        if (shimmerView.isVisible) {
+            shimmerView.measure(
+                MeasureSpec.makeMeasureSpec(contentViewWidth, MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+            )
+        }
+
         if (accountsRecyclerView.isVisible) {
             accountsRecyclerView.measure(
                 MeasureSpec.makeMeasureSpec(contentViewWidth, MeasureSpec.EXACTLY),
@@ -187,6 +222,10 @@ class AccountsListView(context: Context, attrs: AttributeSet?) : ViewGroup(conte
             (viewWidth - contentView.measuredWidth) / 2,
             titleTextView.bottom + convertDpToPx(15)
         )
+
+        if (shimmerView.isVisible) {
+            shimmerView.layoutToTopLeft(0, 0)
+        }
 
         if (accountsRecyclerView.isVisible) {
             accountsRecyclerView.layoutToTopLeft(0, 0)

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
@@ -54,6 +55,10 @@ class AccountsListFragment : Fragment() {
     private fun collectFlows() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             accountsListView?.paginatedManagedAccountsAdapter?.loadStateFlow?.collectLatest { loadState ->
+                if (loadState.refresh is LoadState.NotLoading) {
+                    accountsListView?.setLoadingVisible(false)
+                    accountsListView?.displayAllAccount()
+                }
                 handlePaginationError(loadState)
             }
         }

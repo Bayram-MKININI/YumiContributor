@@ -9,10 +9,13 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.shimmer.ShimmerFrameLayout
 import net.noliaware.yumi_contributor.R
+import net.noliaware.yumi_contributor.commun.presentation.adapters.BaseAdapter
 import net.noliaware.yumi_contributor.commun.util.MarginItemDecoration
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.getStatusBarHeight
+import net.noliaware.yumi_contributor.commun.util.inflate
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import net.noliaware.yumi_contributor.feature_alerts.presentation.adapters.AlertAdapter
@@ -23,6 +26,8 @@ class AlertsView(context: Context, attrs: AttributeSet?) : ViewGroup(context, at
     private lateinit var titleTextView: TextView
     private lateinit var notificationIconView: View
     private lateinit var contentView: View
+    private lateinit var shimmerView: ShimmerFrameLayout
+    private lateinit var shimmerRecyclerView: RecyclerView
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyView: View
 
@@ -43,12 +48,34 @@ class AlertsView(context: Context, attrs: AttributeSet?) : ViewGroup(context, at
         titleTextView = findViewById(R.id.title_text_view)
         notificationIconView = findViewById(R.id.notification_icon_view)
         contentView = findViewById(R.id.content_layout)
+        shimmerView = findViewById(R.id.shimmer_view)
+        shimmerRecyclerView = shimmerView.findViewById(R.id.shimmer_recycler_view)
+        setUpRecyclerView(shimmerRecyclerView)
+        BaseAdapter(listOf(1)).apply {
+            expressionOnCreateViewHolder = { viewGroup ->
+                viewGroup.inflate(R.layout.alert_item_placeholder_layout)
+            }
+            shimmerRecyclerView.adapter = this
+        }
         recyclerView = contentView.findViewById(R.id.recycler_view)
+        setUpRecyclerView(recyclerView)
         emptyView = contentView.findViewById(R.id.empty_message_text_view)
+    }
 
-        recyclerView.also {
-            it.layoutManager = LinearLayoutManager(context)
-            it.addItemDecoration(MarginItemDecoration(convertDpToPx(16)))
+    private fun setUpRecyclerView(recyclerView: RecyclerView) {
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            addItemDecoration(MarginItemDecoration(convertDpToPx(16)))
+        }
+    }
+
+    fun setLoadingVisible(visible: Boolean) {
+        if (visible) {
+            shimmerView.isVisible = true
+            shimmerView.startShimmer()
+        } else {
+            shimmerView.isGone = true
+            shimmerView.stopShimmer()
         }
     }
 
@@ -83,12 +110,19 @@ class AlertsView(context: Context, attrs: AttributeSet?) : ViewGroup(context, at
         val contentViewWidth = viewWidth * 95 / 100
         val sideMargin = viewWidth * 5 / 100 / 2
         val contentViewHeight = viewHeight - (headerView.measuredHeight + notificationIconView.measuredHeight / 2
-                    + sideMargin + convertDpToPx(35))
+                + sideMargin + convertDpToPx(35))
 
         contentView.measure(
             MeasureSpec.makeMeasureSpec(contentViewWidth, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(contentViewHeight, MeasureSpec.EXACTLY)
         )
+
+        if (shimmerView.isVisible) {
+            shimmerView.measure(
+                MeasureSpec.makeMeasureSpec(contentView.measuredWidth, MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+            )
+        }
 
         if (recyclerView.isVisible) {
             recyclerView.measure(
@@ -128,13 +162,19 @@ class AlertsView(context: Context, attrs: AttributeSet?) : ViewGroup(context, at
             notificationIconView.bottom + convertDpToPx(15)
         )
 
+        if (shimmerView.isVisible) {
+            shimmerView.layoutToTopLeft(0, 0)
+        }
+
+        if (recyclerView.isVisible) {
+            recyclerView.layoutToTopLeft(0, 0)
+        }
+
         if (emptyView.isVisible) {
             emptyView.layoutToTopLeft(
                 (contentView.measuredWidth - emptyView.measuredWidth) / 2,
                 (contentView.measuredHeight - emptyView.measuredHeight) / 2
             )
-        } else {
-            recyclerView.layoutToTopLeft(0, 0)
         }
     }
 }

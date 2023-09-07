@@ -54,6 +54,7 @@ class SentMessagesFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             messagesListView?.messageAdapter?.loadStateFlow?.collectLatest { loadState ->
                 if (loadState.refresh is LoadState.NotLoading) {
+                    messagesListView?.setLoadingVisible(false)
                     messagesListView?.setEmptyMessageText(getString(R.string.no_sent_message))
                     val alertsCount = messagesListView?.messageAdapter?.itemCount ?: 0
                     messagesListView?.setEmptyMessageVisible(alertsCount < 1)

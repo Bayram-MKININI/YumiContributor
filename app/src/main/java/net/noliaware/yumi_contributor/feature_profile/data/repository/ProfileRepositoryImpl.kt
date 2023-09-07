@@ -24,6 +24,8 @@ class ProfileRepositoryImpl(
 
     override fun getUserProfile(): Flow<Resource<UserProfile>> = flow {
 
+        emit(Resource.Loading())
+
         try {
 
             val timestamp = System.currentTimeMillis().toString()
@@ -68,6 +70,8 @@ class ProfileRepositoryImpl(
     }
 
     override fun getBackOfficeSignInCode(): Flow<Resource<BOSignIn>> = flow {
+
+        emit(Resource.Loading())
 
         try {
 

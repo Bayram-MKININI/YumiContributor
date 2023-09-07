@@ -315,7 +315,7 @@ fun View.layoutToBottomRight(right: Int, bottom: Int) {
 }
 
 fun View.convertDpToPx(dpValue: Int): Int = TypedValue.applyDimension(
-    TypedValue.COMPLEX_UNIT_DIP, dpValue.toFloat(), context.resources.displayMetrics
+    TypedValue.COMPLEX_UNIT_DIP, dpValue.toFloat(), resources.displayMetrics
 ).toInt()
 
 fun View.getLocationRectOnScreen(): Rect {

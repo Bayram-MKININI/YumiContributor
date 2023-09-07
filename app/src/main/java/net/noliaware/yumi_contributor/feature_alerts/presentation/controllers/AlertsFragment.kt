@@ -42,6 +42,7 @@ class AlertsFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             alertsView?.alertAdapter?.loadStateFlow?.collectLatest { loadState ->
                 if (loadState.refresh is LoadState.NotLoading) {
+                    alertsView?.setLoadingVisible(false)
                     val alertsCount = alertsView?.alertAdapter?.itemCount ?: 0
                     alertsView?.setEmptyMessageVisible(alertsCount < 1)
                 }

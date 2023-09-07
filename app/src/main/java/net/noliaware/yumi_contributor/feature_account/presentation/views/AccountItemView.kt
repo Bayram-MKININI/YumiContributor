@@ -15,7 +15,7 @@ import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import net.noliaware.yumi_contributor.commun.util.weak
 import kotlin.math.max
 
-class AccountsListItemView(
+class AccountItemView(
     context: Context,
     attrs: AttributeSet?
 ) : ViewGroup(context, attrs) {

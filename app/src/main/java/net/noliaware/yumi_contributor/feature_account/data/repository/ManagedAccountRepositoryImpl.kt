@@ -449,6 +449,7 @@ class ManagedAccountRepositoryImpl(
     override fun getVoucherStateDataById(
         voucherId: String
     ): Flow<Resource<VoucherStateData>> = flow {
+
         emit(Resource.Loading())
 
         try {

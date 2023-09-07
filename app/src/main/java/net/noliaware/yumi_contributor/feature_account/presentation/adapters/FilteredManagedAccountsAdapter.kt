@@ -6,7 +6,7 @@ import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.inflate
 import net.noliaware.yumi_contributor.feature_account.domain.model.ManagedAccount
 import net.noliaware.yumi_contributor.feature_account.presentation.mappers.ManagedAccountMapper
-import net.noliaware.yumi_contributor.feature_account.presentation.views.AccountsListItemView
+import net.noliaware.yumi_contributor.feature_account.presentation.views.AccountItemView
 
 class FilteredManagedAccountsAdapter(
     private val dataSet: List<ManagedAccount>,
@@ -19,9 +19,9 @@ class FilteredManagedAccountsAdapter(
         parent: ViewGroup,
         viewType: Int
     ) = ManagedAccountViewHolder(
-        accountsListItemView = parent.inflate(
+        accountItemView = parent.inflate(
             R.layout.account_item_layout
-        ) as AccountsListItemView,
+        ) as AccountItemView,
         onItemClicked = { position ->
             onItemClicked(dataSet[position])
         },

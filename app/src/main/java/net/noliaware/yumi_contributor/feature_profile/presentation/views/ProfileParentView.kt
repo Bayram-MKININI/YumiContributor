@@ -5,17 +5,21 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.widget.LinearLayoutCompat
+import com.facebook.shimmer.Shimmer
+import com.facebook.shimmer.ShimmerFrameLayout
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.util.*
+import net.noliaware.yumi_contributor.commun.util.convertDpToPx
+import net.noliaware.yumi_contributor.commun.util.getStatusBarHeight
+import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
+import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 
 class ProfileParentView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
 
     private lateinit var headerView: View
     private lateinit var titleTextView: TextView
     private lateinit var profileIconView: View
+    private lateinit var shimmerView: ShimmerFrameLayout
     private lateinit var contentView: View
-    private lateinit var profileDataView: View
     private lateinit var profileView: ProfileView
 
     val getProfileView get() = profileView
@@ -30,8 +34,22 @@ class ProfileParentView(context: Context, attrs: AttributeSet?) : ViewGroup(cont
         titleTextView = findViewById(R.id.title_text_view)
         profileIconView = findViewById(R.id.profile_icon_view)
         contentView = findViewById(R.id.content_layout)
-        profileDataView = contentView.findViewById(R.id.profile_data_view)
-        profileView = profileDataView.findViewById(R.id.profile_view)
+        shimmerView = contentView.findViewById(R.id.shimmer_view)
+        profileView = shimmerView.findViewById(R.id.profile_view)
+    }
+
+    fun setLoadingVisible(visible: Boolean) {
+        shimmerView.setShimmer(
+            Shimmer.AlphaHighlightBuilder()
+                .setBaseAlpha(if (visible) 0.4f else 1f)
+                .setDuration(resources.getInteger(R.integer.shimmer_animation_duration_ms).toLong())
+                .build()
+        )
+        if (visible) {
+            shimmerView.startShimmer()
+        } else {
+            shimmerView.stopShimmer()
+        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

@@ -37,9 +37,23 @@
         android:textSize="19sp"
         tools:text="Liste des coupons disponibles de la catégorie Alimentaire" />
 
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:duration="@integer/shimmer_animation_duration_ms">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/shimmer_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:overScrollMode="never" />
+        android:overScrollMode="never"
+        android:visibility="gone" />
 </net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersListView>
