@@ -2,10 +2,10 @@ package net.noliaware.yumi_contributor.feature_account.data.repository
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import net.noliaware.yumi_contributor.commun.GET_MANAGED_ACCOUNT_LIST
-import net.noliaware.yumi_contributor.commun.LIMIT
-import net.noliaware.yumi_contributor.commun.LIST_PAGE_SIZE
-import net.noliaware.yumi_contributor.commun.OFFSET
+import net.noliaware.yumi_contributor.commun.ApiConstants.GET_MANAGED_ACCOUNT_LIST
+import net.noliaware.yumi_contributor.commun.ApiParameters.LIMIT
+import net.noliaware.yumi_contributor.commun.ApiParameters.LIST_PAGE_SIZE
+import net.noliaware.yumi_contributor.commun.ApiParameters.OFFSET
 import net.noliaware.yumi_contributor.commun.data.remote.RemoteApi
 import net.noliaware.yumi_contributor.commun.domain.model.SessionData
 import net.noliaware.yumi_contributor.commun.util.ErrorType

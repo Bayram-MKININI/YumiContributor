@@ -15,7 +15,11 @@ import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import net.noliaware.yumi_contributor.commun.util.weak
 
-class PasswordView(context: Context, attrs: AttributeSet?) : ElevatedCardView(context, attrs) {
+class PasswordView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : ElevatedCardView(context, attrs, defStyle) {
 
     private lateinit var inputCodeTextView: TextView
     private lateinit var descriptionTextView: TextView
@@ -233,8 +237,11 @@ class PasswordView(context: Context, attrs: AttributeSet?) : ElevatedCardView(co
         confirmImageView.measureWrapContent()
         confirmTextView.measureWrapContent()
 
-        viewHeight = inputCodeTextView.measuredHeight + descriptionTextView.measuredHeight + codeTextView.measuredHeight +
-                    padFirstDigit.measuredHeight * 2 + confirmImageView.measuredHeight + convertDpToPx(150)
+        viewHeight =
+            inputCodeTextView.measuredHeight + descriptionTextView.measuredHeight + codeTextView.measuredHeight +
+                    padFirstDigit.measuredHeight * 2 + confirmImageView.measuredHeight + convertDpToPx(
+                150
+            )
 
         setMeasuredDimension(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),

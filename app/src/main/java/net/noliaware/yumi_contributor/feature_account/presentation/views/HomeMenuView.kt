@@ -15,7 +15,11 @@ import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import net.noliaware.yumi_contributor.commun.util.weak
 
-class HomeMenuView(context: Context, attrs: AttributeSet?) : MaterialCardView(context, attrs) {
+class HomeMenuView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : MaterialCardView(context, attrs, defStyle) {
 
     private lateinit var homeImageView: ImageView
     private lateinit var profileImageView: ImageView
@@ -66,6 +70,7 @@ class HomeMenuView(context: Context, attrs: AttributeSet?) : MaterialCardView(co
                     selectHomeButton()
                     callback?.onCategoryButtonClicked()
                 }
+
                 R.id.profile_image_view -> {
                     if (profileImageView.isSelected) {
                         return@OnClickListener
@@ -75,6 +80,7 @@ class HomeMenuView(context: Context, attrs: AttributeSet?) : MaterialCardView(co
                     profileImageView.isSelected = true
                     callback?.onProfileButtonClicked()
                 }
+
                 R.id.mail_image_view -> {
                     if (mailImageView.isSelected) {
                         return@OnClickListener
@@ -84,6 +90,7 @@ class HomeMenuView(context: Context, attrs: AttributeSet?) : MaterialCardView(co
                     mailImageView.isSelected = true
                     callback?.onMailButtonClicked()
                 }
+
                 R.id.notification_image_view -> {
                     if (notificationImageView.isSelected) {
                         return@OnClickListener

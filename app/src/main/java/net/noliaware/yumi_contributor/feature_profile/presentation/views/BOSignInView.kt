@@ -9,7 +9,11 @@ import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 
-class BOSignInView(context: Context, attrs: AttributeSet?) : ElevatedCardView(context, attrs) {
+class BOSignInView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : ElevatedCardView(context, attrs, defStyle) {
 
     private lateinit var descriptionTextView: TextView
     private lateinit var codeTextView: TextView
@@ -50,8 +54,9 @@ class BOSignInView(context: Context, attrs: AttributeSet?) : ElevatedCardView(co
         boCodeExpiration.measureWrapContent()
         timestampTextView.measureWrapContent()
 
-        val contentViewHeight = descriptionTextView.measuredHeight + codeTextView.measuredHeight + boCodeExpiration.measuredHeight +
-                timestampTextView.measuredHeight + convertDpToPx(140)
+        val contentViewHeight =
+            descriptionTextView.measuredHeight + codeTextView.measuredHeight + boCodeExpiration.measuredHeight +
+                    timestampTextView.measuredHeight + convertDpToPx(140)
 
         setMeasuredDimension(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),

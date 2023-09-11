@@ -14,8 +14,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.ACCOUNT_DATA
-import net.noliaware.yumi_contributor.commun.MANAGED_ACCOUNT
+import net.noliaware.yumi_contributor.commun.Args.MANAGED_ACCOUNT
 import net.noliaware.yumi_contributor.commun.util.formatNumber
 import net.noliaware.yumi_contributor.commun.util.getSerializableCompat
 import net.noliaware.yumi_contributor.commun.util.inflate
@@ -23,7 +22,6 @@ import net.noliaware.yumi_contributor.commun.util.withArgs
 import net.noliaware.yumi_contributor.feature_account.domain.model.ManagedAccount
 import net.noliaware.yumi_contributor.feature_account.domain.model.SelectableData
 import net.noliaware.yumi_contributor.feature_account.presentation.views.ManagedAccountParentView
-import net.noliaware.yumi_contributor.feature_login.domain.model.AccountData
 
 @AndroidEntryPoint
 class ManagedAccountFragment : Fragment() {

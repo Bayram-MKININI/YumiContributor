@@ -11,14 +11,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import net.noliaware.yumi_contributor.commun.CATEGORY_UI
-import net.noliaware.yumi_contributor.commun.VOUCHER_CODE_DATA
+import net.noliaware.yumi_contributor.commun.ApiParameters.VOUCHER_CODE_DATA
+import net.noliaware.yumi_contributor.commun.Args.CATEGORY_UI
 import net.noliaware.yumi_contributor.commun.presentation.EventsHelper
 import net.noliaware.yumi_contributor.commun.util.QRCodeGenerator
 import net.noliaware.yumi_contributor.commun.util.ViewModelState
 import net.noliaware.yumi_contributor.commun.util.ViewModelState.DataState
 import net.noliaware.yumi_contributor.commun.util.ViewModelState.LoadingState
-import net.noliaware.yumi_contributor.feature_account.data.repository.ManagedAccountRepository
+import net.noliaware.yumi_contributor.feature_account.domain.repository.ManagedAccountRepository
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherCodeData
 import javax.inject.Inject
 

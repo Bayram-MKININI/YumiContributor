@@ -10,7 +10,11 @@ import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 
-class LoginViewContainer(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
+class LoginViewContainer @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : ViewGroup(context, attrs, defStyle) {
 
     private lateinit var iconView: ImageView
     private lateinit var loginView: LoginView

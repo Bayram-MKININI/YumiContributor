@@ -13,8 +13,8 @@ import androidx.paging.LoadState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.CATEGORY
-import net.noliaware.yumi_contributor.commun.VOUCHER_DETAILS_FRAGMENT_TAG
+import net.noliaware.yumi_contributor.commun.Args.CATEGORY
+import net.noliaware.yumi_contributor.commun.FragmentTags.VOUCHER_DETAILS_FRAGMENT_TAG
 import net.noliaware.yumi_contributor.commun.presentation.adapters.ListLoadStateAdapter
 import net.noliaware.yumi_contributor.commun.util.decorateText
 import net.noliaware.yumi_contributor.commun.util.getColorCompat

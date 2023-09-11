@@ -10,9 +10,9 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.ACCOUNT_DATA
-import net.noliaware.yumi_contributor.commun.BO_SIGN_IN_FRAGMENT_TAG
-import net.noliaware.yumi_contributor.commun.PRIVACY_POLICY_FRAGMENT_TAG
+import net.noliaware.yumi_contributor.commun.Args.ACCOUNT_DATA
+import net.noliaware.yumi_contributor.commun.FragmentTags.BO_SIGN_IN_FRAGMENT_TAG
+import net.noliaware.yumi_contributor.commun.FragmentTags.PRIVACY_POLICY_FRAGMENT_TAG
 import net.noliaware.yumi_contributor.commun.util.ViewModelState.DataState
 import net.noliaware.yumi_contributor.commun.util.ViewModelState.LoadingState
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent

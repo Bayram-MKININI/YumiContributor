@@ -10,7 +10,11 @@ import android.widget.ViewAnimator
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 
-class LoginParentLayout(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
+class LoginParentLayout @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : ViewGroup(context, attrs, defStyle) {
 
     private lateinit var backgroundView: ImageView
     private lateinit var loginViewAnimator: ViewAnimator

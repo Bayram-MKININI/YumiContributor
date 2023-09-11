@@ -13,7 +13,11 @@ import net.noliaware.yumi_contributor.commun.util.hideKeyboard
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 
-class ManagedAccountParentView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
+class ManagedAccountParentView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : ViewGroup(context, attrs, defStyle) {
 
     private lateinit var headerView: View
     private lateinit var helloTextView: TextView

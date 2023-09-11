@@ -25,7 +25,11 @@ import net.noliaware.yumi_contributor.commun.util.weak
 import net.noliaware.yumi_contributor.feature_account.presentation.adapters.FilteredManagedAccountsAdapter
 import net.noliaware.yumi_contributor.feature_account.presentation.adapters.PaginatedManagedAccountsAdapter
 
-class AccountsListView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
+class AccountsListView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : ViewGroup(context, attrs, defStyle) {
 
     private lateinit var searchAutoCompleteLayout: View
     private lateinit var searchAutoComplete: AutoCompleteTextView

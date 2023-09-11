@@ -2,7 +2,7 @@ package net.noliaware.yumi_contributor.feature_account.presentation.mappers
 
 import android.content.Context
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.SHORT_DATE_FORMAT
+import net.noliaware.yumi_contributor.commun.DateTime.SHORT_DATE_FORMAT
 import net.noliaware.yumi_contributor.commun.util.parseDateToFormat
 import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
 import net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherItemView

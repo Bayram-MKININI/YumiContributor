@@ -13,7 +13,11 @@ import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import net.noliaware.yumi_contributor.commun.util.weak
 
-class BOSignInParentView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
+class BOSignInParentView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : ViewGroup(context, attrs, defStyle) {
 
     private lateinit var backgroundView: ImageView
     private lateinit var headerView: View

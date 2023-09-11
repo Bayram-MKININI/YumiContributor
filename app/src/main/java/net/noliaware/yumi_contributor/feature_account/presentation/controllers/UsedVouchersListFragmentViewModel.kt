@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
-import net.noliaware.yumi_contributor.commun.CATEGORY
-import net.noliaware.yumi_contributor.feature_account.data.repository.ManagedAccountRepository
+import net.noliaware.yumi_contributor.commun.Args.CATEGORY
+import net.noliaware.yumi_contributor.feature_account.domain.repository.ManagedAccountRepository
 import net.noliaware.yumi_contributor.feature_account.domain.model.Category
 import javax.inject.Inject
 

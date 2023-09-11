@@ -11,8 +11,8 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.PRIVACY_POLICY_CONFIRMATION_REQUIRED
-import net.noliaware.yumi_contributor.commun.PRIVACY_POLICY_URL
+import net.noliaware.yumi_contributor.commun.Args.PRIVACY_POLICY_CONFIRMATION_REQUIRED
+import net.noliaware.yumi_contributor.commun.Args.PRIVACY_POLICY_URL
 import net.noliaware.yumi_contributor.commun.util.ViewModelState
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.isNetworkReachable

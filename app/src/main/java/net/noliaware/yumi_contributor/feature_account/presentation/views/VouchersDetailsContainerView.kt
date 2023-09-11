@@ -23,10 +23,11 @@ import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import net.noliaware.yumi_contributor.commun.util.tint
 import net.noliaware.yumi_contributor.commun.util.weak
 
-class VouchersDetailsContainerView(
+class VouchersDetailsContainerView @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet?
-) : ViewGroup(context, attrs) {
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : ViewGroup(context, attrs, defStyle) {
 
     private lateinit var backgroundView: View
     private lateinit var headerView: View

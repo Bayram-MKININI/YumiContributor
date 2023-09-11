@@ -11,7 +11,11 @@ import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 
-class AlertItemView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
+class AlertItemView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : ViewGroup(context, attrs, defStyle) {
 
     private lateinit var iconImageView: ImageView
     private lateinit var timeTextView: TextView

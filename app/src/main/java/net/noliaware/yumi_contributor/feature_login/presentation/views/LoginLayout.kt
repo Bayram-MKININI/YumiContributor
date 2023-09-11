@@ -10,9 +10,9 @@ import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.getLocationRectOnScreen
 import net.noliaware.yumi_contributor.commun.util.layoutToBottomLeft
 
-open class LoginLayout(
+open class LoginLayout @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet?
+    attrs: AttributeSet? = null
 ) : ViewAnimator(context, attrs) {
 
     private lateinit var loginViewContainer: View

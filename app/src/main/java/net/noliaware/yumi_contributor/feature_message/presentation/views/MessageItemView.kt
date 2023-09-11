@@ -14,7 +14,11 @@ import net.noliaware.yumi_contributor.commun.util.layoutToTopRight
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import java.lang.Integer.max
 
-class MessageItemView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
+class MessageItemView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : ViewGroup(context, attrs, defStyle) {
 
     private lateinit var iconImageView: ImageView
     private lateinit var subjectTextView: TextView

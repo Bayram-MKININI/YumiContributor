@@ -14,11 +14,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.merge
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.CATEGORY_UI
-import net.noliaware.yumi_contributor.commun.HOURS_TIME_FORMAT
-import net.noliaware.yumi_contributor.commun.QR_CODE_FRAGMENT_TAG
-import net.noliaware.yumi_contributor.commun.SHORT_DATE_FORMAT
-import net.noliaware.yumi_contributor.commun.VOUCHER_ID
+import net.noliaware.yumi_contributor.commun.ApiParameters.VOUCHER_ID
+import net.noliaware.yumi_contributor.commun.Args.CATEGORY_UI
+import net.noliaware.yumi_contributor.commun.DateTime.HOURS_TIME_FORMAT
+import net.noliaware.yumi_contributor.commun.DateTime.SHORT_DATE_FORMAT
+import net.noliaware.yumi_contributor.commun.FragmentTags.QR_CODE_FRAGMENT_TAG
 import net.noliaware.yumi_contributor.commun.util.ViewModelState
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.makeCall

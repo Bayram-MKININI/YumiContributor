@@ -18,7 +18,11 @@ import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.weak
 import net.noliaware.yumi_contributor.feature_account.presentation.views.CategoryItemView.*
 
-class CategoriesView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
+class CategoriesView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : ViewGroup(context, attrs, defStyle) {
 
     private lateinit var shimmerView: ShimmerFrameLayout
     private lateinit var shimmerRecyclerView: RecyclerView

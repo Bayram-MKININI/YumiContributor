@@ -18,7 +18,11 @@ import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import net.noliaware.yumi_contributor.commun.util.weak
 
-class LoginView(context: Context, attrs: AttributeSet?) : ElevatedCardView(context, attrs) {
+class LoginView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : ElevatedCardView(context, attrs, defStyle) {
 
     private lateinit var inputMessageTextView: TextView
     private lateinit var inputLayoutLoginShimmerView: ShimmerFrameLayout

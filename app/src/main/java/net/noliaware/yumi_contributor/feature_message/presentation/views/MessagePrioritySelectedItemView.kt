@@ -9,10 +9,11 @@ import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 
-class MessagePrioritySelectedItemView(
+class MessagePrioritySelectedItemView @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet?
-) : ViewGroup(context, attrs) {
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : ViewGroup(context, attrs, defStyle) {
 
     private lateinit var iconImageView: ImageView
 

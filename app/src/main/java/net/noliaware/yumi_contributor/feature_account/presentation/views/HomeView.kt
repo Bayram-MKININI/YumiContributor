@@ -11,7 +11,11 @@ import net.noliaware.yumi_contributor.commun.util.getStatusBarHeight
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 
-class HomeView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
+class HomeView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : ViewGroup(context, attrs, defStyle) {
 
     private lateinit var backgroundView: View
     private lateinit var mainFragmentContainer: FragmentContainerView

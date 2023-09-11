@@ -17,7 +17,11 @@ import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import net.noliaware.yumi_contributor.commun.util.removeOverScroll
 import net.noliaware.yumi_contributor.commun.util.weak
 
-class MessagingView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
+class MessagingView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : ViewGroup(context, attrs, defStyle) {
 
     private lateinit var headerView: View
     private lateinit var titleTextView: TextView

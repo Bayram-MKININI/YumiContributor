@@ -1,4 +1,4 @@
-package net.noliaware.yumi_contributor.feature_account.data.repository
+package net.noliaware.yumi_contributor.feature_account.domain.repository
 
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow

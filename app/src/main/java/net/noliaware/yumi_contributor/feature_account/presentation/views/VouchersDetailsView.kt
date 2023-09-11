@@ -15,7 +15,11 @@ import net.noliaware.yumi_contributor.commun.presentation.views.FillableTextWidg
 import net.noliaware.yumi_contributor.commun.util.*
 import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView.*
 
-class VouchersDetailsView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
+class VouchersDetailsView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : ViewGroup(context, attrs, defStyle) {
 
     private lateinit var titleFillableTextWidget: FillableTextWidget
     private lateinit var crossOutView: View

@@ -10,10 +10,10 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.ACCOUNT_DATA
-import net.noliaware.yumi_contributor.commun.ACTION_PUSH_DATA
-import net.noliaware.yumi_contributor.commun.PUSH_BODY
-import net.noliaware.yumi_contributor.commun.PUSH_TITLE
+import net.noliaware.yumi_contributor.commun.Args.ACCOUNT_DATA
+import net.noliaware.yumi_contributor.commun.Push.ACTION_PUSH_DATA
+import net.noliaware.yumi_contributor.commun.Push.PUSH_BODY
+import net.noliaware.yumi_contributor.commun.Push.PUSH_TITLE
 import net.noliaware.yumi_contributor.commun.util.getSerializableExtraCompat
 import net.noliaware.yumi_contributor.feature_login.domain.model.AccountData
 

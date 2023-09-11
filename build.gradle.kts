@@ -8,7 +8,7 @@ plugins {
     id("com.google.dagger.hilt.android") version "2.48" apply false
     id("com.google.gms.google-services") version "4.3.15" apply false
     id("com.google.firebase.crashlytics") version "2.9.9" apply false
-    id("com.github.ben-manes.versions") version "0.47.0"
+    id("com.github.ben-manes.versions") version "0.48.0"
 }
 
 fun String.isNonStable(): Boolean {

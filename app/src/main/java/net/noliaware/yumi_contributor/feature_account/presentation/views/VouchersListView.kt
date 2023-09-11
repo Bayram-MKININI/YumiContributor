@@ -24,7 +24,11 @@ import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import net.noliaware.yumi_contributor.commun.util.weak
 import net.noliaware.yumi_contributor.feature_account.presentation.adapters.VoucherAdapter
 
-class VouchersListView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
+class VouchersListView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : ViewGroup(context, attrs, defStyle) {
 
     private lateinit var backgroundView: View
     private lateinit var headerView: View
@@ -134,8 +138,9 @@ class VouchersListView(context: Context, attrs: AttributeSet?) : ViewGroup(conte
             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         )
 
-        val recyclerViewHeight = viewHeight - (headerView.measuredHeight + categoryImageView.measuredHeight / 2 +
-                titleTextView.measuredHeight + convertDpToPx(25))
+        val recyclerViewHeight =
+            viewHeight - (headerView.measuredHeight + categoryImageView.measuredHeight / 2 +
+                    titleTextView.measuredHeight + convertDpToPx(25))
 
         if (shimmerView.isVisible) {
             shimmerView.measure(

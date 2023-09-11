@@ -14,10 +14,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.HOURS_TIME_FORMAT
-import net.noliaware.yumi_contributor.commun.LONG_DATE_WITH_DAY_FORMAT
-import net.noliaware.yumi_contributor.commun.MESSAGE_ID
-import net.noliaware.yumi_contributor.commun.SEND_MESSAGES_FRAGMENT_TAG
+import net.noliaware.yumi_contributor.commun.ApiParameters.MESSAGE_ID
+import net.noliaware.yumi_contributor.commun.DateTime.HOURS_TIME_FORMAT
+import net.noliaware.yumi_contributor.commun.DateTime.LONG_DATE_WITH_DAY_FORMAT
+import net.noliaware.yumi_contributor.commun.FragmentTags.SEND_MESSAGES_FRAGMENT_TAG
 import net.noliaware.yumi_contributor.commun.presentation.mappers.PriorityMapper
 import net.noliaware.yumi_contributor.commun.util.ViewModelState
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent

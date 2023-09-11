@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
-import net.noliaware.yumi_contributor.feature_alerts.data.repository.AlertsRepository
+import net.noliaware.yumi_contributor.feature_alerts.domain.repository.AlertsRepository
 import javax.inject.Inject
 
 @HiltViewModel

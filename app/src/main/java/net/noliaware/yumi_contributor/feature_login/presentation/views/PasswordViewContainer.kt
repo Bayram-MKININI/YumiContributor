@@ -9,7 +9,11 @@ import net.noliaware.yumi_contributor.commun.util.layoutToBottomRight
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 
-class PasswordViewContainer(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
+class PasswordViewContainer @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : ViewGroup(context, attrs, defStyle) {
 
     private lateinit var iconView: ImageView
     private lateinit var passwordView: PasswordView

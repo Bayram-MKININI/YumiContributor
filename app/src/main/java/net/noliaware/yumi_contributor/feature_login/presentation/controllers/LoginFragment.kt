@@ -18,10 +18,10 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.ACCOUNT_DATA
-import net.noliaware.yumi_contributor.commun.ACTION_PUSH_DATA
-import net.noliaware.yumi_contributor.commun.PUSH_BODY
-import net.noliaware.yumi_contributor.commun.PUSH_TITLE
+import net.noliaware.yumi_contributor.commun.Args.ACCOUNT_DATA
+import net.noliaware.yumi_contributor.commun.Push.ACTION_PUSH_DATA
+import net.noliaware.yumi_contributor.commun.Push.PUSH_BODY
+import net.noliaware.yumi_contributor.commun.Push.PUSH_TITLE
 import net.noliaware.yumi_contributor.commun.util.ViewModelState.DataState
 import net.noliaware.yumi_contributor.commun.util.ViewModelState.LoadingState
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent

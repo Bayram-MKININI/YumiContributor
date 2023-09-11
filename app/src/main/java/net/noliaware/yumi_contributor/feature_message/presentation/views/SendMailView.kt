@@ -25,7 +25,11 @@ import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import net.noliaware.yumi_contributor.commun.util.weak
 import kotlin.math.max
 
-class SendMailView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs) {
+class SendMailView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : ViewGroup(context, attrs, defStyle) {
 
     private lateinit var backgroundView: View
     private lateinit var headerView: View

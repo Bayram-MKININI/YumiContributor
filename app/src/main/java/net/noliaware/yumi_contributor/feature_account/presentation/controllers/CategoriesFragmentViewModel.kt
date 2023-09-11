@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.commun.presentation.EventsHelper
-import net.noliaware.yumi_contributor.feature_account.data.repository.ManagedAccountRepository
+import net.noliaware.yumi_contributor.feature_account.domain.repository.ManagedAccountRepository
 import net.noliaware.yumi_contributor.feature_account.domain.model.Category
 import javax.inject.Inject
 

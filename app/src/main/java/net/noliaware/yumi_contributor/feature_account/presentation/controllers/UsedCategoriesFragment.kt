@@ -10,7 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.USED_VOUCHERS_LIST_FRAGMENT_TAG
+import net.noliaware.yumi_contributor.commun.FragmentTags.USED_VOUCHERS_LIST_FRAGMENT_TAG
 import net.noliaware.yumi_contributor.commun.util.ViewModelState
 import net.noliaware.yumi_contributor.commun.util.formatNumber
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent

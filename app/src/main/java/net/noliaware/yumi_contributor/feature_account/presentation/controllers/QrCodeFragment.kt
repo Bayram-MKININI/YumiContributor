@@ -13,9 +13,9 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.CATEGORY_UI
-import net.noliaware.yumi_contributor.commun.LONG_DATE_WITH_DAY_FORMAT
-import net.noliaware.yumi_contributor.commun.VOUCHER_CODE_DATA
+import net.noliaware.yumi_contributor.commun.ApiParameters.VOUCHER_CODE_DATA
+import net.noliaware.yumi_contributor.commun.Args.CATEGORY_UI
+import net.noliaware.yumi_contributor.commun.DateTime.LONG_DATE_WITH_DAY_FORMAT
 import net.noliaware.yumi_contributor.commun.util.*
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherCodeData
 import net.noliaware.yumi_contributor.feature_account.presentation.views.QrCodeView

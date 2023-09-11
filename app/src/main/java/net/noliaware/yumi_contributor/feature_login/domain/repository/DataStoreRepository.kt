@@ -1,4 +1,4 @@
-package net.noliaware.yumi_contributor.feature_login.data.repository
+package net.noliaware.yumi_contributor.feature_login.domain.repository
 
 import kotlinx.coroutines.flow.Flow
 import net.noliaware.yumi_contributor.feature_login.domain.model.UserPreferences

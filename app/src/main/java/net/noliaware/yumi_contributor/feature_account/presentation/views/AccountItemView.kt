@@ -15,10 +15,11 @@ import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import net.noliaware.yumi_contributor.commun.util.weak
 import kotlin.math.max
 
-class AccountItemView(
+class AccountItemView @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet?
-) : ViewGroup(context, attrs) {
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : ViewGroup(context, attrs, defStyle) {
 
     private lateinit var titleTextView: TextView
     private lateinit var countTextView: TextView

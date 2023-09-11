@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.content.ContextCompat
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
@@ -14,7 +13,11 @@ import net.noliaware.yumi_contributor.commun.util.layoutToTopRight
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import net.noliaware.yumi_contributor.commun.util.tint
 
-class VoucherItemView(context: Context, attrs: AttributeSet?) : ElevatedCardView(context, attrs) {
+class VoucherItemView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : ElevatedCardView(context, attrs, defStyle) {
 
     private lateinit var highlightLayout: LinearLayoutCompat
     private lateinit var highlightDescriptionTextView: TextView
@@ -39,7 +42,8 @@ class VoucherItemView(context: Context, attrs: AttributeSet?) : ElevatedCardView
 
     private fun initView() {
         highlightLayout = findViewById(R.id.highlight_layout)
-        highlightDescriptionTextView = highlightLayout.findViewById(R.id.highlight_description_text_view)
+        highlightDescriptionTextView =
+            highlightLayout.findViewById(R.id.highlight_description_text_view)
         highlightValueTextView = highlightLayout.findViewById(R.id.highlight_value_text_view)
         titleTextView = findViewById(R.id.title_text_view)
         retrieveTextView = findViewById(R.id.retrieve_text_view)
@@ -72,8 +76,9 @@ class VoucherItemView(context: Context, attrs: AttributeSet?) : ElevatedCardView
             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         )
 
-        val viewHeight = highlightLayout.measuredHeight + titleTextView.measuredHeight + retrieveTextView.measuredHeight +
-                convertDpToPx(30)
+        val viewHeight =
+            highlightLayout.measuredHeight + titleTextView.measuredHeight + retrieveTextView.measuredHeight +
+                    convertDpToPx(30)
 
         setMeasuredDimension(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),

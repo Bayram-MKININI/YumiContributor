@@ -13,7 +13,11 @@ import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.layoutToTopRight
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 
-class CategoryItemView(context: Context, attrs: AttributeSet?) : ElevatedCardView(context, attrs) {
+class CategoryItemView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : ElevatedCardView(context, attrs, defStyle) {
 
     private lateinit var countTextView: TextView
     private lateinit var iconImageView: ImageView
