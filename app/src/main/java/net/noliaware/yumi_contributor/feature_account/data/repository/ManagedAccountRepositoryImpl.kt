@@ -33,8 +33,9 @@ import net.noliaware.yumi_contributor.feature_account.domain.repository.ManagedA
 import okio.IOException
 import retrofit2.HttpException
 import java.util.UUID
+import javax.inject.Inject
 
-class ManagedAccountRepositoryImpl(
+class ManagedAccountRepositoryImpl @Inject constructor(
     private val api: RemoteApi,
     private val sessionData: SessionData
 ) : ManagedAccountRepository {
