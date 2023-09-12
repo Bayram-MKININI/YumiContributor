@@ -42,43 +42,45 @@ class CategoriesView @JvmOverloads constructor(
     private fun initView() {
         shimmerView = findViewById(R.id.shimmer_view)
         shimmerRecyclerView = shimmerView.findViewById(R.id.shimmer_recycler_view)
-        setUpRecyclerView(shimmerRecyclerView)
-        BaseAdapter((0..9).map { 0 }).apply {
-            expressionOnCreateViewHolder = { viewGroup ->
-                viewGroup.inflate(R.layout.category_item_placeholder_layout)
+        shimmerRecyclerView.also {
+            it.setUp()
+            BaseAdapter((0..9).map { 0 }).apply {
+                expressionOnCreateViewHolder = { viewGroup ->
+                    viewGroup.inflate(R.layout.category_item_placeholder_layout)
+                }
+                it.adapter = this
             }
-            shimmerRecyclerView.adapter = this
         }
-
         recyclerView = findViewById(R.id.recycler_view)
-        setUpRecyclerView(recyclerView)
-        BaseAdapter(categoryViewAdapters).apply {
-            expressionViewHolderBinding = { eachItem, view ->
-                (view as CategoryItemView).fillViewWithData(eachItem)
+        recyclerView.also {
+            it.setUp()
+            it.setHasFixedSize(true)
+            BaseAdapter(categoryViewAdapters).apply {
+                expressionViewHolderBinding = { eachItem, view ->
+                    (view as CategoryItemView).fillViewWithData(eachItem)
+                }
+                expressionOnCreateViewHolder = { viewGroup ->
+                    viewGroup.inflate(R.layout.category_item_layout)
+                }
+                onItemClicked = { position ->
+                    callback?.onCategoryClickedAtIndex(position)
+                }
+                it.adapter = this
             }
-            expressionOnCreateViewHolder = { viewGroup ->
-                viewGroup.inflate(R.layout.category_item_layout)
-            }
-            onItemClicked = { position ->
-                callback?.onCategoryClickedAtIndex(position)
-            }
-            recyclerView.adapter = this
         }
     }
 
-    private fun setUpRecyclerView(recyclerView: RecyclerView) {
-        recyclerView.apply {
-            layoutManager = GridLayoutManager(
-                context,
-                resources.getInteger(R.integer.number_of_columns_for_categories)
-            )
+    private fun RecyclerView.setUp() {
+        layoutManager = GridLayoutManager(
+            context,
+            resources.getInteger(R.integer.number_of_columns_for_categories)
+        )
 
-            val spacing = convertDpToPx(10)
-            setPadding(spacing, spacing, spacing, spacing)
-            clipToPadding = false
-            clipChildren = false
-            addItemDecoration(MarginItemDecoration(spacing, GRID))
-        }
+        val spacing = convertDpToPx(10)
+        setPadding(spacing, spacing, spacing, spacing)
+        clipToPadding = false
+        clipChildren = false
+        addItemDecoration(MarginItemDecoration(spacing, GRID))
     }
 
     fun fillViewWithData(adapters: List<CategoryItemViewAdapter>) {

@@ -89,25 +89,24 @@ class AccountsListView @JvmOverloads constructor(
 
         shimmerView = findViewById(R.id.shimmer_view)
         shimmerRecyclerView = shimmerView.findViewById(R.id.shimmer_recycler_view)
-        setUpRecyclerView(shimmerRecyclerView)
-        BaseAdapter((0..1).map { 0 }).apply {
-            expressionOnCreateViewHolder = { viewGroup ->
-                viewGroup.inflate(R.layout.account_item_placeholder_layout)
+        shimmerRecyclerView.also {
+            it.setUp()
+            BaseAdapter((0..1).map { 0 }).apply {
+                expressionOnCreateViewHolder = { viewGroup ->
+                    viewGroup.inflate(R.layout.account_item_placeholder_layout)
+                }
+                it.adapter = this
             }
-            shimmerRecyclerView.adapter = this
         }
-
         accountsRecyclerView = contentView.findViewById(R.id.accounts_recycler_view)
-        setUpRecyclerView(accountsRecyclerView)
+        accountsRecyclerView.setUp()
 
         filteredAccountRecyclerView = contentView.findViewById(R.id.filtered_accounts_recycler_view)
-        setUpRecyclerView(filteredAccountRecyclerView)
+        filteredAccountRecyclerView.setUp()
     }
 
-    private fun setUpRecyclerView(recyclerView: RecyclerView) {
-        recyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-        }
+    private fun RecyclerView.setUp() {
+        layoutManager = LinearLayoutManager(context)
     }
 
     private fun extractIdFromSuggestion(suggestion: String): String {

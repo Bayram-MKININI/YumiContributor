@@ -47,30 +47,29 @@ class AlertsView @JvmOverloads constructor(
     }
 
     private fun initView() {
-
         headerView = findViewById(R.id.header_view)
         titleTextView = findViewById(R.id.title_text_view)
         notificationIconView = findViewById(R.id.notification_icon_view)
         contentView = findViewById(R.id.content_layout)
         shimmerView = findViewById(R.id.shimmer_view)
         shimmerRecyclerView = shimmerView.findViewById(R.id.shimmer_recycler_view)
-        setUpRecyclerView(shimmerRecyclerView)
-        BaseAdapter(listOf(1)).apply {
-            expressionOnCreateViewHolder = { viewGroup ->
-                viewGroup.inflate(R.layout.alert_item_placeholder_layout)
+        shimmerRecyclerView.also {
+            it.setUp()
+            BaseAdapter(listOf(1)).apply {
+                expressionOnCreateViewHolder = { viewGroup ->
+                    viewGroup.inflate(R.layout.alert_item_placeholder_layout)
+                }
+                it.adapter = this
             }
-            shimmerRecyclerView.adapter = this
         }
         recyclerView = contentView.findViewById(R.id.recycler_view)
-        setUpRecyclerView(recyclerView)
+        recyclerView.setUp()
         emptyView = contentView.findViewById(R.id.empty_message_text_view)
     }
 
-    private fun setUpRecyclerView(recyclerView: RecyclerView) {
-        recyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            addItemDecoration(MarginItemDecoration(convertDpToPx(16)))
-        }
+    private fun RecyclerView.setUp() {
+        layoutManager = LinearLayoutManager(context)
+        addItemDecoration(MarginItemDecoration(convertDpToPx(16)))
     }
 
     fun setLoadingVisible(visible: Boolean) {
