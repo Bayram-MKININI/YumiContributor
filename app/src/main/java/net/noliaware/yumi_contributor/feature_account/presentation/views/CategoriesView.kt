@@ -54,7 +54,15 @@ class CategoriesView @JvmOverloads constructor(
         recyclerView = findViewById(R.id.recycler_view)
         recyclerView.also {
             it.setUp()
-            BaseAdapter(categoryViewAdapters).apply {
+            BaseAdapter(
+                dataSet = categoryViewAdapters,
+                compareItems = { old, new ->
+                    old.title == new.title
+                },
+                compareContents = { old, new ->
+                    old == new
+                }
+            ).apply {
                 expressionViewHolderBinding = { eachItem, view ->
                     (view as CategoryItemView).fillViewWithData(eachItem)
                 }
@@ -86,7 +94,6 @@ class CategoriesView @JvmOverloads constructor(
         if (categoryViewAdapters.isNotEmpty())
             categoryViewAdapters.clear()
         categoryViewAdapters.addAll(adapters)
-        recyclerView.adapter?.notifyDataSetChanged()
     }
 
     fun setLoadingVisible(visible: Boolean) {
