@@ -45,11 +45,12 @@ class MessagesListView @JvmOverloads constructor(
         shimmerRecyclerView = shimmerView.findViewById(R.id.shimmer_recycler_view)
         shimmerRecyclerView.also {
             it.setUp()
-            BaseAdapter(listOf(1)).apply {
+            BaseAdapter<Int>().apply {
                 expressionOnCreateViewHolder = { viewGroup ->
                     viewGroup.inflate(R.layout.message_item_placeholder_layout)
                 }
                 it.adapter = this
+                submitList(listOf(0))
             }
         }
         recyclerView = findViewById(R.id.recycler_view)

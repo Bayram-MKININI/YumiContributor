@@ -27,7 +27,7 @@ class CategoriesView @JvmOverloads constructor(
     private lateinit var shimmerView: ShimmerFrameLayout
     private lateinit var shimmerRecyclerView: RecyclerView
     private lateinit var recyclerView: RecyclerView
-    private val categoryViewAdapters = mutableListOf<CategoryItemViewAdapter>()
+    private lateinit var recyclerAdapter: BaseAdapter<CategoryItemViewAdapter>
     var callback: CategoriesViewCallback? by weak()
 
     fun interface CategoriesViewCallback {
@@ -44,18 +44,18 @@ class CategoriesView @JvmOverloads constructor(
         shimmerRecyclerView = shimmerView.findViewById(R.id.shimmer_recycler_view)
         shimmerRecyclerView.also {
             it.setUp()
-            BaseAdapter((0..9).map { 0 }).apply {
+            BaseAdapter<Int>().apply {
                 expressionOnCreateViewHolder = { viewGroup ->
                     viewGroup.inflate(R.layout.category_item_placeholder_layout)
                 }
                 it.adapter = this
+                submitList((0..9).map { 0 })
             }
         }
         recyclerView = findViewById(R.id.recycler_view)
         recyclerView.also {
             it.setUp()
-            BaseAdapter(
-                dataSet = categoryViewAdapters,
+            recyclerAdapter = BaseAdapter<CategoryItemViewAdapter>(
                 compareItems = { old, new ->
                     old.title == new.title
                 },
@@ -91,9 +91,7 @@ class CategoriesView @JvmOverloads constructor(
     }
 
     fun fillViewWithData(adapters: List<CategoryItemViewAdapter>) {
-        if (categoryViewAdapters.isNotEmpty())
-            categoryViewAdapters.clear()
-        categoryViewAdapters.addAll(adapters)
+        recyclerAdapter.submitList(adapters)
     }
 
     fun setLoadingVisible(visible: Boolean) {

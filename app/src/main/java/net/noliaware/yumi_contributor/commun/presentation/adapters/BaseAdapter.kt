@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 
 class BaseAdapter<T : Any>(
-    private val dataSet: List<T>,
     compareItems: ((old: T, new: T) -> Boolean)? = null,
     compareContents: ((old: T, new: T) -> Boolean)? = null
 ) : ListAdapter<T, BaseViewHolder<T>>(DiffCallback(compareItems, compareContents)) {
@@ -27,7 +26,7 @@ class BaseAdapter<T : Any>(
                 expression = expressionViewHolderBinding,
                 onItemClicked = onItemClicked?.let {
                     { position ->
-                        dataSet[position].let {
+                        getItem(position).let {
                             onItemClicked?.invoke(position)
                         }
                     }
@@ -37,11 +36,7 @@ class BaseAdapter<T : Any>(
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder<T>, position: Int) {
-        holder.bind(dataSet[position])
-    }
-
-    override fun getItemCount(): Int {
-        return dataSet.size
+        holder.bind(getItem(position))
     }
 
     private class DiffCallback<K : Any>(

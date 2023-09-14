@@ -55,11 +55,12 @@ class AlertsView @JvmOverloads constructor(
         shimmerRecyclerView = shimmerView.findViewById(R.id.shimmer_recycler_view)
         shimmerRecyclerView.also {
             it.setUp()
-            BaseAdapter(listOf(1)).apply {
+            BaseAdapter<Int>().apply {
                 expressionOnCreateViewHolder = { viewGroup ->
                     viewGroup.inflate(R.layout.alert_item_placeholder_layout)
                 }
                 it.adapter = this
+                submitList(listOf(0))
             }
         }
         recyclerView = contentView.findViewById(R.id.recycler_view)
@@ -112,8 +113,9 @@ class AlertsView @JvmOverloads constructor(
 
         val contentViewWidth = viewWidth * 95 / 100
         val sideMargin = viewWidth * 5 / 100 / 2
-        val contentViewHeight = viewHeight - (headerView.measuredHeight + notificationIconView.measuredHeight / 2
-                + sideMargin + convertDpToPx(35))
+        val contentViewHeight =
+            viewHeight - (headerView.measuredHeight + notificationIconView.measuredHeight / 2
+                    + sideMargin + convertDpToPx(35))
 
         contentView.measure(
             MeasureSpec.makeMeasureSpec(contentViewWidth, MeasureSpec.EXACTLY),

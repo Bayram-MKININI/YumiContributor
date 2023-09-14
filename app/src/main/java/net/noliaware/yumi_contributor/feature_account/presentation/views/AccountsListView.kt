@@ -91,11 +91,12 @@ class AccountsListView @JvmOverloads constructor(
         shimmerRecyclerView = shimmerView.findViewById(R.id.shimmer_recycler_view)
         shimmerRecyclerView.also {
             it.setUp()
-            BaseAdapter((0..1).map { 0 }).apply {
+            BaseAdapter<Int>().apply {
                 expressionOnCreateViewHolder = { viewGroup ->
                     viewGroup.inflate(R.layout.account_item_placeholder_layout)
                 }
                 it.adapter = this
+                submitList((0..1).map { 0 })
             }
         }
         accountsRecyclerView = contentView.findViewById(R.id.accounts_recycler_view)
