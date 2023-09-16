@@ -49,7 +49,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            tools:duration="@integer/shimmer_animation_duration_ms">
+            app:shimmer_auto_start="false"
+            app:shimmer_base_alpha="1">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/shimmer_recycler_view"

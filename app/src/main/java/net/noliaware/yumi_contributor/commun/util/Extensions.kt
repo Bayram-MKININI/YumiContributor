@@ -37,8 +37,11 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
+import androidx.paging.PagingSource
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.facebook.shimmer.Shimmer
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.FlowCollector
@@ -59,6 +62,8 @@ import net.noliaware.yumi_contributor.commun.data.remote.dto.SessionDTO
 import net.noliaware.yumi_contributor.commun.domain.model.AppMessageType
 import net.noliaware.yumi_contributor.commun.domain.model.SessionData
 import net.noliaware.yumi_contributor.feature_login.presentation.controllers.LoginActivity
+import retrofit2.HttpException
+import java.io.IOException
 import java.io.Serializable
 import java.math.BigInteger
 import java.nio.charset.StandardCharsets
@@ -132,7 +137,7 @@ suspend fun <T> FlowCollector<Resource<T>>.handleSessionWithNoFailure(
     }
 }
 
-fun handlePaginatedListErrorIfAny(
+fun resolvePaginatedListErrorIfAny(
     session: SessionDTO?,
     sessionData: SessionData,
     tokenKey: String
@@ -147,6 +152,24 @@ fun handlePaginatedListErrorIfAny(
         ErrorType.SYSTEM_ERROR
     }
     return errorType
+}
+
+inline fun <reified T : Any, reified K : Any> handlePagingSourceError(
+    ex1: Exception
+): PagingSource.LoadResult.Error<T, K> {
+    try {
+        when (ex1) {
+            is HttpException -> ErrorType.SYSTEM_ERROR
+            is IOException -> ErrorType.NETWORK_ERROR
+            else -> null
+        }?.let { errorType ->
+            throw PaginationException(errorType)
+        } ?: run {
+            return PagingSource.LoadResult.Error(ex1)
+        }
+    } catch (ex2: Exception) {
+        return PagingSource.LoadResult.Error(ex2)
+    }
 }
 
 fun String.parseDateToFormat(
@@ -236,18 +259,29 @@ fun Fragment.redirectToLoginScreenFromSharedEvent(sharedEvent: UIEvent) {
     }
 }
 
-fun Fragment.handlePaginationError(loadState: CombinedLoadStates) {
-    when (val currentState = loadState.refresh) {
-        is LoadState.Error -> {
-            if (
-                currentState.error is PaginationException &&
-                (currentState.error as PaginationException).errorType == ErrorType.SYSTEM_ERROR
-            ) {
+fun Fragment.handlePaginationError(loadState: CombinedLoadStates): Boolean {
+    when {
+        loadState.prepend is LoadState.Error -> loadState.prepend as LoadState.Error
+        loadState.append is LoadState.Error -> loadState.append as LoadState.Error
+        loadState.refresh is LoadState.Error -> loadState.refresh as LoadState.Error
+        else -> null
+    }?.let {
+        if (it.error is PaginationException) {
+            if ((it.error as PaginationException).errorType == ErrorType.SYSTEM_ERROR) {
                 redirectToLoginScreenInternal()
+                return true
+            } else if ((it.error as PaginationException).errorType == ErrorType.NETWORK_ERROR) {
+                handleSharedEvent(
+                    UIEvent.ShowError(
+                        errorType = ErrorType.NETWORK_ERROR,
+                        errorStrRes = R.string.error_no_network
+                    )
+                )
+                return true
             }
         }
-        else -> Unit
     }
+    return false
 }
 
 private fun Fragment.redirectToLoginScreenInternal() {
@@ -334,6 +368,20 @@ fun View.getLocationRectOnScreen(): Rect {
         top = location[1]
         right = left + measuredWidth
         bottom = top + measuredHeight
+    }
+}
+
+fun ShimmerFrameLayout.activateShimmer(activated: Boolean) {
+    Shimmer.AlphaHighlightBuilder()
+        .setBaseAlpha(if (activated) 0.4f else 1f)
+        .setDuration(resources.getInteger(R.integer.shimmer_animation_duration_ms).toLong())
+        .build().apply {
+            setShimmer(this)
+        }
+    if (activated) {
+        startShimmer()
+    } else {
+        stopShimmer()
     }
 }
 

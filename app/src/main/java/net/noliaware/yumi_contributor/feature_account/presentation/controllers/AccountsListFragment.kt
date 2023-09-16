@@ -49,17 +49,20 @@ class AccountsListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.resetFilteredManagedAccount()
+        accountsListView?.setLoadingVisible(true)
         collectFlows()
     }
 
     private fun collectFlows() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             accountsListView?.paginatedManagedAccountsAdapter?.loadStateFlow?.collectLatest { loadState ->
-                if (loadState.refresh is LoadState.NotLoading) {
-                    accountsListView?.setLoadingVisible(false)
-                    accountsListView?.displayAllAccount()
+                when {
+                    handlePaginationError(loadState) -> accountsListView?.stopLoading()
+                    loadState.refresh is LoadState.NotLoading -> {
+                        accountsListView?.setLoadingVisible(false)
+                    }
+                    else -> Unit
                 }
-                handlePaginationError(loadState)
             }
         }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {

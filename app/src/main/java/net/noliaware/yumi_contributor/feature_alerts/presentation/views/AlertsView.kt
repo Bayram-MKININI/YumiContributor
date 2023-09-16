@@ -13,6 +13,7 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.presentation.adapters.BaseAdapter
 import net.noliaware.yumi_contributor.commun.util.MarginItemDecoration
+import net.noliaware.yumi_contributor.commun.util.activateShimmer
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.getStatusBarHeight
 import net.noliaware.yumi_contributor.commun.util.inflate
@@ -74,12 +75,17 @@ class AlertsView @JvmOverloads constructor(
     }
 
     fun setLoadingVisible(visible: Boolean) {
+        shimmerView.activateShimmer(visible)
         if (visible) {
             shimmerView.isVisible = true
-            shimmerView.startShimmer()
         } else {
             shimmerView.isGone = true
-            shimmerView.stopShimmer()
+        }
+    }
+
+    fun stopLoading() {
+        if (shimmerView.isVisible) {
+            shimmerView.activateShimmer(false)
         }
     }
 

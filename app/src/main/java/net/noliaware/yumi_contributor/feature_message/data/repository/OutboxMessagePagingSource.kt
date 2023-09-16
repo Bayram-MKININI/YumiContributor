@@ -43,7 +43,7 @@ class OutboxMessagePagingSource(
                 params = generateGetMessagesListParams(nextPage, GET_OUTBOX_MESSAGE_LIST)
             )
 
-            val errorType = handlePaginatedListErrorIfAny(
+            val errorType = resolvePaginatedListErrorIfAny(
                 session = remoteData.session,
                 sessionData = sessionData,
                 tokenKey = GET_OUTBOX_MESSAGE_LIST
@@ -70,8 +70,8 @@ class OutboxMessagePagingSource(
                 prevKey = null,// Only paging forward.
                 nextKey = if (canLoadMore) messageRank else null
             )
-        } catch (e: Exception) {
-            return LoadResult.Error(e)
+        } catch (ex: Exception) {
+            return handlePagingSourceError(ex)
         }
     }
 

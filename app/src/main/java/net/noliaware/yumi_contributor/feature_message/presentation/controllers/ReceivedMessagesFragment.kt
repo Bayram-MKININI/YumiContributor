@@ -47,19 +47,24 @@ class ReceivedMessagesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        messagesListView?.setLoadingVisible(true)
         collectFlows()
     }
 
     private fun collectFlows() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             messagesListView?.messageAdapter?.loadStateFlow?.collectLatest { loadState ->
-                if (loadState.refresh is LoadState.NotLoading) {
-                    messagesListView?.setLoadingVisible(false)
-                    messagesListView?.setEmptyMessageText(getString(R.string.no_received_message))
-                    val alertsCount = messagesListView?.messageAdapter?.itemCount ?: 0
-                    messagesListView?.setEmptyMessageVisible(alertsCount < 1)
+
+                val noMessagesLoaded = (messagesListView?.messageAdapter?.itemCount ?: 0) < 1
+                when {
+                    handlePaginationError(loadState) -> messagesListView?.stopLoading()
+                    loadState.refresh is LoadState.NotLoading -> {
+                        messagesListView?.setLoadingVisible(false)
+                        messagesListView?.setEmptyMessageText(getString(R.string.no_received_message))
+                        messagesListView?.setEmptyMessageVisible(noMessagesLoaded)
+                    }
+                    else -> Unit
                 }
-                handlePaginationError(loadState)
             }
         }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {

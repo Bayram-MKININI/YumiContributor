@@ -15,10 +15,10 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
-import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerFrameLayout
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.presentation.views.FillableTextWidget
+import net.noliaware.yumi_contributor.commun.util.activateShimmer
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.getColorCompat
 import net.noliaware.yumi_contributor.commun.util.getStatusBarHeight
@@ -131,18 +131,8 @@ class ReadMailView @JvmOverloads constructor(
         composeButton.isVisible = readMailViewAdapter.replyPossible
     }
 
-    fun setLoadingVisible(visible: Boolean) {
-        shimmerView.setShimmer(
-            Shimmer.AlphaHighlightBuilder()
-                .setBaseAlpha(if (visible) 0.4f else 1f)
-                .setDuration(resources.getInteger(R.integer.shimmer_animation_duration_ms).toLong())
-                .build()
-        )
-        if (visible) {
-            shimmerView.startShimmer()
-        } else {
-            shimmerView.stopShimmer()
-        }
+    fun activateLoading(visible: Boolean) {
+        shimmerView.activateShimmer(visible)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

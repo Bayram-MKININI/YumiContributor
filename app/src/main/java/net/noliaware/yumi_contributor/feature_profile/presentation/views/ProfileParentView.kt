@@ -5,9 +5,9 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerFrameLayout
 import net.noliaware.yumi_contributor.R
+import net.noliaware.yumi_contributor.commun.util.activateShimmer
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.getStatusBarHeight
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
@@ -42,18 +42,8 @@ class ProfileParentView @JvmOverloads constructor(
         profileView = shimmerView.findViewById(R.id.profile_view)
     }
 
-    fun setLoadingVisible(visible: Boolean) {
-        shimmerView.setShimmer(
-            Shimmer.AlphaHighlightBuilder()
-                .setBaseAlpha(if (visible) 0.4f else 1f)
-                .setDuration(resources.getInteger(R.integer.shimmer_animation_duration_ms).toLong())
-                .build()
-        )
-        if (visible) {
-            shimmerView.startShimmer()
-        } else {
-            shimmerView.stopShimmer()
-        }
+    fun activateLoading(visible: Boolean) {
+        shimmerView.activateShimmer(visible)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

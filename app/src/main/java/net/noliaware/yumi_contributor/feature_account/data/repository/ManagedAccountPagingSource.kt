@@ -12,7 +12,8 @@ import net.noliaware.yumi_contributor.commun.util.ErrorType
 import net.noliaware.yumi_contributor.commun.util.PaginationException
 import net.noliaware.yumi_contributor.commun.util.generateToken
 import net.noliaware.yumi_contributor.commun.util.getCommonWSParams
-import net.noliaware.yumi_contributor.commun.util.handlePaginatedListErrorIfAny
+import net.noliaware.yumi_contributor.commun.util.handlePagingSourceError
+import net.noliaware.yumi_contributor.commun.util.resolvePaginatedListErrorIfAny
 import net.noliaware.yumi_contributor.feature_account.domain.model.ManagedAccount
 import java.util.UUID
 
@@ -46,7 +47,7 @@ class ManagedAccountPagingSource(
                 params = generateWSParams(nextPage, GET_MANAGED_ACCOUNT_LIST)
             )
 
-            val errorType = handlePaginatedListErrorIfAny(
+            val errorType = resolvePaginatedListErrorIfAny(
                 session = remoteData.session,
                 sessionData = sessionData,
                 tokenKey = GET_MANAGED_ACCOUNT_LIST
@@ -72,8 +73,8 @@ class ManagedAccountPagingSource(
                 .orEmpty(),
                 prevKey = null,// Only paging forward.
                 nextKey = if (canLoadMore) profileRank else null)
-        } catch (e: Exception) {
-            return LoadResult.Error(e)
+        } catch (ex: Exception) {
+            return handlePagingSourceError(ex)
         }
     }
 

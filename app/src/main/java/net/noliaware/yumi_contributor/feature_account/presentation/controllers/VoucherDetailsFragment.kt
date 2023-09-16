@@ -84,23 +84,27 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
 
     private fun collectFlows() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            merge(
-                viewModel.getVoucherEventsHelper.eventFlow,
-                viewModel.getVoucherStateDataEventsHelper.eventFlow
-            ).collectLatest { sharedEvent ->
+            viewModel.getVoucherEventsHelper.eventFlow.collectLatest { sharedEvent ->
+                vouchersDetailsContainerView?.activateLoading(false)
                 handleSharedEvent(sharedEvent)
                 redirectToLoginScreenFromSharedEvent(sharedEvent)
             }
         }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.getVoucherEventsHelper.stateFlow.collect { vmState ->
-                    when (vmState) {
-                        is ViewModelState.LoadingState -> Unit
-                        is ViewModelState.DataState -> vmState.data?.let { voucher ->
-                            bindViewToData(voucher)
-                        }
+                when (vmState) {
+                    is ViewModelState.LoadingState -> vouchersDetailsContainerView?.activateLoading(true)
+                    is ViewModelState.DataState -> vmState.data?.let { voucher ->
+                        vouchersDetailsContainerView?.activateLoading(false)
+                        bindViewToData(voucher)
                     }
                 }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.getVoucherStateDataEventsHelper.eventFlow.collectLatest { sharedEvent ->
+                redirectToLoginScreenFromSharedEvent(sharedEvent)
+            }
         }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.getVoucherStateDataEventsHelper.stateFlow.collect { vmState ->

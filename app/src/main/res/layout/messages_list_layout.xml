@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <net.noliaware.yumi_contributor.feature_message.presentation.views.MessagesListView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -10,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        tools:duration="@integer/shimmer_animation_duration_ms">
+        app:shimmer_auto_start="false"
+        app:shimmer_base_alpha="1">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/shimmer_recycler_view"

@@ -58,6 +58,7 @@ class UserProfileFragment : Fragment() {
     private fun collectFlows() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.userProfileEventsHelper.eventFlow.collectLatest { sharedEvent ->
+                profileParentView?.activateLoading(false)
                 handleSharedEvent(sharedEvent)
                 redirectToLoginScreenFromSharedEvent(sharedEvent)
             }
@@ -65,9 +66,9 @@ class UserProfileFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.userProfileEventsHelper.stateFlow.collect { vmState ->
                 when (vmState) {
-                    is LoadingState -> profileParentView?.setLoadingVisible(true)
+                    is LoadingState -> profileParentView?.activateLoading(true)
                     is DataState -> vmState.data?.let { userProfile ->
-                        profileParentView?.setLoadingVisible(false)
+                        profileParentView?.activateLoading(false)
                         bindViewToData(userProfile)
                     }
                 }

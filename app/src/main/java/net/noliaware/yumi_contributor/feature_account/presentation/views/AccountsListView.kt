@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.presentation.adapters.BaseAdapter
+import net.noliaware.yumi_contributor.commun.util.activateShimmer
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.inflate
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
@@ -119,12 +120,19 @@ class AccountsListView @JvmOverloads constructor(
     }
 
     fun setLoadingVisible(visible: Boolean) {
+        shimmerView.activateShimmer(visible)
         if (visible) {
             shimmerView.isVisible = true
-            shimmerView.startShimmer()
+            accountsRecyclerView.isGone = true
         } else {
             shimmerView.isGone = true
-            shimmerView.stopShimmer()
+            accountsRecyclerView.isVisible = true
+        }
+    }
+
+    fun stopLoading() {
+        if (shimmerView.isVisible) {
+            shimmerView.activateShimmer(false)
         }
     }
 

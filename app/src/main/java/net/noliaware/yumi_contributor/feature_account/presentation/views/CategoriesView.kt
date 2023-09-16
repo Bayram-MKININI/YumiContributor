@@ -12,6 +12,7 @@ import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.presentation.adapters.BaseAdapter
 import net.noliaware.yumi_contributor.commun.util.GRID
 import net.noliaware.yumi_contributor.commun.util.MarginItemDecoration
+import net.noliaware.yumi_contributor.commun.util.activateShimmer
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.inflate
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
@@ -95,14 +96,19 @@ class CategoriesView @JvmOverloads constructor(
     }
 
     fun setLoadingVisible(visible: Boolean) {
+        shimmerView.activateShimmer(visible)
         if (visible) {
             shimmerView.isVisible = true
             recyclerView.isGone = true
-            shimmerView.startShimmer()
         } else {
             shimmerView.isGone = true
             recyclerView.isVisible = true
-            shimmerView.stopShimmer()
+        }
+    }
+
+    fun stopLoading() {
+        if (shimmerView.isVisible) {
+            shimmerView.activateShimmer(false)
         }
     }
 

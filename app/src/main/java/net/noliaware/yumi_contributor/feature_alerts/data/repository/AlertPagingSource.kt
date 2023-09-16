@@ -8,9 +8,14 @@ import net.noliaware.yumi_contributor.commun.ApiParameters.LIST_PAGE_SIZE
 import net.noliaware.yumi_contributor.commun.ApiParameters.TIMESTAMP_OFFSET
 import net.noliaware.yumi_contributor.commun.data.remote.RemoteApi
 import net.noliaware.yumi_contributor.commun.domain.model.SessionData
-import net.noliaware.yumi_contributor.commun.util.*
+import net.noliaware.yumi_contributor.commun.util.ErrorType
+import net.noliaware.yumi_contributor.commun.util.PaginationException
+import net.noliaware.yumi_contributor.commun.util.generateToken
+import net.noliaware.yumi_contributor.commun.util.getCommonWSParams
+import net.noliaware.yumi_contributor.commun.util.handlePagingSourceError
+import net.noliaware.yumi_contributor.commun.util.resolvePaginatedListErrorIfAny
 import net.noliaware.yumi_contributor.feature_alerts.domain.model.Alert
-import java.util.*
+import java.util.UUID
 
 class AlertPagingSource(
     private val api: RemoteApi,
@@ -38,7 +43,7 @@ class AlertPagingSource(
                 params = generateGetAlertsListParams(nextTimestamp, GET_ALERT_LIST)
             )
 
-            val errorType = handlePaginatedListErrorIfAny(
+            val errorType = resolvePaginatedListErrorIfAny(
                 session = remoteData.session,
                 sessionData = sessionData,
                 tokenKey = GET_ALERT_LIST
@@ -48,8 +53,7 @@ class AlertPagingSource(
                 throw PaginationException(errorType)
             }
 
-            val alertTimestamp =
-                remoteData.data?.alertDTOList?.lastOrNull()?.alertTimestamp ?: nextTimestamp
+            val alertTimestamp = remoteData.data?.alertDTOList?.lastOrNull()?.alertTimestamp ?: nextTimestamp
 
             val moreItemsAvailable = remoteData.data?.alertDTOList?.lastOrNull()?.let { alertDTO ->
                 alertDTO.alertRank < alertDTO.alertCount
@@ -62,8 +66,8 @@ class AlertPagingSource(
                 prevKey = null,// Only paging forward.
                 nextKey = if (canLoadMore) alertTimestamp else null
             )
-        } catch (e: Exception) {
-            return LoadResult.Error(e)
+        } catch (ex: Exception) {
+            return handlePagingSourceError(ex)
         }
     }
 

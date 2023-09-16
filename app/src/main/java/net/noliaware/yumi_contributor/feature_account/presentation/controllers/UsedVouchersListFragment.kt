@@ -89,16 +89,20 @@ class UsedVouchersListFragment : AppCompatDialogFragment() {
                 iconName = viewModel.selectedCategory?.categoryIcon
             )
         )
+        vouchersListView?.setLoadingVisible(true)
         collectFlows()
     }
 
     private fun collectFlows() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             vouchersListView?.voucherAdapter?.loadStateFlow?.collectLatest { loadState ->
-                if (loadState.refresh is LoadState.NotLoading) {
-                    vouchersListView?.setLoadingVisible(false)
+                when {
+                    handlePaginationError(loadState) -> vouchersListView?.stopLoading()
+                    loadState.refresh is LoadState.NotLoading -> {
+                        vouchersListView?.setLoadingVisible(false)
+                    }
+                    else -> Unit
                 }
-                handlePaginationError(loadState)
             }
         }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {

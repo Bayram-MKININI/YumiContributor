@@ -35,18 +35,22 @@ class AlertsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        alertsView?.setLoadingVisible(true)
         collectFlows()
     }
 
     private fun collectFlows() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             alertsView?.alertAdapter?.loadStateFlow?.collectLatest { loadState ->
-                if (loadState.refresh is LoadState.NotLoading) {
-                    alertsView?.setLoadingVisible(false)
-                    val alertsCount = alertsView?.alertAdapter?.itemCount ?: 0
-                    alertsView?.setEmptyMessageVisible(alertsCount < 1)
+                val noAlertsLoaded = (alertsView?.alertAdapter?.itemCount ?: 0) < 1
+                when {
+                    handlePaginationError(loadState) -> alertsView?.stopLoading()
+                    loadState.refresh is LoadState.NotLoading -> {
+                        alertsView?.setLoadingVisible(false)
+                        alertsView?.setEmptyMessageVisible(noAlertsLoaded)
+                    }
+                    else -> Unit
                 }
-                handlePaginationError(loadState)
             }
         }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {

@@ -10,9 +10,9 @@ import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerFrameLayout
 import net.noliaware.yumi_contributor.R
+import net.noliaware.yumi_contributor.commun.util.activateShimmer
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.drawableIdByName
 import net.noliaware.yumi_contributor.commun.util.getDrawableCompat
@@ -98,18 +98,8 @@ class VouchersDetailsContainerView @JvmOverloads constructor(
         }
     }
 
-    fun setLoadingVisible(visible: Boolean) {
-        shimmerView.setShimmer(
-            Shimmer.AlphaHighlightBuilder()
-                .setBaseAlpha(if (visible) 0.4f else 1f)
-                .setDuration(resources.getInteger(R.integer.shimmer_animation_duration_ms).toLong())
-                .build()
-        )
-        if (visible) {
-            shimmerView.startShimmer()
-        } else {
-            shimmerView.stopShimmer()
-        }
+    fun activateLoading(visible: Boolean) {
+        shimmerView.activateShimmer(visible)
     }
 
     fun setUpViewLook(color: Int, iconName: String?) {

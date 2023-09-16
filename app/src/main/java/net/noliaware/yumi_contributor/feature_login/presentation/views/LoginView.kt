@@ -7,11 +7,11 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.widget.doAfterTextChanged
-import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.textfield.TextInputLayout
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView
+import net.noliaware.yumi_contributor.commun.util.activateShimmer
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.hideKeyboard
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
@@ -80,18 +80,11 @@ class LoginView @JvmOverloads constructor(
     }
 
     fun setProgressVisible(visible: Boolean) {
-        inputLayoutLoginShimmerView.setShimmer(
-            Shimmer.AlphaHighlightBuilder()
-                .setBaseAlpha(if (visible) 0.4f else 1f)
-                .setDuration(resources.getInteger(R.integer.shimmer_animation_duration_ms).toLong())
-                .build()
-        )
+        inputLayoutLoginShimmerView.activateShimmer(visible)
         if (visible) {
             inputLayoutLogin.isEnabled = false
             confirmImageView.isEnabled = false
-            inputLayoutLoginShimmerView.startShimmer()
         } else {
-            inputLayoutLoginShimmerView.stopShimmer()
             inputLayoutLogin.isEnabled = true
             confirmImageView.isEnabled = true
         }

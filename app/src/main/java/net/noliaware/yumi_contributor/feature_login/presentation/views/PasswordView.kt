@@ -6,10 +6,10 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.widget.ImageView
 import android.widget.TextView
-import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerFrameLayout
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView
+import net.noliaware.yumi_contributor.commun.util.activateShimmer
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
@@ -190,18 +190,11 @@ class PasswordView @JvmOverloads constructor(
     }
 
     fun setProgressVisible(visible: Boolean) {
-        codeShimmerView.setShimmer(
-            Shimmer.AlphaHighlightBuilder()
-                .setBaseAlpha(if (visible) 0.4f else 1f)
-                .setDuration(resources.getInteger(R.integer.shimmer_animation_duration_ms).toLong())
-                .build()
-        )
+        codeShimmerView.activateShimmer(visible)
         if (visible) {
             deleteTextView.isEnabled = false
             confirmImageView.isEnabled = false
-            codeShimmerView.startShimmer()
         } else {
-            codeShimmerView.stopShimmer()
             deleteTextView.isEnabled = true
             confirmImageView.isEnabled = true
         }

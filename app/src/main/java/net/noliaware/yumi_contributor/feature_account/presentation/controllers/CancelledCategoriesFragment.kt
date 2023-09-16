@@ -46,6 +46,7 @@ class CancelledCategoriesFragment : Fragment() {
     private fun collectFlows() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.cancelledCategoriesEventsHelper.eventFlow.collectLatest { sharedEvent ->
+                categoriesView?.stopLoading()
                 handleSharedEvent(sharedEvent)
                 redirectToLoginScreenFromSharedEvent(sharedEvent)
             }

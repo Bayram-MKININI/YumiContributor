@@ -51,6 +51,7 @@ class UsedCategoriesFragment : Fragment() {
         }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.usedCategoriesEventsHelper.eventFlow.collectLatest { sharedEvent ->
+                categoriesView?.stopLoading()
                 handleSharedEvent(sharedEvent)
                 redirectToLoginScreenFromSharedEvent(sharedEvent)
             }

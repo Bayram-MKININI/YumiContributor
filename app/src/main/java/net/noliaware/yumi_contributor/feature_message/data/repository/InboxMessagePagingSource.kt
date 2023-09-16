@@ -42,7 +42,7 @@ class InboxMessagePagingSource(
                 params = generateGetMessagesListParams(nextPage, GET_INBOX_MESSAGE_LIST)
             )
 
-            val errorType = handlePaginatedListErrorIfAny(
+            val errorType = resolvePaginatedListErrorIfAny(
                 session = remoteData.session,
                 sessionData = sessionData,
                 tokenKey = GET_INBOX_MESSAGE_LIST
@@ -69,8 +69,8 @@ class InboxMessagePagingSource(
                 prevKey = null,// Only paging forward.
                 nextKey = if (canLoadMore) messageRank else null
             )
-        } catch (e: Exception) {
-            return LoadResult.Error(e)
+        } catch (ex: Exception) {
+            return handlePagingSourceError(ex)
         }
     }
 

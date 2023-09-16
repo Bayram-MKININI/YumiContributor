@@ -91,6 +91,7 @@ class ReadOutboxMailFragment : AppCompatDialogFragment() {
     private fun collectFlows() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.getMessageEventsHelper.eventFlow.collectLatest { sharedEvent ->
+                readMailView?.activateLoading(false)
                 handleSharedEvent(sharedEvent)
                 redirectToLoginScreenFromSharedEvent(sharedEvent)
             }
@@ -98,9 +99,9 @@ class ReadOutboxMailFragment : AppCompatDialogFragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.getMessageEventsHelper.stateFlow.collect { vmState ->
                 when (vmState) {
-                    is ViewModelState.LoadingState -> readMailView?.setLoadingVisible(true)
+                    is ViewModelState.LoadingState -> readMailView?.activateLoading(true)
                     is ViewModelState.DataState -> vmState.data?.let { message ->
-                        readMailView?.setLoadingVisible(false)
+                        readMailView?.activateLoading(false)
                         bindViewToData(message)
                     }
                 }
