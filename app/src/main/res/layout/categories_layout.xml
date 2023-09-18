@@ -8,7 +8,7 @@
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmer_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         app:shimmer_auto_start="false"
         app:shimmer_base_alpha="1">
@@ -16,7 +16,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/shimmer_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:overScrollMode="never" />
     </com.facebook.shimmer.ShimmerFrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView

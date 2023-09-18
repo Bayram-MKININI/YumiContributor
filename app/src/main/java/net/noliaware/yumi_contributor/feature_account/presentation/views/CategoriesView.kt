@@ -126,7 +126,7 @@ class CategoriesView @JvmOverloads constructor(
         if (shimmerView.isVisible) {
             shimmerView.measure(
                 MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
-                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+                MeasureSpec.makeMeasureSpec(viewHeight, MeasureSpec.EXACTLY)
             )
         }
 

@@ -42,6 +42,7 @@ class AlertsFragment : Fragment() {
     private fun collectFlows() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             alertsView?.alertAdapter?.loadStateFlow?.collectLatest { loadState ->
+
                 val noAlertsLoaded = (alertsView?.alertAdapter?.itemCount ?: 0) < 1
                 when {
                     handlePaginationError(loadState) -> alertsView?.stopLoading()
