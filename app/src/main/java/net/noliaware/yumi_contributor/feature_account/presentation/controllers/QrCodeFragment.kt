@@ -1,42 +1,38 @@
 package net.noliaware.yumi_contributor.feature_account.presentation.controllers
 
 import android.content.DialogInterface
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.ApiParameters.VOUCHER_CODE_DATA
-import net.noliaware.yumi_contributor.commun.Args.CATEGORY_UI
 import net.noliaware.yumi_contributor.commun.DateTime.LONG_DATE_WITH_DAY_FORMAT
-import net.noliaware.yumi_contributor.commun.util.*
-import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherCodeData
+import net.noliaware.yumi_contributor.commun.FragmentKeys.QR_CODE_REQUEST_KEY
+import net.noliaware.yumi_contributor.commun.FragmentKeys.VOUCHER_ID_RESULT_KEY
+import net.noliaware.yumi_contributor.commun.util.ViewModelState
+import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
+import net.noliaware.yumi_contributor.commun.util.navDismiss
+import net.noliaware.yumi_contributor.commun.util.parseDateToFormat
+import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromSharedEvent
 import net.noliaware.yumi_contributor.feature_account.presentation.views.QrCodeView
-import net.noliaware.yumi_contributor.feature_account.presentation.views.QrCodeView.*
+import net.noliaware.yumi_contributor.feature_account.presentation.views.QrCodeView.QrCodeViewAdapter
+import net.noliaware.yumi_contributor.feature_account.presentation.views.QrCodeView.QrCodeViewCallback
 
 @AndroidEntryPoint
 class QrCodeFragment : AppCompatDialogFragment() {
 
-    companion object {
-        fun newInstance(
-            categoryUI: CategoryUI?,
-            voucherCodeData: VoucherCodeData
-        ) = QrCodeFragment().withArgs(
-            CATEGORY_UI to categoryUI,
-            VOUCHER_CODE_DATA to voucherCodeData
-        )
-    }
-
     private var qrCodeView: QrCodeView? = null
+    private val args: QrCodeFragmentArgs by navArgs()
     private val viewModel by viewModels<QrCodeFragmentViewModel>()
-    var handleDialogClosed: (() -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,11 +86,11 @@ class QrCodeFragment : AppCompatDialogFragment() {
     }
 
     private fun bindViewToData() {
-        viewModel.voucherCodeData?.let { voucherCodeData ->
+        args.voucherCodeData.let { voucherCodeData ->
             qrCodeView?.fillViewWithData(
                 QrCodeViewAdapter(
-                    color = viewModel.categoryUI?.categoryColor ?: Color.TRANSPARENT,
-                    iconName = viewModel.categoryUI?.categoryIcon,
+                    color = args.categoryUI.categoryColor,
+                    iconName = args.categoryUI.categoryIcon,
                     title = voucherCodeData.productLabel.orEmpty(),
                     creationDate = getString(
                         R.string.created_in,
@@ -102,9 +98,7 @@ class QrCodeFragment : AppCompatDialogFragment() {
                     ),
                     expiryDate = getString(
                         R.string.expiry_date_value,
-                        voucherCodeData.voucherExpiryDate?.parseDateToFormat(
-                            LONG_DATE_WITH_DAY_FORMAT
-                        )
+                        voucherCodeData.voucherExpiryDate?.parseDateToFormat(LONG_DATE_WITH_DAY_FORMAT)
                     )
                 )
             )
@@ -114,7 +108,7 @@ class QrCodeFragment : AppCompatDialogFragment() {
     private val qrCodeViewCallback: QrCodeViewCallback by lazy {
         object : QrCodeViewCallback {
             override fun onBackButtonClicked() {
-                dismissAllowingStateLoss()
+                navDismiss()
             }
 
             override fun onUseVoucherButtonClicked() {
@@ -127,13 +121,16 @@ class QrCodeFragment : AppCompatDialogFragment() {
         super.onDismiss(dialog)
         qrCodeView?.isQrCodeRevealed()?.let { isQrCodeRevealed ->
             if (isQrCodeRevealed) {
-                handleDialogClosed?.invoke()
+                setFragmentResult(
+                    QR_CODE_REQUEST_KEY,
+                    bundleOf(VOUCHER_ID_RESULT_KEY to viewModel.voucherCodeData?.voucherId)
+                )
             }
         }
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         qrCodeView = null
+        super.onDestroyView()
     }
 }

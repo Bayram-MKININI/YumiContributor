@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:keepScreenOn="true">
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -17,7 +18,7 @@
         android:id="@+id/header_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary" />
+        tools:background="@color/orange_1" />
 
     <include layout="@layout/back_layout" />
 
@@ -27,7 +28,8 @@
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:background="@drawable/circle_white"
-        android:padding="12dp" />
+        android:padding="12dp"
+        tools:src="@drawable/ic_food" />
 
     <net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView
         android:id="@+id/content_layout"
@@ -40,7 +42,8 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/omnes_semibold_regular"
             android:textColor="@color/grey_2"
-            android:textSize="19sp" />
+            android:textSize="19sp"
+            tools:text="Basiques légumes" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/created_text_view"
@@ -48,7 +51,8 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/omnes_light"
             android:textColor="@color/grey_2"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            tools:text="Crée le 13 mai 2023" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/expiry_date_text_view"
@@ -56,7 +60,8 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/omnes_light"
             android:textColor="@color/grey_2"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            tools:text="Valable jusqu'au mardi 07 novembre 2023" />
 
         <View
             android:id="@+id/qr_code_background"

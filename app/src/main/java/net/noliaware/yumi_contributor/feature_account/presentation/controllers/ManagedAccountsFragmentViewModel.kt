@@ -1,6 +1,5 @@
 package net.noliaware.yumi_contributor.feature_account.presentation.controllers
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
@@ -12,25 +11,21 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import net.noliaware.yumi_contributor.commun.Args.ACCOUNT_DATA
 import net.noliaware.yumi_contributor.commun.presentation.EventsHelper
 import net.noliaware.yumi_contributor.feature_account.domain.repository.ManagedAccountRepository
 import net.noliaware.yumi_contributor.feature_account.domain.model.ManagedAccount
 import net.noliaware.yumi_contributor.feature_account.domain.model.SelectableData
 import net.noliaware.yumi_contributor.feature_account.domain.model.SelectableData.AssignedData
 import net.noliaware.yumi_contributor.feature_account.domain.model.SelectableData.SelectedData
-import net.noliaware.yumi_contributor.feature_login.domain.model.AccountData
 import javax.inject.Inject
 
 @HiltViewModel
-class ManagedAccountFragmentViewModel @Inject constructor(
-    private val repository: ManagedAccountRepository,
-    private val savedStateHandle: SavedStateHandle
+class ManagedAccountsFragmentViewModel @Inject constructor(
+    private val repository: ManagedAccountRepository
 ) : ViewModel() {
 
-    val accountData get() = savedStateHandle.get<AccountData>(ACCOUNT_DATA)
     val getFilteredAccountEventsHelper = EventsHelper<ManagedAccount>()
-    val getUsersEventsHelper = EventsHelper<List<ManagedAccount>>()
+    val getUsersAutocompleteListEventsHelper = EventsHelper<List<ManagedAccount>>()
     val selectAccountEventsHelper = EventsHelper<String>()
     private val _managedAccountFlow: MutableStateFlow<SelectableData<ManagedAccount>> =
         MutableStateFlow(
@@ -42,11 +37,12 @@ class ManagedAccountFragmentViewModel @Inject constructor(
     val onBackEventFlow = _onBackEventFlow.asSharedFlow()
 
     init {
-        callGetAllUsers()
+        callGetAllAutocompleteUsers()
     }
 
     fun setInitManagedAccount(managedAccount: ManagedAccount) {
         _managedAccountFlow.value = AssignedData(managedAccount)
+        callSelectAccountForId(managedAccount.login)
     }
 
     fun setSelectedManagedAccount(managedAccount: ManagedAccount) {
@@ -59,10 +55,10 @@ class ManagedAccountFragmentViewModel @Inject constructor(
         is SelectedData -> selectedAccount.data
     }
 
-    private fun callGetAllUsers() {
+    private fun callGetAllAutocompleteUsers() {
         viewModelScope.launch {
             repository.getFilterUsers().onEach { result ->
-                getUsersEventsHelper.handleResponse(result)
+                getUsersAutocompleteListEventsHelper.handleResponse(result)
             }.launchIn(this)
         }
     }

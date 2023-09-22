@@ -9,34 +9,29 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.commun.presentation.EventsHelper
-import net.noliaware.yumi_contributor.feature_account.domain.repository.ManagedAccountRepository
 import net.noliaware.yumi_contributor.feature_account.domain.model.Category
+import net.noliaware.yumi_contributor.feature_account.domain.repository.ManagedAccountRepository
 import javax.inject.Inject
 
 @HiltViewModel
-class CategoriesFragmentViewModel @Inject constructor(
+class SelectedAccountFragmentViewModel @Inject constructor(
     private val repository: ManagedAccountRepository
 ) : ViewModel() {
 
     val availableCategoriesEventsHelper = EventsHelper<List<Category>>()
-    val usedCategoriesEventsHelper = EventsHelper<List<Category>>()
     val cancelledCategoriesEventsHelper = EventsHelper<List<Category>>()
+    val usedCategoriesEventsHelper = EventsHelper<List<Category>>()
 
-    private val _onDataRefreshedEventFlow = MutableSharedFlow<Unit>()
-    val onDataRefreshedEventFlow = _onDataRefreshedEventFlow.asSharedFlow()
+    private val _onAvailableCategoriesListRefreshedEventFlow = MutableSharedFlow<Unit>()
+    val onAvailableCategoriesListRefreshedEventFlow = _onAvailableCategoriesListRefreshedEventFlow.asSharedFlow()
+
+    private val _onUsedCategoriesListRefreshedEventFlow = MutableSharedFlow<Unit>()
+    val onUsedCategoriesListRefreshedEventFlow = _onUsedCategoriesListRefreshedEventFlow.asSharedFlow()
 
     fun callGetAvailableCategories() {
         viewModelScope.launch {
             repository.getAvailableCategories().onEach { result ->
                 availableCategoriesEventsHelper.handleResponse(result)
-            }.launchIn(this)
-        }
-    }
-
-    fun callGetUsedCategories() {
-        viewModelScope.launch {
-            repository.getUsedCategories().onEach { result ->
-                usedCategoriesEventsHelper.handleResponse(result)
             }.launchIn(this)
         }
     }
@@ -49,9 +44,20 @@ class CategoriesFragmentViewModel @Inject constructor(
         }
     }
 
-    fun sendDataRefreshedEvent() {
+    fun callGetUsedCategories() {
         viewModelScope.launch {
-            _onDataRefreshedEventFlow.emit(Unit)
+            repository.getUsedCategories().onEach { result ->
+                usedCategoriesEventsHelper.handleResponse(result)
+            }.launchIn(this)
+        }
+    }
+
+    fun sendCategoriesListsRefreshedEvent() {
+        viewModelScope.launch {
+            _onAvailableCategoriesListRefreshedEventFlow.emit(Unit)
+        }
+        viewModelScope.launch {
+            _onUsedCategoriesListRefreshedEventFlow.emit(Unit)
         }
     }
 }

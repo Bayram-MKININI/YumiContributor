@@ -1,7 +1,11 @@
 package net.noliaware.yumi_contributor.feature_login.domain.model
 
-import java.io.Serializable
+import android.os.Parcelable
+import androidx.annotation.Keep
+import kotlinx.parcelize.Parcelize
 
+@Keep
+@Parcelize
 data class AccountData(
     val privacyPolicyUrl: String = "",
     val shouldConfirmPrivacyPolicy: Boolean,
@@ -12,4 +16,4 @@ data class AccountData(
     val newAlertCount: Int = 0,
     val newMessageCount: Int = 0,
     val twoFactorAuthMode: TFAMode
-) : Serializable
+) : Parcelable

@@ -8,38 +8,29 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.Args.PRIVACY_POLICY_CONFIRMATION_REQUIRED
-import net.noliaware.yumi_contributor.commun.Args.PRIVACY_POLICY_URL
 import net.noliaware.yumi_contributor.commun.util.ViewModelState
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.isNetworkReachable
+import net.noliaware.yumi_contributor.commun.util.navDismiss
 import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromSharedEvent
-import net.noliaware.yumi_contributor.commun.util.withArgs
 import net.noliaware.yumi_contributor.feature_account.presentation.views.PrivacyPolicyView
+import net.noliaware.yumi_contributor.feature_account.presentation.views.PrivacyPolicyView.PrivacyPolicyViewCallback
 
 @AndroidEntryPoint
 class PrivacyPolicyFragment : AppCompatDialogFragment() {
 
-    companion object {
-        fun newInstance(
-            privacyPolicyUrl: String,
-            isConfirmationRequired: Boolean
-        ) = PrivacyPolicyFragment().withArgs(
-            PRIVACY_POLICY_URL to privacyPolicyUrl,
-            PRIVACY_POLICY_CONFIRMATION_REQUIRED to isConfirmationRequired
-        )
-    }
-
     private var privacyPolicyView: PrivacyPolicyView? = null
+    private val args: PrivacyPolicyFragmentArgs by navArgs()
     private val viewModel by viewModels<PrivacyPolicyViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.FullScreenDialogTheme)
-        isCancelable = !viewModel.privacyPolicyConfirmationRequired
+        isCancelable = !args.isPrivacyPolicyConfirmationRequired
     }
 
     override fun onCreateView(
@@ -47,11 +38,7 @@ class PrivacyPolicyFragment : AppCompatDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(
-            R.layout.privacy_policy_layout,
-            container,
-            false
-        ).apply {
+        return inflater.inflate(R.layout.privacy_policy_layout, container, false).apply {
             privacyPolicyView = this as PrivacyPolicyView
             privacyPolicyView?.callback = privacyPolicyViewCallback
         }
@@ -62,7 +49,7 @@ class PrivacyPolicyFragment : AppCompatDialogFragment() {
         collectFlows()
         if (isNetworkReachable(requireContext())) {
             privacyPolicyView?.showWebView()
-            privacyPolicyView?.loadURL(viewModel.privacyPolicyUrl)
+            privacyPolicyView?.loadURL(args.privacyPolicyUrl)
         } else {
             privacyPolicyView?.showOfflineMessage()
         }
@@ -81,7 +68,7 @@ class PrivacyPolicyFragment : AppCompatDialogFragment() {
                     is ViewModelState.LoadingState -> Unit
                     is ViewModelState.DataState -> vmState.data?.let { result ->
                         if (result) {
-                            dismiss()
+                            navDismiss()
                         }
                     }
                 }
@@ -89,18 +76,19 @@ class PrivacyPolicyFragment : AppCompatDialogFragment() {
         }
     }
 
-    private val privacyPolicyViewCallback: PrivacyPolicyView.PrivacyPolicyViewCallback by lazy {
-        PrivacyPolicyView.PrivacyPolicyViewCallback {
-            if (viewModel.privacyPolicyConfirmationRequired) {
+    private val privacyPolicyViewCallback: PrivacyPolicyViewCallback by lazy {
+        PrivacyPolicyViewCallback {
+            if (args.isPrivacyPolicyConfirmationRequired) {
                 viewModel.callUpdatePrivacyPolicyReadStatus()
             } else {
-                dismiss()
+                navDismiss()
             }
         }
     }
 
     override fun onDestroyView() {
         privacyPolicyView?.destroyWebPage()
+        privacyPolicyView = null
         super.onDestroyView()
     }
 }

@@ -9,18 +9,17 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.Args.CATEGORY
-import net.noliaware.yumi_contributor.commun.FragmentTags.VOUCHER_DETAILS_FRAGMENT_TAG
 import net.noliaware.yumi_contributor.commun.presentation.adapters.ListLoadStateAdapter
 import net.noliaware.yumi_contributor.commun.util.decorateText
 import net.noliaware.yumi_contributor.commun.util.getColorCompat
 import net.noliaware.yumi_contributor.commun.util.handlePaginationError
-import net.noliaware.yumi_contributor.commun.util.withArgs
-import net.noliaware.yumi_contributor.feature_account.domain.model.Category
+import net.noliaware.yumi_contributor.commun.util.navDismiss
 import net.noliaware.yumi_contributor.feature_account.presentation.adapters.VoucherAdapter
 import net.noliaware.yumi_contributor.feature_account.presentation.mappers.CancelledVoucherMapper
 import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersListView
@@ -30,13 +29,8 @@ import net.noliaware.yumi_contributor.feature_account.presentation.views.Voucher
 @AndroidEntryPoint
 class CancelledVouchersListFragment : AppCompatDialogFragment() {
 
-    companion object {
-        fun newInstance(
-            category: Category
-        ) = CancelledVouchersListFragment().withArgs(CATEGORY to category)
-    }
-
     private var vouchersListView: VouchersListView? = null
+    private val args: CancelledVouchersListFragmentArgs by navArgs()
     private val viewModel by viewModels<CancelledVouchersListFragmentViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,19 +47,17 @@ class CancelledVouchersListFragment : AppCompatDialogFragment() {
             vouchersListView = this as VouchersListView
             vouchersListView?.callback = vouchersListViewCallback
             vouchersListView?.voucherAdapter = VoucherAdapter(
-                color = viewModel.selectedCategory?.categoryColor ?: Color.TRANSPARENT,
+                color = args.selectedCategory.categoryColor,
                 voucherMapper = CancelledVoucherMapper()
             ) { voucher ->
-                VoucherDetailsFragment.newInstance(
-                    categoryUI = CategoryUI(
-                        categoryColor = viewModel.selectedCategory?.categoryColor,
-                        categoryIcon = viewModel.selectedCategory?.categoryIcon,
-                        categoryLabel = viewModel.selectedCategory?.categoryLabel
-                    ),
-                    voucherId = voucher.voucherId
-                ).show(
-                    childFragmentManager.beginTransaction(),
-                    VOUCHER_DETAILS_FRAGMENT_TAG
+                findNavController().navigate(
+                    CancelledVouchersListFragmentDirections.actionCancelledVouchersListFragmentToVoucherDetailsFragment(
+                        categoryUI = CategoryUI(
+                            categoryColor = args.selectedCategory.categoryColor,
+                            categoryIcon = args.selectedCategory.categoryIcon,
+                            categoryLabel = args.selectedCategory.categoryLabel
+                        ), voucherId = voucher.voucherId
+                    )
                 )
             }
         }
@@ -73,24 +65,28 @@ class CancelledVouchersListFragment : AppCompatDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setUpViewWithSelectedCategory()
+        vouchersListView?.setLoadingVisible(true)
+        collectFlows()
+    }
+
+    private fun setUpViewWithSelectedCategory() {
         val title = getString(
             R.string.cancelled_vouchers_list,
-            viewModel.selectedCategory?.categoryLabel.orEmpty()
+            args.selectedCategory.categoryLabel
         )
         vouchersListView?.fillViewWithData(
             VouchersListViewAdapter(
                 title = title.decorateText(
                     coloredText1 = getString(R.string.cancelled).lowercase(),
                     color1 = context?.getColorCompat(R.color.colorPrimary) ?: Color.TRANSPARENT,
-                    coloredText2 = viewModel.selectedCategory?.categoryLabel.orEmpty(),
-                    color2 = viewModel.selectedCategory?.categoryColor ?: Color.TRANSPARENT
+                    coloredText2 = args.selectedCategory.categoryLabel,
+                    color2 = args.selectedCategory.categoryColor
                 ),
-                color = viewModel.selectedCategory?.categoryColor ?: Color.TRANSPARENT,
-                iconName = viewModel.selectedCategory?.categoryIcon
+                color = args.selectedCategory.categoryColor,
+                iconName = args.selectedCategory.categoryIcon
             )
         )
-        vouchersListView?.setLoadingVisible(true)
-        collectFlows()
     }
 
     private fun collectFlows() {
@@ -117,12 +113,12 @@ class CancelledVouchersListFragment : AppCompatDialogFragment() {
 
     private val vouchersListViewCallback: VouchersListViewCallback by lazy {
         VouchersListViewCallback {
-            dismissAllowingStateLoss()
+            navDismiss()
         }
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         vouchersListView = null
+        super.onDestroyView()
     }
 }

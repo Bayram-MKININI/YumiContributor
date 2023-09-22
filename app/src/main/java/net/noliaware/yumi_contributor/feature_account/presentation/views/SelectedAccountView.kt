@@ -2,18 +2,20 @@ package net.noliaware.yumi_contributor.feature_account.presentation.views
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.presentation.views.ClipartTabView
+import net.noliaware.yumi_contributor.commun.presentation.views.FillableTextWidget
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
+import net.noliaware.yumi_contributor.commun.util.getColorCompat
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import net.noliaware.yumi_contributor.commun.util.removeOverScroll
-import net.noliaware.yumi_contributor.commun.util.weak
 
 class SelectedAccountView @JvmOverloads constructor(
     context: Context,
@@ -21,8 +23,7 @@ class SelectedAccountView @JvmOverloads constructor(
     defStyle: Int = 0
 ) : ViewGroup(context, attrs, defStyle) {
 
-    private lateinit var backLayout: View
-    private lateinit var titleTextView: TextView
+    private lateinit var titleFillableTextWidget: FillableTextWidget
     private lateinit var availableTabView: ClipartTabView
     private lateinit var usedTabView: ClipartTabView
     private lateinit var cancelledTabView: ClipartTabView
@@ -30,11 +31,6 @@ class SelectedAccountView @JvmOverloads constructor(
     private lateinit var viewPager: ViewPager2
 
     val getViewPager get() = viewPager
-    var callback: SelectedAccountViewCallback? by weak()
-
-    fun interface SelectedAccountViewCallback {
-        fun onBackButtonClicked()
-    }
 
     override fun onFinishInflate() {
         super.onFinishInflate()
@@ -42,9 +38,13 @@ class SelectedAccountView @JvmOverloads constructor(
     }
 
     private fun initView() {
-        backLayout = findViewById(R.id.back_layout)
-        backLayout.setOnClickListener { callback?.onBackButtonClicked() }
-        titleTextView = findViewById(R.id.title_text_view)
+        titleFillableTextWidget = findViewById(R.id.title_fillable_text_view)
+        titleFillableTextWidget.textView.apply {
+            typeface = ResourcesCompat.getFont(context, R.font.omnes_semibold_regular)
+            setTextColor(context.getColorCompat(R.color.grey_4))
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 22f)
+        }
+
         availableTabView = findViewById(R.id.available_tab_layout)
         availableTabView.setTitle(context.getString(R.string.available).uppercase())
         availableTabView.setOnClickListener {
@@ -78,7 +78,13 @@ class SelectedAccountView @JvmOverloads constructor(
     }
 
     fun setTitle(title: String) {
-        titleTextView.text = title
+        titleFillableTextWidget.setText(title)
+    }
+
+    fun setLoadingView() {
+        titleFillableTextWidget.resetText()
+        setFirstTabSelected()
+        viewPager.setCurrentItem(0, false)
     }
 
     private fun setFirstTabSelected() {
@@ -103,12 +109,10 @@ class SelectedAccountView @JvmOverloads constructor(
         val viewWidth = MeasureSpec.getSize(widthMeasureSpec)
         val viewHeight = MeasureSpec.getSize(heightMeasureSpec)
 
-        backLayout.measure(
-            MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(convertDpToPx(44), MeasureSpec.EXACTLY)
+        titleFillableTextWidget.measure(
+            MeasureSpec.makeMeasureSpec(viewWidth * 6 / 10, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(convertDpToPx(24), MeasureSpec.EXACTLY)
         )
-
-        titleTextView.measureWrapContent()
 
         availableTabView.measureWrapContent()
         usedTabView.measureWrapContent()
@@ -144,8 +148,8 @@ class SelectedAccountView @JvmOverloads constructor(
             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         )
 
-        val contentViewHeight = viewHeight - (backLayout.measuredHeight + titleTextView.measuredHeight + availableTabView.measuredHeight
-                    + sideMargin + convertDpToPx(25))
+        val contentViewHeight = viewHeight - (titleFillableTextWidget.measuredHeight + availableTabView.measuredHeight
+                    + sideMargin + convertDpToPx(15))
 
         contentView.measure(
             MeasureSpec.makeMeasureSpec(contentViewWidth, MeasureSpec.EXACTLY),
@@ -167,17 +171,15 @@ class SelectedAccountView @JvmOverloads constructor(
         val viewWidth = right - left
         val viewHeight = bottom - top
 
-        backLayout.layoutToTopLeft(0, 0)
-
-        titleTextView.layoutToTopLeft(
-            (viewWidth - titleTextView.measuredWidth) / 2,
-            backLayout.bottom + convertDpToPx(10)
+        titleFillableTextWidget.layoutToTopLeft(
+            (viewWidth - titleFillableTextWidget.measuredWidth) / 2,
+            0
         )
 
         val contentViewLeft = (viewWidth - contentView.measuredWidth) / 2
         availableTabView.layoutToTopLeft(
             contentViewLeft,
-            titleTextView.bottom + convertDpToPx(15)
+            titleFillableTextWidget.bottom + convertDpToPx(15)
         )
 
         usedTabView.layoutToTopLeft(

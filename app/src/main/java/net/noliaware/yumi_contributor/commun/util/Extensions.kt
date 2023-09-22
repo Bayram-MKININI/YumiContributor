@@ -35,6 +35,8 @@ import androidx.core.os.bundleOf
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.PagingSource
@@ -61,7 +63,6 @@ import net.noliaware.yumi_contributor.commun.data.remote.dto.ErrorDTO
 import net.noliaware.yumi_contributor.commun.data.remote.dto.SessionDTO
 import net.noliaware.yumi_contributor.commun.domain.model.AppMessageType
 import net.noliaware.yumi_contributor.commun.domain.model.SessionData
-import net.noliaware.yumi_contributor.feature_login.presentation.controllers.LoginActivity
 import retrofit2.HttpException
 import java.io.IOException
 import java.io.Serializable
@@ -284,12 +285,14 @@ fun Fragment.handlePaginationError(loadState: CombinedLoadStates): Boolean {
     return false
 }
 
+fun Fragment.navDismiss() {
+    findNavController().navigateUp()
+}
+
 private fun Fragment.redirectToLoginScreenInternal() {
-    startActivity(
-        Intent(requireActivity(), LoginActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
-    )
+    (activity?.supportFragmentManager?.findFragmentById(
+        R.id.app_nav_host_fragment
+    ) as? NavHostFragment)?.findNavController()?.setGraph(R.navigation.app_nav_graph)
 }
 
 fun <T : Serializable?> Bundle.getSerializableCompat(key: String, clazz: Class<T>): T? =
@@ -299,17 +302,6 @@ fun <T : Serializable?> Bundle.getSerializableCompat(key: String, clazz: Class<T
         @Suppress("DEPRECATION")
         (getSerializable(key) as T)
     }
-
-inline fun <reified T : Serializable> Intent.getSerializableExtraCompat(key: String): T? =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        getSerializableExtra(key, T::class.java)
-    } else {
-        @Suppress("DEPRECATION")
-        getSerializableExtra(key) as? T
-    }
-
-fun <T : Fragment> T.withArgs(vararg pairs: Pair<String, Any?>) =
-    apply { arguments = bundleOf(*pairs) }
 
 fun ViewGroup.inflate(
     layoutRes: Int,

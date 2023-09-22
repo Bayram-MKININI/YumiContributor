@@ -1,33 +1,36 @@
 package net.noliaware.yumi_contributor.feature_account.presentation.controllers
 
 import android.content.DialogInterface
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.merge
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.ApiParameters.VOUCHER_ID
-import net.noliaware.yumi_contributor.commun.Args.CATEGORY_UI
 import net.noliaware.yumi_contributor.commun.DateTime.HOURS_TIME_FORMAT
 import net.noliaware.yumi_contributor.commun.DateTime.SHORT_DATE_FORMAT
-import net.noliaware.yumi_contributor.commun.FragmentTags.QR_CODE_FRAGMENT_TAG
+import net.noliaware.yumi_contributor.commun.FragmentKeys.QR_CODE_REQUEST_KEY
+import net.noliaware.yumi_contributor.commun.FragmentKeys.VOUCHER_DETAILS_REQUEST_KEY
+import net.noliaware.yumi_contributor.commun.FragmentKeys.VOUCHER_ID_RESULT_KEY
 import net.noliaware.yumi_contributor.commun.util.ViewModelState
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.makeCall
+import net.noliaware.yumi_contributor.commun.util.navDismiss
 import net.noliaware.yumi_contributor.commun.util.openMap
 import net.noliaware.yumi_contributor.commun.util.openWebPage
 import net.noliaware.yumi_contributor.commun.util.parseDateToFormat
 import net.noliaware.yumi_contributor.commun.util.parseTimeToFormat
 import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromSharedEvent
-import net.noliaware.yumi_contributor.commun.util.withArgs
 import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherCodeData
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStateData
@@ -43,19 +46,9 @@ import net.noliaware.yumi_contributor.feature_account.presentation.views.Voucher
 @AndroidEntryPoint
 class VoucherDetailsFragment : AppCompatDialogFragment() {
 
-    companion object {
-        fun newInstance(
-            categoryUI: CategoryUI,
-            voucherId: String
-        ) = VoucherDetailsFragment().withArgs(
-            CATEGORY_UI to categoryUI,
-            VOUCHER_ID to voucherId
-        )
-    }
-
     private var vouchersDetailsContainerView: VouchersDetailsContainerView? = null
+    private val args: VoucherDetailsFragmentArgs by navArgs()
     private val viewModel by viewModels<VoucherDetailsFragmentViewModel>()
-    var onDataRefreshed: (() -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,11 +68,22 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setUpFragmentListener()
         collectFlows()
         vouchersDetailsContainerView?.setUpViewLook(
-            color = viewModel.categoryUI?.categoryColor ?: Color.TRANSPARENT,
-            iconName = viewModel.categoryUI?.categoryIcon
+            color = args.categoryUI.categoryColor,
+            iconName = args.categoryUI.categoryIcon
         )
+    }
+
+    private fun setUpFragmentListener() {
+        setFragmentResultListener(
+            QR_CODE_REQUEST_KEY
+        ) { _, bundle ->
+            bundle.getString(VOUCHER_ID_RESULT_KEY)?.let { voucherId ->
+                viewModel.callGetVoucherStatusById(voucherId)
+            }
+        }
     }
 
     private fun collectFlows() {
@@ -108,13 +112,13 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
         }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.getVoucherStateDataEventsHelper.stateFlow.collect { vmState ->
-                    when (vmState) {
-                        is ViewModelState.LoadingState -> Unit
-                        is ViewModelState.DataState -> vmState.data?.let { voucherStateData ->
-                            handleVoucherStateDataUpdated(voucherStateData)
-                        }
+                when (vmState) {
+                    is ViewModelState.LoadingState -> Unit
+                    is ViewModelState.DataState -> vmState.data?.let { voucherStateData ->
+                        handleVoucherStateDataUpdated(voucherStateData)
                     }
                 }
+            }
         }
     }
 
@@ -151,23 +155,25 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
         )
     }
 
-    private fun mapVoucherEndDate(voucher: Voucher) =
-        when (voucher.voucherStatus) {
-            USABLE -> getString(
-                R.string.expiry_date_value, voucher.voucherExpiryDate?.parseDateToFormat(SHORT_DATE_FORMAT)
-            )
-            CONSUMED -> getString(
-                R.string.usage_date_value,
-                voucher.voucherUseDate?.parseDateToFormat(SHORT_DATE_FORMAT),
-                voucher.voucherUseTime?.parseTimeToFormat(HOURS_TIME_FORMAT)
-            )
-            CANCELLED -> getString(
-                R.string.cancellation_date_value,
-                voucher.voucherUseDate?.parseTimeToFormat(SHORT_DATE_FORMAT),
-                voucher.voucherUseTime?.parseTimeToFormat(HOURS_TIME_FORMAT)
-            )
-            else -> ""
-        }
+    private fun mapVoucherEndDate(
+        voucher: Voucher
+    ) = when (voucher.voucherStatus) {
+        USABLE -> getString(
+            R.string.expiry_date_value,
+            voucher.voucherExpiryDate?.parseDateToFormat(SHORT_DATE_FORMAT)
+        )
+        CONSUMED -> getString(
+            R.string.usage_date_value,
+            voucher.voucherUseDate?.parseDateToFormat(SHORT_DATE_FORMAT),
+            voucher.voucherUseTime?.parseTimeToFormat(HOURS_TIME_FORMAT)
+        )
+        CANCELLED -> getString(
+            R.string.cancellation_date_value,
+            voucher.voucherUseDate?.parseDateToFormat(SHORT_DATE_FORMAT),
+            voucher.voucherUseTime?.parseTimeToFormat(HOURS_TIME_FORMAT)
+        )
+        else -> ""
+    }
 
     private fun mapVoucherStatus(voucherStatus: VoucherStatus?) =
         when (voucherStatus) {
@@ -189,7 +195,7 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
     private val vouchersDetailsViewCallback: VouchersDetailsViewCallback by lazy {
         object : VouchersDetailsViewCallback {
             override fun onBackButtonClicked() {
-                dismissAllowingStateLoss()
+                navDismiss()
             }
 
             override fun onPartnerInfoClicked() {
@@ -219,25 +225,18 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
 
             override fun onDisplayVoucherButtonClicked() {
                 viewModel.getVoucherEventsHelper.stateData?.let { voucher ->
-                    QrCodeFragment.newInstance(
-                        viewModel.categoryUI,
-                        VoucherCodeData(
-                            voucherId = voucher.voucherId,
-                            productLabel = voucher.productLabel,
-                            voucherDate = voucher.voucherDate,
-                            voucherExpiryDate = voucher.voucherExpiryDate,
-                            voucherCode = voucher.voucherCode,
-                            voucherCodeSize = resources.displayMetrics.widthPixels
+                    findNavController().navigate(
+                        VoucherDetailsFragmentDirections.actionVoucherDetailsFragmentToQrCodeFragment(
+                            args.categoryUI,
+                            VoucherCodeData(
+                                voucherId = voucher.voucherId,
+                                productLabel = voucher.productLabel,
+                                voucherDate = voucher.voucherDate,
+                                voucherExpiryDate = voucher.voucherExpiryDate,
+                                voucherCode = voucher.voucherCode,
+                                voucherCodeSize = resources.displayMetrics.widthPixels
+                            )
                         )
-                    ).apply {
-                        handleDialogClosed = {
-                            viewModel.getVoucherEventsHelper.stateData?.voucherId?.let {
-                                viewModel.callGetVoucherStatusById(it)
-                            }
-                        }
-                    }.show(
-                        childFragmentManager.beginTransaction(),
-                        QR_CODE_FRAGMENT_TAG
                     )
                 }
             }
@@ -248,13 +247,16 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
         super.onDismiss(dialog)
         viewModel.getVoucherStateDataEventsHelper.stateData?.let { voucherStateData ->
             if (voucherStateData.voucherStatus == CONSUMED) {
-                onDataRefreshed?.invoke()
+                setFragmentResult(
+                    VOUCHER_DETAILS_REQUEST_KEY,
+                    bundleOf()
+                )
             }
         }
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         vouchersDetailsContainerView = null
+        super.onDestroyView()
     }
 }

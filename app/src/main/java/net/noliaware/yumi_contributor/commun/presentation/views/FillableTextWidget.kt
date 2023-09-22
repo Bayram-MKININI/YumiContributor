@@ -39,6 +39,12 @@ class FillableTextWidget @JvmOverloads constructor(
         textView.isVisible = true
     }
 
+    fun resetText() {
+        textView.text = ""
+        textView.isGone = true
+        placeholderView.isVisible = true
+    }
+
     fun setFixedWidth(fixed: Boolean) {
         isFixedWidth = fixed
     }

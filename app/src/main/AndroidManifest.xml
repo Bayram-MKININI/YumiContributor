@@ -23,8 +23,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/Theme.YumiContributor">
         <activity
-            android:name=".feature_login.presentation.controllers.LoginActivity"
+            android:name=".feature_login.presentation.controllers.MainActivity"
             android:exported="true"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.SplashScreenTheme">
             <intent-filter>
@@ -32,12 +33,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".feature_account.presentation.controllers.MainActivity"
-            android:exported="false"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.YumiContributor.NoActionBar" />
 
         <service
             android:name=".PushMessagingService"

@@ -49,6 +49,7 @@ object ApiParameters {
     const val TOKEN = "token"
     const val USER_ID = "userId"
     const val SELECTED_USER = "selectedUser"
+    const val CATEGORY_ID = "categoryId"
     const val VOUCHER_ID = "voucherId"
     const val VOUCHER_CODE_DATA = "voucherCodeData"
     const val LIMIT = "limit"
@@ -57,21 +58,13 @@ object ApiParameters {
     const val MESSAGE_ID = "messageId"
     const val MESSAGE_PRIORITY = "messagePriority"
     const val MESSAGE_SUBJECT_ID = "messageSubjectId"
-    const val MESSAGE_SUBJECTS_DATA = "message_subjects_data"
     const val MESSAGE_BODY = "messageBody"
-    const val MESSAGE = "message"
     const val TIMESTAMP_OFFSET = "timestampOffset"
 }
 
 object Args {
-    const val ACCOUNT_DATA = "account_data"
-    const val PRIVACY_POLICY_URL = "privacy_policy_url"
-    const val PRIVACY_POLICY_CONFIRMATION_REQUIRED = "privacy_policy_confirmation_required"
-    const val MANAGED_ACCOUNT = "managed_account"
-    const val CATEGORY_ID = "categoryId"
-    const val CATEGORY = "category"
-    const val CATEGORY_UI = "categoryUI"
-
+    const val MANAGED_ACCOUNT = "managedAccount"
+    const val SELECTED_CATEGORY = "selectedCategory"
     const val DATA_SHOULD_REFRESH = "dataShouldRefresh"
 }
 
@@ -100,16 +93,13 @@ object RemoteConfig {
     const val KEY_FORCE_UPDATE_URL = "android_force_update_store_url"
 }
 
-object FragmentTags {
-    const val PRIVACY_POLICY_FRAGMENT_TAG = "privacy_policy_fragment"
-    const val BO_SIGN_IN_FRAGMENT_TAG = "bo_sign_in_fragment"
-    const val AVAILABLE_VOUCHERS_LIST_FRAGMENT_TAG = "available_vouchers_list_fragment"
-    const val USED_VOUCHERS_LIST_FRAGMENT_TAG = "used_vouchers_list_fragment"
-    const val CANCELLED_VOUCHERS_LIST_FRAGMENT_TAG = "cancelled_vouchers_list_fragment"
-    const val VOUCHER_DETAILS_FRAGMENT_TAG = "voucher_details_fragment"
-    const val QR_CODE_FRAGMENT_TAG = "qr_code_fragment"
-    const val READ_MESSAGE_FRAGMENT_TAG = "read_message_fragment"
-    const val SEND_MESSAGES_FRAGMENT_TAG = "send_messages_fragment"
+object FragmentKeys {
+    const val AVAILABLE_VOUCHERS_LIST_REQUEST_KEY = "available_vouchers_list_request_key"
+    const val VOUCHER_DETAILS_REQUEST_KEY = "voucher_details_request_key"
+    const val QR_CODE_REQUEST_KEY = "qr_code_request_key"
+    const val VOUCHER_ID_RESULT_KEY = "voucher_id_result_key"
+    const val REFRESH_RECEIVED_MESSAGES_REQUEST_KEY = "refresh_received_message_request_key"
+    const val REFRESH_SENT_MESSAGES_REQUEST_KEY = "refresh_sent_message_request_key"
 }
 
 object UI {

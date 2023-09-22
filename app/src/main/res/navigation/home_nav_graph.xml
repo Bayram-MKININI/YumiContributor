@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_nav_graph"
+    app:startDestination="@id/managed_account_fragment">
+
+    <fragment
+        android:id="@+id/managed_account_fragment"
+        android:name="net.noliaware.yumi_contributor.feature_account.presentation.controllers.ManagedAccountsFragment"
+        android:label="@string/managed_account_screen_label"
+        tools:layout="@layout/managed_accounts_layout">
+        <argument
+            android:name="accountData"
+            app:argType="net.noliaware.yumi_contributor.feature_login.domain.model.AccountData" />
+        <argument
+            android:name="managedAccount"
+            android:defaultValue="@null"
+            app:argType="net.noliaware.yumi_contributor.feature_account.domain.model.ManagedAccount"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_CategoriesFragment_to_AvailableVouchersListFragment"
+            app:destination="@id/available_vouchers_list_fragment" />
+        <action
+            android:id="@+id/action_CategoriesFragment_to_UsedVouchersListFragment"
+            app:destination="@id/used_vouchers_list_fragment" />
+        <action
+            android:id="@+id/action_CategoriesFragment_to_CancelledVouchersListFragment"
+            app:destination="@id/cancelled_vouchers_list_fragment" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/available_vouchers_list_fragment"
+        android:name="net.noliaware.yumi_contributor.feature_account.presentation.controllers.AvailableVouchersListFragment"
+        android:label="@string/available_vouchers_list_fragment_screen_label"
+        tools:layout="@layout/vouchers_list_layout">
+        <argument
+            android:name="selectedCategory"
+            app:argType="net.noliaware.yumi_contributor.feature_account.domain.model.Category" />
+        <action
+            android:id="@+id/action_AvailableVouchersListFragment_to_VoucherDetailsFragment"
+            app:destination="@id/voucher_detail_fragment" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/used_vouchers_list_fragment"
+        android:name="net.noliaware.yumi_contributor.feature_account.presentation.controllers.UsedVouchersListFragment"
+        android:label="@string/used_vouchers_list_fragment_screen_label"
+        tools:layout="@layout/vouchers_list_layout">
+        <argument
+            android:name="selectedCategory"
+            app:argType="net.noliaware.yumi_contributor.feature_account.domain.model.Category" />
+        <action
+            android:id="@+id/action_UsedVouchersListFragment_to_VoucherDetailsFragment"
+            app:destination="@id/voucher_detail_fragment" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/cancelled_vouchers_list_fragment"
+        android:name="net.noliaware.yumi_contributor.feature_account.presentation.controllers.CancelledVouchersListFragment"
+        android:label="@string/cancelled_vouchers_list_fragment_screen_label"
+        tools:layout="@layout/vouchers_list_layout">
+        <argument
+            android:name="selectedCategory"
+            app:argType="net.noliaware.yumi_contributor.feature_account.domain.model.Category" />
+        <action
+            android:id="@+id/action_CancelledVouchersListFragment_to_VoucherDetailsFragment"
+            app:destination="@id/voucher_detail_fragment" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/voucher_detail_fragment"
+        android:name="net.noliaware.yumi_contributor.feature_account.presentation.controllers.VoucherDetailsFragment"
+        android:label="@string/voucher_details_fragment_screen_label"
+        tools:layout="@layout/vouchers_details_layout">
+        <argument
+            android:name="categoryUI"
+            app:argType="net.noliaware.yumi_contributor.feature_account.presentation.controllers.CategoryUI" />
+        <argument
+            android:name="voucherId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_VoucherDetailsFragment_to_QrCodeFragment"
+            app:destination="@id/qr_code_fragment" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/qr_code_fragment"
+        android:name="net.noliaware.yumi_contributor.feature_account.presentation.controllers.QrCodeFragment"
+        android:label="@string/qr_code_fragment_screen_label"
+        tools:layout="@layout/qr_code_layout">
+        <argument
+            android:name="categoryUI"
+            app:argType="net.noliaware.yumi_contributor.feature_account.presentation.controllers.CategoryUI" />
+        <argument
+            android:name="voucherCodeData"
+            app:argType="net.noliaware.yumi_contributor.feature_account.domain.model.VoucherCodeData" />
+    </dialog>
+
+    <fragment
+        android:id="@+id/user_profile_fragment"
+        android:name="net.noliaware.yumi_contributor.feature_profile.presentation.controllers.UserProfileFragment"
+        android:label="@string/user_profile_fragment_screen_label"
+        tools:layout="@layout/profile_layout">
+        <argument
+            android:name="accountData"
+            app:argType="net.noliaware.yumi_contributor.feature_login.domain.model.AccountData" />
+        <action
+            android:id="@+id/action_UserProfileFragment_to_BOSignInFragment"
+            app:destination="@id/bo_sign_in_fragment" />
+        <action
+            android:id="@+id/action_UserProfileFragment_to_PrivacyPolicyFragment"
+            app:destination="@id/privacy_policy_fragment" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/bo_sign_in_fragment"
+        android:name="net.noliaware.yumi_contributor.feature_profile.presentation.controllers.BOSignInFragment"
+        android:label="@string/bo_sign_in_fragment_screen_label"
+        tools:layout="@layout/bo_sign_in_layout" />
+
+    <dialog
+        android:id="@+id/privacy_policy_fragment"
+        android:name="net.noliaware.yumi_contributor.feature_account.presentation.controllers.PrivacyPolicyFragment"
+        android:label="@string/privacy_policy_fragment_screen_label"
+        tools:layout="@layout/privacy_policy_layout">
+        <argument
+            android:name="privacyPolicyUrl"
+            app:argType="string" />
+        <argument
+            android:name="isPrivacyPolicyConfirmationRequired"
+            app:argType="boolean" />
+    </dialog>
+
+    <fragment
+        android:id="@+id/messaging_fragment"
+        android:name="net.noliaware.yumi_contributor.feature_message.presentation.controllers.MessagingFragment"
+        android:label="@string/messaging_fragment_screen_label"
+        tools:layout="@layout/messaging_layout">
+        <argument
+            android:name="subjects"
+            app:argType="net.noliaware.yumi_contributor.feature_login.domain.model.MessageSubject[]" />
+        <action
+            android:id="@+id/action_MessagingFragment_to_SendMailFragment"
+            app:destination="@id/send_mail_fragment" />
+        <action
+            android:id="@+id/action_MessagingFragment_to_ReadInboxMailFragment"
+            app:destination="@id/read_inbox_mail_fragment" />
+        <action
+            android:id="@+id/action_MessagingFragment_to_ReadOutboxMailFragment"
+            app:destination="@id/read_outbox_mail_fragment" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/send_mail_fragment"
+        android:name="net.noliaware.yumi_contributor.feature_message.presentation.controllers.SendMailFragment"
+        android:label="@string/send_mail_fragment_screen_label"
+        tools:layout="@layout/send_mail_layout">
+        <argument
+            android:name="subjects"
+            android:defaultValue="@null"
+            app:argType="net.noliaware.yumi_contributor.feature_login.domain.model.MessageSubject[]"
+            app:nullable="true" />
+        <argument
+            android:name="message"
+            android:defaultValue="@null"
+            app:argType="net.noliaware.yumi_contributor.feature_message.domain.model.Message"
+            app:nullable="true" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/read_inbox_mail_fragment"
+        android:name="net.noliaware.yumi_contributor.feature_message.presentation.controllers.ReadInboxMailFragment"
+        android:label="@string/read_mail_inbox_fragment_screen_label"
+        tools:layout="@layout/read_mail_layout">
+        <argument
+            android:name="messageId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_ReadInboxMailFragment_to_SendMailFragment"
+            app:destination="@id/send_mail_fragment" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/read_outbox_mail_fragment"
+        android:name="net.noliaware.yumi_contributor.feature_message.presentation.controllers.ReadOutboxMailFragment"
+        android:label="@string/read_mail_outbox_fragment_screen_label"
+        tools:layout="@layout/read_mail_layout">
+        <argument
+            android:name="messageId"
+            app:argType="string" />
+    </dialog>
+
+    <fragment
+        android:id="@+id/alerts_fragment"
+        android:name="net.noliaware.yumi_contributor.feature_alerts.presentation.controllers.AlertsFragment"
+        android:label="@string/alerts_fragment_screen_label"
+        tools:layout="@layout/alerts_layout" />
+</navigation>

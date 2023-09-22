@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.FragmentTags.READ_MESSAGE_FRAGMENT_TAG
 import net.noliaware.yumi_contributor.commun.presentation.adapters.ListLoadStateAdapter
 import net.noliaware.yumi_contributor.commun.util.handlePaginationError
 import net.noliaware.yumi_contributor.feature_message.presentation.adapters.MessageAdapter
@@ -21,7 +21,11 @@ import net.noliaware.yumi_contributor.feature_message.presentation.views.Message
 class ReceivedMessagesFragment : Fragment() {
 
     private var messagesListView: MessagesListView? = null
-    private val viewModel by viewModels<ReceivedMessagesFragmentViewModel>()
+    private val viewModel by viewModels<MessagingFragmentViewModel>(
+        ownerProducer = {
+            requireParentFragment()
+        }
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,15 +35,10 @@ class ReceivedMessagesFragment : Fragment() {
         return inflater.inflate(R.layout.messages_list_layout, container, false).apply {
             messagesListView = this as MessagesListView
             messagesListView?.messageAdapter = MessageAdapter { message ->
-                ReadInboxMailFragment.newInstance(
-                    message.messageId
-                ).apply {
-                    onReceivedMessageListRefreshed = {
-                        messagesListView?.messageAdapter?.refresh()
-                    }
-                }.show(
-                    childFragmentManager.beginTransaction(),
-                    READ_MESSAGE_FRAGMENT_TAG
+                findNavController().navigate(
+                    MessagingFragmentDirections.actionMessagingFragmentToReadInboxMailFragment(
+                        message.messageId
+                    )
                 )
             }
         }
@@ -52,6 +51,11 @@ class ReceivedMessagesFragment : Fragment() {
     }
 
     private fun collectFlows() {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.onReceivedListRefreshedEventFlow.collectLatest {
+                messagesListView?.messageAdapter?.refresh()
+            }
+        }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             messagesListView?.messageAdapter?.loadStateFlow?.collectLatest { loadState ->
 
@@ -68,7 +72,7 @@ class ReceivedMessagesFragment : Fragment() {
             }
         }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.getMessages().collectLatest {
+            viewModel.getReceivedMessages().collectLatest {
                 messagesListView?.messageAdapter?.withLoadStateFooter(
                     footer = ListLoadStateAdapter()
                 )

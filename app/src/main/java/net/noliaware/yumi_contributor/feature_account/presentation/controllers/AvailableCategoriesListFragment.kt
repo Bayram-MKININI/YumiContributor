@@ -5,63 +5,67 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.FragmentTags.USED_VOUCHERS_LIST_FRAGMENT_TAG
 import net.noliaware.yumi_contributor.commun.util.ViewModelState
 import net.noliaware.yumi_contributor.commun.util.formatNumber
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromSharedEvent
 import net.noliaware.yumi_contributor.feature_account.domain.model.Category
-import net.noliaware.yumi_contributor.feature_account.presentation.views.CategoriesView
-import net.noliaware.yumi_contributor.feature_account.presentation.views.CategoriesView.CategoriesViewCallback
-import net.noliaware.yumi_contributor.feature_account.presentation.views.CategoryItemView.CategoryItemViewAdapter
+import net.noliaware.yumi_contributor.feature_account.presentation.views.CategoriesListView
+import net.noliaware.yumi_contributor.feature_account.presentation.views.CategoriesListView.*
+import net.noliaware.yumi_contributor.feature_account.presentation.views.CategoryItemView.*
 
 @AndroidEntryPoint
-class UsedCategoriesFragment : Fragment() {
+class AvailableCategoriesListFragment : Fragment() {
 
-    private var categoriesView: CategoriesView? = null
-    private val viewModel by activityViewModels<CategoriesFragmentViewModel>()
+    private var categoriesListView: CategoriesListView? = null
+    private val viewModel by viewModels<SelectedAccountFragmentViewModel>(
+        ownerProducer = {
+            requireParentFragment()
+        }
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.categories_layout, container, false).apply {
-            categoriesView = this as CategoriesView
-            categoriesView?.callback = categoriesViewCallback
+        return inflater.inflate(R.layout.categories_list_layout, container, false).apply {
+            categoriesListView = this as CategoriesListView
+            categoriesListView?.callback = categoriesListViewCallback
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         collectFlows()
-        viewModel.callGetUsedCategories()
+        viewModel.callGetAvailableCategories()
     }
 
     private fun collectFlows() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.onDataRefreshedEventFlow.collectLatest {
-                viewModel.callGetUsedCategories()
+            viewModel.onAvailableCategoriesListRefreshedEventFlow.collectLatest {
+                viewModel.callGetAvailableCategories()
             }
         }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.usedCategoriesEventsHelper.eventFlow.collectLatest { sharedEvent ->
-                categoriesView?.stopLoading()
+            viewModel.availableCategoriesEventsHelper.eventFlow.collectLatest { sharedEvent ->
+                categoriesListView?.stopLoading()
                 handleSharedEvent(sharedEvent)
                 redirectToLoginScreenFromSharedEvent(sharedEvent)
             }
         }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.usedCategoriesEventsHelper.stateFlow.collect { vmState ->
+            viewModel.availableCategoriesEventsHelper.stateFlow.collect { vmState ->
                 when (vmState) {
-                    is ViewModelState.LoadingState -> categoriesView?.setLoadingVisible(true)
+                    is ViewModelState.LoadingState -> categoriesListView?.setLoadingVisible(true)
                     is ViewModelState.DataState -> vmState.data?.let { categories ->
-                        categoriesView?.setLoadingVisible(false)
+                        categoriesListView?.setLoadingVisible(false)
                         bindViewToData(categories)
                     }
                 }
@@ -73,25 +77,24 @@ class UsedCategoriesFragment : Fragment() {
         val categoryItemViewAdapters = mutableListOf<CategoryItemViewAdapter>()
         categories.map { category ->
             CategoryItemViewAdapter(
-                count = category.usedVoucherCount.formatNumber(),
+                count = category.availableVoucherCount.formatNumber(),
                 iconName = category.categoryIcon.orEmpty(),
                 title = category.categoryShortLabel
             ).also {
                 categoryItemViewAdapters.add(it)
             }
         }
-        categoriesView?.fillViewWithData(categoryItemViewAdapters)
+        categoriesListView?.fillViewWithData(categoryItemViewAdapters)
     }
 
-    private val categoriesViewCallback: CategoriesViewCallback by lazy {
-        CategoriesViewCallback { index ->
-            viewModel.usedCategoriesEventsHelper.stateData?.let { categories ->
+    private val categoriesListViewCallback: CategoriesListViewCallback by lazy {
+        CategoriesListViewCallback { index ->
+            viewModel.availableCategoriesEventsHelper.stateData?.let { categories ->
                 categories[index].apply {
-                    UsedVouchersListFragment.newInstance(
-                        this
-                    ).show(
-                        childFragmentManager.beginTransaction(),
-                        USED_VOUCHERS_LIST_FRAGMENT_TAG
+                    findNavController().navigate(
+                        ManagedAccountsFragmentDirections.actionCategoriesFragmentToAvailableVouchersListFragment(
+                            this
+                        )
                     )
                 }
             }
@@ -99,7 +102,7 @@ class UsedCategoriesFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        categoriesView = null
+        categoriesListView = null
         super.onDestroyView()
     }
 }

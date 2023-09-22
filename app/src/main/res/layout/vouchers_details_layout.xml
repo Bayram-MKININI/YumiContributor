@@ -17,7 +17,8 @@
     <View
         android:id="@+id/header_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        tools:background="@color/orange_1" />
 
     <include layout="@layout/back_layout" />
 
@@ -27,7 +28,8 @@
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:background="@drawable/circle_white"
-        android:padding="12dp" />
+        android:padding="12dp"
+        tools:src="@drawable/ic_food" />
 
     <net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView
         android:id="@+id/parent_content_layout"
@@ -163,9 +165,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/omnes_regular"
-                        tools:text="7 Boulevard Leon Kennedy\n63000 Puy-de-Dome"
                         android:textColor="@color/grey_2"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        tools:text="7 Boulevard Leon Kennedy\n63000 Puy-de-Dome" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/phone_image_view"

@@ -2,6 +2,7 @@
 <net.noliaware.yumi_contributor.feature_account.presentation.views.HomeView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -14,7 +15,8 @@
         android:src="@drawable/ic_view_background" />
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/main_fragment_container"
+        android:id="@+id/home_nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -62,7 +64,9 @@
             android:paddingVertical="2dp"
             android:textColor="@android:color/black"
             android:textSize="13sp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:text="12"
+            tools:visibility="visible" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/notification_image_view"
@@ -85,7 +89,9 @@
             android:paddingVertical="2dp"
             android:textColor="@android:color/black"
             android:textSize="13sp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:text="12"
+            tools:visibility="visible" />
 
     </net.noliaware.yumi_contributor.feature_account.presentation.views.HomeMenuView>
 </net.noliaware.yumi_contributor.feature_account.presentation.views.HomeView>

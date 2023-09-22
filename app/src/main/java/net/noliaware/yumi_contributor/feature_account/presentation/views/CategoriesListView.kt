@@ -19,7 +19,7 @@ import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.weak
 import net.noliaware.yumi_contributor.feature_account.presentation.views.CategoryItemView.*
 
-class CategoriesView @JvmOverloads constructor(
+class CategoriesListView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
@@ -29,9 +29,9 @@ class CategoriesView @JvmOverloads constructor(
     private lateinit var shimmerRecyclerView: RecyclerView
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerAdapter: BaseAdapter<CategoryItemViewAdapter>
-    var callback: CategoriesViewCallback? by weak()
+    var callback: CategoriesListViewCallback? by weak()
 
-    fun interface CategoriesViewCallback {
+    fun interface CategoriesListViewCallback {
         fun onCategoryClickedAtIndex(index: Int)
     }
 

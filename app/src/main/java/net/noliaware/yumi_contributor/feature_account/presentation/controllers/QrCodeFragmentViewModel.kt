@@ -12,14 +12,13 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.commun.ApiParameters.VOUCHER_CODE_DATA
-import net.noliaware.yumi_contributor.commun.Args.CATEGORY_UI
 import net.noliaware.yumi_contributor.commun.presentation.EventsHelper
 import net.noliaware.yumi_contributor.commun.util.QRCodeGenerator
 import net.noliaware.yumi_contributor.commun.util.ViewModelState
 import net.noliaware.yumi_contributor.commun.util.ViewModelState.DataState
 import net.noliaware.yumi_contributor.commun.util.ViewModelState.LoadingState
-import net.noliaware.yumi_contributor.feature_account.domain.repository.ManagedAccountRepository
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherCodeData
+import net.noliaware.yumi_contributor.feature_account.domain.repository.ManagedAccountRepository
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,10 +27,8 @@ class QrCodeFragmentViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _stateFlow: MutableStateFlow<ViewModelState<Bitmap>> =
-        MutableStateFlow(DataState())
+    private val _stateFlow: MutableStateFlow<ViewModelState<Bitmap>> = MutableStateFlow(DataState())
     val stateFlow = _stateFlow.asStateFlow()
-    val categoryUI get() = savedStateHandle.get<CategoryUI>(CATEGORY_UI)
     val voucherCodeData get() = savedStateHandle.get<VoucherCodeData>(VOUCHER_CODE_DATA)
     val useVoucherEventsHelper = EventsHelper<Boolean>()
 

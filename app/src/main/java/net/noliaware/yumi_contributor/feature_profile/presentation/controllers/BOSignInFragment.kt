@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.ViewModelState
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
+import net.noliaware.yumi_contributor.commun.util.navDismiss
 import net.noliaware.yumi_contributor.commun.util.parseSecondsToMinutesString
 import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromSharedEvent
 import net.noliaware.yumi_contributor.feature_profile.presentation.views.BOSignInParentView
@@ -20,10 +21,6 @@ import net.noliaware.yumi_contributor.feature_profile.presentation.views.BOSignI
 
 @AndroidEntryPoint
 class BOSignInFragment : AppCompatDialogFragment() {
-
-    companion object {
-        fun newInstance() = BOSignInFragment()
-    }
 
     private var boSignInView: BOSignInParentView? = null
     private val viewModel by viewModels<BOSignInFragmentViewModel>()
@@ -46,7 +43,7 @@ class BOSignInFragment : AppCompatDialogFragment() {
 
     private val boSignInViewCallback: BOSignInViewCallback by lazy {
         BOSignInViewCallback {
-            dismissAllowingStateLoss()
+            navDismiss()
         }
     }
 
@@ -80,7 +77,7 @@ class BOSignInFragment : AppCompatDialogFragment() {
                 )
                 timerState.secondsRemaining?.let { secondsRemaining ->
                     if (secondsRemaining <= 0) {
-                        dismissAllowingStateLoss()
+                        navDismiss()
                     }
                 }
             }
@@ -88,7 +85,7 @@ class BOSignInFragment : AppCompatDialogFragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         boSignInView = null
+        super.onDestroyView()
     }
 }

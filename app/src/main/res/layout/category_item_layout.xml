@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <net.noliaware.yumi_contributor.feature_account.presentation.views.CategoryItemView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -17,13 +18,15 @@
         android:paddingHorizontal="4dp"
         android:paddingVertical="2dp"
         android:textColor="@color/grey_2"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        tools:text="3" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/icon_image_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true" />
+        android:adjustViewBounds="true"
+        tools:src="@drawable/ic_health" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title_text_view"
@@ -32,6 +35,7 @@
         android:fontFamily="@font/omnes_semibold_regular"
         android:gravity="center"
         android:textColor="@color/grey_2"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        tools:text="Santé" />
 
 </net.noliaware.yumi_contributor.feature_account.presentation.views.CategoryItemView>

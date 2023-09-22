@@ -29,7 +29,7 @@ class HomeView @JvmOverloads constructor(
 
     private fun initView() {
         backgroundView = findViewById(R.id.background_view)
-        mainFragmentContainer = findViewById(R.id.main_fragment_container)
+        mainFragmentContainer = findViewById(R.id.home_nav_host_fragment)
         homeMenuView = findViewById(R.id.menu_card_view)
     }
 

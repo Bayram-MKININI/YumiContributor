@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<net.noliaware.yumi_contributor.feature_account.presentation.views.SelectedAccountView
+<net.noliaware.yumi_contributor.feature_account.presentation.views.SelectedAccountParentView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -18,40 +18,52 @@
             android:layout_marginStart="15dp" />
     </FrameLayout>
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/title_text_view"
-        android:layout_width="wrap_content"
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/omnes_semibold_regular"
-        android:textColor="@color/grey_4"
-        android:textSize="22sp"
-        tools:text="John Doe" />
+        android:orientation="vertical"
+        app:shimmer_auto_start="false"
+        app:shimmer_base_alpha="1">
 
-    <net.noliaware.yumi_contributor.commun.presentation.views.ClipartTabView
-        android:id="@+id/available_tab_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <net.noliaware.yumi_contributor.commun.presentation.views.ClipartTabView
-        android:id="@+id/used_tab_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <net.noliaware.yumi_contributor.commun.presentation.views.ClipartTabView
-        android:id="@+id/cancelled_tab_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView
-        android:id="@+id/content_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/pager"
+        <net.noliaware.yumi_contributor.feature_account.presentation.views.SelectedAccountView
+            android:id="@+id/selected_account_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:overScrollMode="never" />
+            android:layout_height="wrap_content">
 
-    </net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView>
-</net.noliaware.yumi_contributor.feature_account.presentation.views.SelectedAccountView>
+            <net.noliaware.yumi_contributor.commun.presentation.views.FillableTextWidget
+                android:id="@+id/title_fillable_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <net.noliaware.yumi_contributor.commun.presentation.views.ClipartTabView
+                android:id="@+id/available_tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <net.noliaware.yumi_contributor.commun.presentation.views.ClipartTabView
+                android:id="@+id/used_tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <net.noliaware.yumi_contributor.commun.presentation.views.ClipartTabView
+                android:id="@+id/cancelled_tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView
+                android:id="@+id/content_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:overScrollMode="never" />
+
+            </net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView>
+
+        </net.noliaware.yumi_contributor.feature_account.presentation.views.SelectedAccountView>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+</net.noliaware.yumi_contributor.feature_account.presentation.views.SelectedAccountParentView>

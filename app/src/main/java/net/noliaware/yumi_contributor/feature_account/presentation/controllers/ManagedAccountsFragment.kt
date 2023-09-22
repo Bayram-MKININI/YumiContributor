@@ -8,42 +8,31 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.Args.MANAGED_ACCOUNT
 import net.noliaware.yumi_contributor.commun.util.formatNumber
-import net.noliaware.yumi_contributor.commun.util.getSerializableCompat
-import net.noliaware.yumi_contributor.commun.util.inflate
-import net.noliaware.yumi_contributor.commun.util.withArgs
-import net.noliaware.yumi_contributor.feature_account.domain.model.ManagedAccount
 import net.noliaware.yumi_contributor.feature_account.domain.model.SelectableData
-import net.noliaware.yumi_contributor.feature_account.presentation.views.ManagedAccountParentView
+import net.noliaware.yumi_contributor.feature_account.presentation.views.ManagedAccountsParentView
 
 @AndroidEntryPoint
-class ManagedAccountFragment : Fragment() {
+class ManagedAccountsFragment : Fragment() {
 
-    companion object {
-        fun newInstance(
-            managedAccount: ManagedAccount?
-        ) = ManagedAccountFragment().withArgs(
-            MANAGED_ACCOUNT to managedAccount
-        )
-    }
-
-    private var managedAccountParentView: ManagedAccountParentView? = null
-    private val viewModel by activityViewModels<ManagedAccountFragmentViewModel>()
-    var onManagedAccountSelected: ((ManagedAccount) -> Unit)? = null
-    var onBackButtonPressed: (() -> Unit)? = null
+    private var managedAccountsParentView: ManagedAccountsParentView? = null
+    private val args: ManagedAccountsFragmentArgs by navArgs()
+    private val managedAccountsViewModel by viewModels<ManagedAccountsFragmentViewModel>()
+    private val homeViewModel by activityViewModels<HomeFragmentViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        return container?.inflate(R.layout.managed_account_layout)?.apply {
-            managedAccountParentView = this as ManagedAccountParentView
+        return inflater.inflate(R.layout.managed_accounts_layout, container, false)?.apply {
+            managedAccountsParentView = this as ManagedAccountsParentView
         }
     }
 
@@ -57,14 +46,14 @@ class ManagedAccountFragment : Fragment() {
     }
 
     private fun addDefaultManagedAccountIfAny() {
-        arguments?.getSerializableCompat(MANAGED_ACCOUNT, ManagedAccount::class.java)?.let {
-            viewModel.setInitManagedAccount(it)
+        args.managedAccount?.let {
+            managedAccountsViewModel.setInitManagedAccount(it)
         }
     }
 
     private fun setUpWelcomeMessage() {
-        viewModel.accountData?.let {
-            managedAccountParentView?.setUserData(
+        args.accountData.let {
+            managedAccountsParentView?.setUserData(
                 helloText = it.helloMessage,
                 userName = it.userName,
                 accountBadgeValue = it.accountCount.formatNumber(),
@@ -77,35 +66,32 @@ class ManagedAccountFragment : Fragment() {
     }
 
     private fun setUpViewPager() {
-        ManagedAccountFragmentStateAdapter(
-            childFragmentManager,
-            viewLifecycleOwner.lifecycle
-        ).apply {
-            managedAccountParentView?.getViewPager?.adapter = this
+        ManagedAccountsFragmentStateAdapter(childFragmentManager, viewLifecycleOwner.lifecycle).apply {
+            managedAccountsParentView?.getViewPager?.adapter = this
         }
     }
 
     private fun collectFlow() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.onBackEventFlow.collectLatest {
-                viewModel.resetSelectedManagedAccount()
-                managedAccountParentView?.displayAccountListView()
-                onBackButtonPressed?.invoke()
+            managedAccountsViewModel.onBackEventFlow.collectLatest {
+                managedAccountsViewModel.resetSelectedManagedAccount()
+                managedAccountsParentView?.displayAccountListView()
+                homeViewModel.managedAccount = null
             }
         }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.managedAccountFlow.collect { managedAccount ->
+            managedAccountsViewModel.managedAccountFlow.collect { managedAccount ->
                 when (managedAccount) {
                     is SelectableData.AssignedData -> {
                         managedAccount.data?.let {
-                            managedAccountParentView?.displaySelectedAccountView(animated = false)
+                            managedAccountsParentView?.displaySelectedAccountView(animated = false)
                         }
                     }
 
                     is SelectableData.SelectedData -> {
                         managedAccount.data?.let {
-                            onManagedAccountSelected?.invoke(it)
-                            managedAccountParentView?.displaySelectedAccountView()
+                            homeViewModel.managedAccount = it
+                            managedAccountsParentView?.displaySelectedAccountView()
                         }
                     }
                 }
@@ -118,8 +104,8 @@ class ManagedAccountFragment : Fragment() {
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    if (managedAccountParentView?.getViewPager?.currentItem == 1) {
-                        viewModel.sendBackButtonClickedEvent()
+                    if (managedAccountsParentView?.getViewPager?.currentItem == 1) {
+                        managedAccountsViewModel.sendBackButtonClickedEvent()
                     } else {
                         activity?.finish()
                     }
@@ -128,11 +114,11 @@ class ManagedAccountFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        managedAccountParentView = null
+        managedAccountsParentView = null
         super.onDestroyView()
     }
 
-    private class ManagedAccountFragmentStateAdapter(
+    private class ManagedAccountsFragmentStateAdapter(
         fragmentManager: FragmentManager,
         lifecycle: Lifecycle
     ) : FragmentStateAdapter(fragmentManager, lifecycle) {

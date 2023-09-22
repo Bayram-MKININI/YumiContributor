@@ -13,21 +13,19 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.Args.ACCOUNT_DATA
 import net.noliaware.yumi_contributor.commun.Push.ACTION_PUSH_DATA
 import net.noliaware.yumi_contributor.commun.Push.PUSH_BODY
 import net.noliaware.yumi_contributor.commun.Push.PUSH_TITLE
 import net.noliaware.yumi_contributor.commun.util.ViewModelState.DataState
 import net.noliaware.yumi_contributor.commun.util.ViewModelState.LoadingState
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
-import net.noliaware.yumi_contributor.commun.util.inflate
 import net.noliaware.yumi_contributor.commun.util.startWebBrowserAtURL
-import net.noliaware.yumi_contributor.feature_account.presentation.controllers.MainActivity
 import net.noliaware.yumi_contributor.feature_login.presentation.views.LoginParentLayout
 import net.noliaware.yumi_contributor.feature_login.presentation.views.LoginView.LoginViewCallback
 import net.noliaware.yumi_contributor.feature_login.presentation.views.PasswordView.PasswordViewCallback
@@ -61,7 +59,7 @@ class LoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return container?.inflate(R.layout.login_layout)
+        return inflater.inflate(R.layout.login_layout, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -147,11 +145,9 @@ class LoginFragment : Fragment() {
                     is LoadingState -> loginParentLayout?.setPasswordViewProgressVisible(true)
                     is DataState -> vmState.data?.let { accountData ->
                         loginParentLayout?.setPasswordViewProgressVisible(false)
-                        Intent(requireActivity(), MainActivity::class.java).apply {
-                            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                            putExtra(ACCOUNT_DATA, accountData)
-                            startActivity(this)
-                        }
+                        findNavController().navigate(
+                            LoginFragmentDirections.actionLoginFragmentToHomeFragment(accountData)
+                        )
                     }
                 }
             }

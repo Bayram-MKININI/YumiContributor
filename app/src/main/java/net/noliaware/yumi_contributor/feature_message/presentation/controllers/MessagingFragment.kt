@@ -6,57 +6,61 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.ApiParameters.MESSAGE_SUBJECTS_DATA
-import net.noliaware.yumi_contributor.commun.FragmentTags.SEND_MESSAGES_FRAGMENT_TAG
-import net.noliaware.yumi_contributor.commun.util.inflate
-import net.noliaware.yumi_contributor.commun.util.withArgs
-import net.noliaware.yumi_contributor.feature_login.domain.model.MessageSubject
+import net.noliaware.yumi_contributor.commun.FragmentKeys.REFRESH_RECEIVED_MESSAGES_REQUEST_KEY
+import net.noliaware.yumi_contributor.commun.FragmentKeys.REFRESH_SENT_MESSAGES_REQUEST_KEY
 import net.noliaware.yumi_contributor.feature_message.presentation.views.MessagingView
 import net.noliaware.yumi_contributor.feature_message.presentation.views.MessagingView.*
 
 @AndroidEntryPoint
 class MessagingFragment : Fragment() {
 
-    companion object {
-        fun newInstance(
-            messageSubjects: List<MessageSubject>?
-        ) = MessagingFragment().withArgs(MESSAGE_SUBJECTS_DATA to messageSubjects)
-    }
-
     private var messagingView: MessagingView? = null
+    private val args: MessagingFragmentArgs by navArgs()
     private val viewModel by viewModels<MessagingFragmentViewModel>()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
-        return container?.inflate(R.layout.messaging_layout)?.apply {
+        return inflater.inflate(R.layout.messaging_layout, container, false)?.apply {
             messagingView = this as MessagingView
             messagingView?.callback = messagingViewCallback
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setUpFragmentListener()
         MessageFragmentStateAdapter(childFragmentManager, viewLifecycleOwner.lifecycle).apply {
             messagingView?.getViewPager?.adapter = this
         }
     }
 
+    private fun setUpFragmentListener() {
+        setFragmentResultListener(
+            REFRESH_RECEIVED_MESSAGES_REQUEST_KEY
+        ) { _, _ ->
+            viewModel.sendReceivedListRefreshedEvent()
+        }
+        setFragmentResultListener(
+            REFRESH_SENT_MESSAGES_REQUEST_KEY
+        ) { _, _ ->
+            viewModel.sendSentListRefreshedEvent()
+        }
+    }
+
     private val messagingViewCallback: MailViewCallback by lazy {
         MailViewCallback {
-            SendMailFragment.newInstance(
-                viewModel.messageSubjects ?: listOf()
-            ).apply {
-                onMessageSent = {
-                    (messagingView?.getViewPager?.adapter as MessageFragmentStateAdapter).refreshSentFragment()
-                }
-            }.show(
-                childFragmentManager.beginTransaction(),
-                SEND_MESSAGES_FRAGMENT_TAG
+            findNavController().navigate(
+                MessagingFragmentDirections.actionMessagingFragmentToSendMailFragment(args.subjects)
             )
         }
     }
@@ -70,24 +74,12 @@ class MessagingFragment : Fragment() {
         fragmentManager: FragmentManager,
         lifecycle: Lifecycle
     ) : FragmentStateAdapter(fragmentManager, lifecycle) {
-        var fragments = Array<Fragment?>(2) { null }
         override fun getItemCount() = 2
         override fun createFragment(position: Int): Fragment {
             return when (position) {
-                0 -> {
-                    fragments[0] = ReceivedMessagesFragment()
-                    fragments[0]!!
-                }
-
-                else -> {
-                    fragments[1] = SentMessagesFragment()
-                    fragments[1]!!
-                }
+                0 -> ReceivedMessagesFragment()
+                else -> SentMessagesFragment()
             }
-        }
-
-        fun refreshSentFragment() {
-            (fragments[1] as? SentMessagesFragment)?.refreshAdapter()
         }
     }
 }

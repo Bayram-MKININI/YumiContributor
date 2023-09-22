@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,7 +28,11 @@ import net.noliaware.yumi_contributor.feature_account.presentation.views.Account
 class AccountsListFragment : Fragment() {
 
     private var accountsListView: AccountsListView? = null
-    private val viewModel by activityViewModels<ManagedAccountFragmentViewModel>()
+    private val viewModel by viewModels<ManagedAccountsFragmentViewModel>(
+        ownerProducer = {
+            requireParentFragment()
+        }
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,13 +70,13 @@ class AccountsListFragment : Fragment() {
             }
         }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.getUsersEventsHelper.eventFlow.collectLatest { sharedEvent ->
+            viewModel.getUsersAutocompleteListEventsHelper.eventFlow.collectLatest { sharedEvent ->
                     handleSharedEvent(sharedEvent)
                     redirectToLoginScreenFromSharedEvent(sharedEvent)
                 }
         }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.getUsersEventsHelper.stateFlow.collect { vmState ->
+            viewModel.getUsersAutocompleteListEventsHelper.stateFlow.collect { vmState ->
                     when (vmState) {
                         is ViewModelState.LoadingState -> Unit
                         is ViewModelState.DataState -> vmState.data?.let { usersList ->

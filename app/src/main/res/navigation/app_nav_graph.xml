@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_nav_graph"
+    app:startDestination="@id/login_fragment">
+
+    <fragment
+        android:id="@+id/login_fragment"
+        android:name="net.noliaware.yumi_contributor.feature_login.presentation.controllers.LoginFragment"
+        android:label="@string/login_fragment_screen_label"
+        tools:layout="@layout/login_layout">
+        <action
+            android:id="@+id/action_LoginFragment_to_HomeFragment"
+            app:destination="@id/home_fragment"
+            app:popUpTo="@id/login_fragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/home_fragment"
+        android:name="net.noliaware.yumi_contributor.feature_account.presentation.controllers.HomeFragment"
+        android:label="@string/home_fragment_screen_label"
+        tools:layout="@layout/home_layout">
+        <argument
+            android:name="accountData"
+            app:argType="net.noliaware.yumi_contributor.feature_login.domain.model.AccountData" />
+        <action
+            android:id="@+id/action_HomeFragment_to_PrivacyPolicyFragment"
+            app:destination="@id/privacy_policy_fragment" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/privacy_policy_fragment"
+        android:name="net.noliaware.yumi_contributor.feature_account.presentation.controllers.PrivacyPolicyFragment"
+        android:label="@string/privacy_policy_fragment_screen_label"
+        tools:layout="@layout/privacy_policy_layout">
+        <argument
+            android:name="privacyPolicyUrl"
+            app:argType="string" />
+        <argument
+            android:name="isPrivacyPolicyConfirmationRequired"
+            app:argType="boolean" />
+    </dialog>
+</navigation>

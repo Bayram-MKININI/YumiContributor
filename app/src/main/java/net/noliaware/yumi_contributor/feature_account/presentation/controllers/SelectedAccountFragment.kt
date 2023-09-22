@@ -6,24 +6,31 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
+import net.noliaware.yumi_contributor.commun.FragmentKeys.AVAILABLE_VOUCHERS_LIST_REQUEST_KEY
 import net.noliaware.yumi_contributor.commun.util.ViewModelState
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromSharedEvent
-import net.noliaware.yumi_contributor.feature_account.presentation.views.SelectedAccountView
-import net.noliaware.yumi_contributor.feature_account.presentation.views.SelectedAccountView.SelectedAccountViewCallback
+import net.noliaware.yumi_contributor.feature_account.presentation.views.SelectedAccountParentView
+import net.noliaware.yumi_contributor.feature_account.presentation.views.SelectedAccountParentView.SelectedAccountViewCallback
 
 @AndroidEntryPoint
 class SelectedAccountFragment : Fragment() {
 
-    private var selectedAccountView: SelectedAccountView? = null
-    private val viewModel by activityViewModels<ManagedAccountFragmentViewModel>()
+    private var selectedAccountParentView: SelectedAccountParentView? = null
+    private val selectedAccountViewModel by viewModels<SelectedAccountFragmentViewModel>()
+    private val managedAccountsViewModel by viewModels<ManagedAccountsFragmentViewModel>(
+        ownerProducer = {
+            requireParentFragment()
+        }
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,27 +38,38 @@ class SelectedAccountFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.selected_account_layout, container, false).apply {
-            selectedAccountView = this as SelectedAccountView
-            selectedAccountView?.callback = selectedAccountViewCallback
+            selectedAccountParentView = this as SelectedAccountParentView
+            selectedAccountParentView?.callback = selectedAccountViewCallback
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setUpFragmentListener()
         collectFlows()
+    }
+
+    private fun setUpFragmentListener() {
+        setFragmentResultListener(
+            AVAILABLE_VOUCHERS_LIST_REQUEST_KEY
+        ) { _, _ ->
+            selectedAccountViewModel.sendCategoriesListsRefreshedEvent()
+        }
     }
 
     private fun collectFlows() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.selectAccountEventsHelper.eventFlow.collectLatest { sharedEvent ->
+            managedAccountsViewModel.selectAccountEventsHelper.eventFlow.collectLatest { sharedEvent ->
+                selectedAccountParentView?.activateLoading(false)
                 handleSharedEvent(sharedEvent)
                 redirectToLoginScreenFromSharedEvent(sharedEvent)
             }
         }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.selectAccountEventsHelper.stateFlow.collect { vmState ->
+            managedAccountsViewModel.selectAccountEventsHelper.stateFlow.collect { vmState ->
                 when (vmState) {
-                    is ViewModelState.LoadingState -> Unit
-                    is ViewModelState.DataState -> vmState.data?.let { accountId ->
+                    is ViewModelState.LoadingState -> selectedAccountParentView?.activateLoading(true)
+                    is ViewModelState.DataState -> vmState.data?.let {
+                        selectedAccountParentView?.activateLoading(false)
                         setUserName()
                         setUpViewPager()
                     }
@@ -61,30 +79,27 @@ class SelectedAccountFragment : Fragment() {
     }
 
     private fun setUserName() {
-        viewModel.getSelectedManagedAccount()?.let { managedAccount ->
-            selectedAccountView?.setTitle(
+        managedAccountsViewModel.getSelectedManagedAccount()?.let { managedAccount ->
+            selectedAccountParentView?.setTitle(
                 "${managedAccount.title} ${managedAccount.firstName} ${managedAccount.lastName}"
             )
         }
     }
 
     private fun setUpViewPager() {
-        SelectedAccountFragmentStateAdapter(
-            childFragmentManager,
-            viewLifecycleOwner.lifecycle
-        ).apply {
-            selectedAccountView?.getViewPager?.adapter = this
+        SelectedAccountFragmentStateAdapter(childFragmentManager, viewLifecycleOwner.lifecycle).apply {
+            selectedAccountParentView?.getViewPager?.adapter = this
         }
     }
 
     private val selectedAccountViewCallback: SelectedAccountViewCallback by lazy {
         SelectedAccountViewCallback {
-            viewModel.sendBackButtonClickedEvent()
+            managedAccountsViewModel.sendBackButtonClickedEvent()
         }
     }
 
     override fun onDestroyView() {
-        selectedAccountView = null
+        selectedAccountParentView = null
         super.onDestroyView()
     }
 
@@ -95,9 +110,9 @@ class SelectedAccountFragment : Fragment() {
         override fun getItemCount() = 3
         override fun createFragment(position: Int): Fragment {
             return when (position) {
-                0 -> AvailableCategoriesFragment()
-                1 -> UsedCategoriesFragment()
-                else -> CancelledCategoriesFragment()
+                0 -> AvailableCategoriesListFragment()
+                1 -> UsedCategoriesListFragment()
+                else -> CancelledCategoriesListFragment()
             }
         }
     }

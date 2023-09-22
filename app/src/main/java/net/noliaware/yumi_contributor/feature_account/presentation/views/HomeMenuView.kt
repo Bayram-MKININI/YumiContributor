@@ -31,7 +31,7 @@ class HomeMenuView @JvmOverloads constructor(
     var callback: HomeMenuViewCallback? by weak()
 
     interface HomeMenuViewCallback {
-        fun onCategoryButtonClicked()
+        fun onHomeButtonClicked()
         fun onProfileButtonClicked()
         fun onMailButtonClicked()
         fun onNotificationButtonClicked()
@@ -68,7 +68,7 @@ class HomeMenuView @JvmOverloads constructor(
                     }
                     resetAllBackgrounds()
                     selectHomeButton()
-                    callback?.onCategoryButtonClicked()
+                    callback?.onHomeButtonClicked()
                 }
 
                 R.id.profile_image_view -> {

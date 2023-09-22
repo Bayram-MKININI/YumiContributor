@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name" translatable="false">Yumi Contributor</string>
-
     <string name="view_tag_key" translatable="false">view_tag</string>
 
+    //Navigation
+    <string name="login_fragment_screen_label" translatable="false">Login</string>
+    <string name="home_fragment_screen_label" translatable="false">Home</string>
+    <string name="privacy_policy_fragment_screen_label" translatable="false">Privacy Policy</string>
+    <string name="managed_account_screen_label" translatable="false">Managed Accounts</string>
+    <string name="available_vouchers_list_fragment_screen_label" translatable="false">Available Vouchers</string>
+    <string name="used_vouchers_list_fragment_screen_label" translatable="false">Used Vouchers</string>
+    <string name="cancelled_vouchers_list_fragment_screen_label" translatable="false">Cancelled Vouchers</string>
+    <string name="voucher_details_fragment_screen_label" translatable="false">Voucher Details</string>
+    <string name="qr_code_fragment_screen_label" translatable="false">Qr Code</string>
+    <string name="user_profile_fragment_screen_label" translatable="false">User Profile</string>
+    <string name="bo_sign_in_fragment_screen_label" translatable="false">BO Sign In</string>
+    <string name="messaging_fragment_screen_label" translatable="false">Messaging</string>
+    <string name="send_mail_fragment_screen_label" translatable="false">Send Message</string>
+    <string name="read_mail_inbox_fragment_screen_label" translatable="false">Read Inbox</string>
+    <string name="read_mail_outbox_fragment_screen_label" translatable="false">Read Outbox</string>
+    <string name="alerts_fragment_screen_label" translatable="false">Alerts</string>
 </resources>

@@ -15,7 +15,9 @@
         android:paddingHorizontal="10dp"
         android:paddingVertical="5dp"
         app:divider="@drawable/empty_divider_2dp"
-        app:showDividers="middle">
+        app:showDividers="middle"
+        tools:background="@drawable/rectangle_rounded_15dp"
+        tools:backgroundTint="@color/orange_1">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/highlight_description_text_view"

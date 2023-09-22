@@ -4,6 +4,8 @@ plugins {
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
     id("com.google.gms.google-services")
+    id("androidx.navigation.safeargs.kotlin")
+    id("kotlin-parcelize")
     id("com.google.firebase.crashlytics")
 }
 
@@ -16,7 +18,7 @@ android {
         applicationId = "net.noliaware.yumi_contributor"
         minSdk = 21
         targetSdk = 34
-        versionCode = 10
+        versionCode = 11
         versionName = "1.0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -94,6 +96,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.fragment:fragment-ktx:1.6.1")
     implementation("androidx.activity:activity-ktx:1.7.2")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.3")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.3")
     implementation("androidx.paging:paging-runtime-ktx:3.2.1")
     implementation("androidx.browser:browser:1.6.0")
     implementation("androidx.webkit:webkit:1.8.0")

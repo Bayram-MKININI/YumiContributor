@@ -1,7 +1,11 @@
 package net.noliaware.yumi_contributor.feature_account.domain.model
 
-import java.io.Serializable
+import android.os.Parcelable
+import androidx.annotation.Keep
+import kotlinx.parcelize.Parcelize
 
+@Keep
+@Parcelize
 data class ManagedAccount(
     val login: String,
     val title: String,
@@ -9,4 +13,4 @@ data class ManagedAccount(
     val lastName: String,
     val cellPhoneNumber: String,
     val availableVoucherCount: Int,
-) : Serializable
+) : Parcelable

@@ -13,7 +13,7 @@ import net.noliaware.yumi_contributor.commun.util.hideKeyboard
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 
-class ManagedAccountParentView @JvmOverloads constructor(
+class ManagedAccountsParentView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
