@@ -82,7 +82,7 @@ dependencies {
 
     // Support Libraries
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.constraintlayout:constraintlayout:+")
 
     // Network
     implementation(platform("com.squareup.okhttp3:okhttp-bom:4.11.0"))
