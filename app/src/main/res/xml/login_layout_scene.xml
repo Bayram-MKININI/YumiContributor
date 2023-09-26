@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetStart="@id/start"
+        motion:duration="1000"
+        motion:motionInterpolator="linear">
+        <KeyFrameSet>
+            <KeyAttribute
+                motion:framePosition="0"
+                motion:motionTarget="@id/login_view">
+                <CustomAttribute
+                    motion:attributeName="alpha"
+                    motion:customFloatValue="1" />
+            </KeyAttribute>
+            <KeyAttribute
+                motion:framePosition="60"
+                motion:motionTarget="@id/login_view">
+                <CustomAttribute
+                    motion:attributeName="alpha"
+                    motion:customFloatValue="0" />
+            </KeyAttribute>
+            <KeyAttribute
+                motion:framePosition="20"
+                motion:motionTarget="@id/password_view">
+                <CustomAttribute
+                    motion:attributeName="alpha"
+                    motion:customFloatValue="0" />
+            </KeyAttribute>
+            <KeyAttribute
+                motion:framePosition="100"
+                motion:motionTarget="@id/password_view">
+                <CustomAttribute
+                    motion:attributeName="alpha"
+                    motion:customFloatValue="1" />
+            </KeyAttribute>
+        </KeyFrameSet>
+    </Transition>
+
+    <ConstraintSet android:id="@+id/start">
+        <Constraint android:id="@id/intermediate_view">
+            <PropertySet motion:visibilityMode="ignore" />
+        </Constraint>
+        <Constraint android:id="@id/password_view">
+            <PropertySet motion:visibilityMode="ignore" />
+        </Constraint>
+        <Constraint android:id="@id/login_view">
+            <PropertySet motion:visibilityMode="ignore" />
+        </Constraint>
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:id="@id/icon_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="@+id/password_view"
+            motion:layout_constraintEnd_toEndOf="@+id/password_view"
+            motion:layout_constraintTop_toBottomOf="@+id/password_view">
+            <Transform android:scaleX="-1" />
+        </Constraint>
+        <Constraint
+            android:id="@id/login_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            motion:layout_constraintWidth_percent="0.9" />
+        <Constraint
+            android:id="@id/password_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:alpha="1"
+            motion:layout_constraintWidth_percent="0.9" />
+        <Constraint
+            android:id="@id/intermediate_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            motion:layout_constraintBottom_toBottomOf="@+id/password_view"
+            motion:layout_constraintEnd_toEndOf="@id/password_view"
+            motion:layout_constraintStart_toStartOf="@id/password_view"
+            motion:layout_constraintTop_toTopOf="@id/password_view" />
+    </ConstraintSet>
+</MotionScene>

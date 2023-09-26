@@ -18,6 +18,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import net.noliaware.yumi_contributor.feature_login.presentation.views.LoginLayout
+import net.noliaware.yumi_contributor.feature_login.presentation.views.LoginView.LoginViewCallback
+import net.noliaware.yumi_contributor.feature_login.presentation.views.PasswordView.PasswordViewCallback
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.Push.ACTION_PUSH_DATA
 import net.noliaware.yumi_contributor.commun.Push.PUSH_BODY
@@ -26,15 +29,12 @@ import net.noliaware.yumi_contributor.commun.util.ViewModelState.DataState
 import net.noliaware.yumi_contributor.commun.util.ViewModelState.LoadingState
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.startWebBrowserAtURL
-import net.noliaware.yumi_contributor.feature_login.presentation.views.LoginParentLayout
-import net.noliaware.yumi_contributor.feature_login.presentation.views.LoginView.LoginViewCallback
-import net.noliaware.yumi_contributor.feature_login.presentation.views.PasswordView.PasswordViewCallback
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
 
     private val viewModel: LoginFragmentViewModel by viewModels()
-    private var loginParentLayout: LoginParentLayout? = null
+    private var loginLayout: LoginLayout? = null
     private val passwordIndexes = mutableListOf<Int>()
 
     private val messageReceiver: BroadcastReceiver = object : BroadcastReceiver() {
@@ -59,14 +59,15 @@ class LoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.login_layout, container, false)
+        return inflater.inflate(R.layout.login_layout, container, false).apply {
+            loginLayout = this as LoginLayout
+            loginLayout?.getLoginView?.callback = loginViewCallback
+            loginLayout?.getPasswordView?.callback = passwordViewCallback
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loginParentLayout = view as LoginParentLayout
-        loginParentLayout?.loginView?.callback = loginViewCallback
-        loginParentLayout?.passwordView?.callback = passwordViewCallback
         collectFlows()
     }
 
@@ -76,6 +77,11 @@ class LoginFragment : Fragment() {
             messageReceiver,
             IntentFilter(ACTION_PUSH_DATA)
         )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loginLayout?.computeLoginLayout()
     }
 
     override fun onStop() {
@@ -92,9 +98,9 @@ class LoginFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.forceUpdateStateFlow.collectLatest { vmState ->
                 when (vmState) {
-                    is LoadingState -> loginParentLayout?.setLoginViewProgressVisible(true)
+                    is LoadingState -> loginLayout?.setLoginViewProgressVisible(true)
                     is DataState -> vmState.data?.let {
-                        loginParentLayout?.setLoginViewProgressVisible(false)
+                        loginLayout?.setLoginViewProgressVisible(false)
                         showForceUpdateDialog()
                     }
                 }
@@ -105,14 +111,14 @@ class LoginFragment : Fragment() {
                 when (vmState) {
                     is LoadingState -> Unit
                     is DataState -> vmState.data?.let { userPrefs ->
-                        loginParentLayout?.setLogin(userPrefs.login)
+                        loginLayout?.setLogin(userPrefs.login)
                     }
                 }
             }
         }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.initEventsHelper.eventFlow.collectLatest { sharedEvent ->
-                loginParentLayout?.setLoginViewProgressVisible(false)
+                loginLayout?.setLoginViewProgressVisible(false)
                 handleSharedEvent(sharedEvent)
             }
         }
@@ -122,17 +128,17 @@ class LoginFragment : Fragment() {
                     is LoadingState -> Unit
                     is DataState -> vmState.data?.let { initData ->
                         viewModel.saveDeviceIdPreferences(initData.deviceId)
-                        loginParentLayout?.setLoginViewProgressVisible(false)
-                        loginParentLayout?.displayPasswordView()
-                        loginParentLayout?.fillPadViewWithData(initData.keyboard)
+                        loginLayout?.setLoginViewProgressVisible(false)
+                        loginLayout?.displayPasswordView()
+                        loginLayout?.fillPadViewWithData(initData.keyboard)
                     }
                 }
             }
         }
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.accountDataEventsHelper.eventFlow.collectLatest { sharedEvent ->
-                loginParentLayout?.let {
-                    loginParentLayout?.setPasswordViewProgressVisible(false)
+                loginLayout?.let {
+                    loginLayout?.setPasswordViewProgressVisible(false)
                     it.clearSecretDigits()
                     passwordIndexes.clear()
                 }
@@ -142,9 +148,9 @@ class LoginFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.accountDataEventsHelper.stateFlow.collect { vmState ->
                 when (vmState) {
-                    is LoadingState -> loginParentLayout?.setPasswordViewProgressVisible(true)
+                    is LoadingState -> loginLayout?.setPasswordViewProgressVisible(true)
                     is DataState -> vmState.data?.let { accountData ->
-                        loginParentLayout?.setPasswordViewProgressVisible(false)
+                        loginLayout?.setPasswordViewProgressVisible(false)
                         findNavController().navigate(
                             LoginFragmentDirections.actionLoginFragmentToHomeFragment(accountData)
                         )
@@ -185,12 +191,12 @@ class LoginFragment : Fragment() {
                     return
 
                 passwordIndexes.add(index)
-                loginParentLayout?.addSecretDigit()
+                loginLayout?.addSecretDigit()
             }
 
             override fun onClearButtonPressed() {
                 passwordIndexes.clear()
-                loginParentLayout?.clearSecretDigits()
+                loginLayout?.clearSecretDigits()
             }
 
             override fun onConfirmButtonPressed() {
@@ -202,7 +208,7 @@ class LoginFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        loginParentLayout = null
+        loginLayout = null
         super.onDestroyView()
     }
 }

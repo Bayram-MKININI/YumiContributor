@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
@@ -16,12 +15,13 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
+import net.noliaware.yumi_contributor.commun.util.OnBackPressedHandler
 import net.noliaware.yumi_contributor.commun.util.formatNumber
 import net.noliaware.yumi_contributor.feature_account.domain.model.SelectableData
 import net.noliaware.yumi_contributor.feature_account.presentation.views.ManagedAccountsParentView
 
 @AndroidEntryPoint
-class ManagedAccountsFragment : Fragment() {
+class ManagedAccountsFragment : Fragment(), OnBackPressedHandler {
 
     private var managedAccountsParentView: ManagedAccountsParentView? = null
     private val args: ManagedAccountsFragmentArgs by navArgs()
@@ -42,7 +42,6 @@ class ManagedAccountsFragment : Fragment() {
         setUpWelcomeMessage()
         setUpViewPager()
         collectFlow()
-        setUpBackButtonIntercept()
     }
 
     private fun addDefaultManagedAccountIfAny() {
@@ -66,7 +65,10 @@ class ManagedAccountsFragment : Fragment() {
     }
 
     private fun setUpViewPager() {
-        ManagedAccountsFragmentStateAdapter(childFragmentManager, viewLifecycleOwner.lifecycle).apply {
+        ManagedAccountsFragmentStateAdapter(
+            childFragmentManager,
+            viewLifecycleOwner.lifecycle
+        ).apply {
             managedAccountsParentView?.getViewPager?.adapter = this
         }
     }
@@ -99,19 +101,13 @@ class ManagedAccountsFragment : Fragment() {
         }
     }
 
-    private fun setUpBackButtonIntercept() {
-        activity?.onBackPressedDispatcher?.addCallback(
-            viewLifecycleOwner,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    if (managedAccountsParentView?.getViewPager?.currentItem == 1) {
-                        managedAccountsViewModel.sendBackButtonClickedEvent()
-                    } else {
-                        activity?.finish()
-                    }
-                }
-            })
-    }
+    override fun onBackPressedHandled() =
+        if (managedAccountsParentView?.getViewPager?.currentItem == 1) {
+            managedAccountsViewModel.sendBackButtonClickedEvent()
+            true
+        } else {
+            false
+        }
 
     override fun onDestroyView() {
         managedAccountsParentView = null

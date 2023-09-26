@@ -70,7 +70,6 @@ class HomeMenuView @JvmOverloads constructor(
                     selectHomeButton()
                     callback?.onHomeButtonClicked()
                 }
-
                 R.id.profile_image_view -> {
                     if (profileImageView.isSelected) {
                         return@OnClickListener
@@ -80,7 +79,6 @@ class HomeMenuView @JvmOverloads constructor(
                     profileImageView.isSelected = true
                     callback?.onProfileButtonClicked()
                 }
-
                 R.id.mail_image_view -> {
                     if (mailImageView.isSelected) {
                         return@OnClickListener
@@ -90,7 +88,6 @@ class HomeMenuView @JvmOverloads constructor(
                     mailImageView.isSelected = true
                     callback?.onMailButtonClicked()
                 }
-
                 R.id.notification_image_view -> {
                     if (notificationImageView.isSelected) {
                         return@OnClickListener
@@ -102,6 +99,10 @@ class HomeMenuView @JvmOverloads constructor(
                 }
             }
         }
+    }
+
+    fun performClickOnHomeButton() {
+        onButtonClickListener.onClick(homeImageView)
     }
 
     fun selectHomeButton() {

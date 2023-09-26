@@ -1,5 +1,6 @@
 package net.noliaware.yumi_contributor.commun.util
 
+import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -323,6 +324,10 @@ fun View.measureWrapContent() {
         MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
     )
 }
+
+fun View.translateYByValue(
+    value: Float
+): ObjectAnimator = ObjectAnimator.ofFloat(this, "translationY", value)
 
 fun View.layoutToTopLeft(left: Int, top: Int) {
     val right = left + measuredWidth

@@ -37,6 +37,10 @@ class HomeView @JvmOverloads constructor(
         homeMenuView.selectHomeButton()
     }
 
+    fun performClickOnHomeButton() {
+        homeMenuView.performClickOnHomeButton()
+    }
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val viewWidth = MeasureSpec.getSize(widthMeasureSpec)
         val viewHeight = MeasureSpec.getSize(heightMeasureSpec)

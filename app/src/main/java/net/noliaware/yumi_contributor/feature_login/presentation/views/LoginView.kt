@@ -113,6 +113,14 @@ class LoginView @JvmOverloads constructor(
         return true
     }
 
+    fun setStartAnimationState() {
+        setBackgroundResource(android.R.color.transparent)
+    }
+
+    fun setEndAnimationState() {
+        setBackgroundResource(R.drawable.rectangle_rounded_white)
+    }
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val viewWidth = MeasureSpec.getSize(widthMeasureSpec)
         var viewHeight = MeasureSpec.getSize(heightMeasureSpec)

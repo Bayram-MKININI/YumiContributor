@@ -44,6 +44,7 @@ class AvailableCategoriesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         collectFlows()
+        categoriesListView?.setLoadingVisible(true)
         viewModel.callGetAvailableCategories()
     }
 
@@ -63,7 +64,7 @@ class AvailableCategoriesListFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.availableCategoriesEventsHelper.stateFlow.collect { vmState ->
                 when (vmState) {
-                    is ViewModelState.LoadingState -> categoriesListView?.setLoadingVisible(true)
+                    is ViewModelState.LoadingState -> Unit
                     is ViewModelState.DataState -> vmState.data?.let { categories ->
                         categoriesListView?.setLoadingVisible(false)
                         bindViewToData(categories)
@@ -92,9 +93,7 @@ class AvailableCategoriesListFragment : Fragment() {
             viewModel.availableCategoriesEventsHelper.stateData?.let { categories ->
                 categories[index].apply {
                     findNavController().navigate(
-                        ManagedAccountsFragmentDirections.actionCategoriesFragmentToAvailableVouchersListFragment(
-                            this
-                        )
+                        ManagedAccountsFragmentDirections.actionCategoriesFragmentToAvailableVouchersListFragment(this)
                     )
                 }
             }
