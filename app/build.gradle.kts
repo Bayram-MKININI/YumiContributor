@@ -118,8 +118,8 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:2.7.3")
 
     // Utils
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
     implementation("com.google.zxing:zxingorg:3.5.1")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
 
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.12")
 }

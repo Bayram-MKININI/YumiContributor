@@ -162,16 +162,19 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
             R.string.expiry_date_value,
             voucher.voucherExpiryDate?.parseDateToFormat(SHORT_DATE_FORMAT)
         )
+
         CONSUMED -> getString(
             R.string.usage_date_value,
             voucher.voucherUseDate?.parseDateToFormat(SHORT_DATE_FORMAT),
             voucher.voucherUseTime?.parseTimeToFormat(HOURS_TIME_FORMAT)
         )
+
         CANCELLED -> getString(
             R.string.cancellation_date_value,
             voucher.voucherUseDate?.parseDateToFormat(SHORT_DATE_FORMAT),
             voucher.voucherUseTime?.parseTimeToFormat(HOURS_TIME_FORMAT)
         )
+
         else -> ""
     }
 
@@ -216,10 +219,11 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
 
             override fun onLocationClicked() {
                 viewModel.getVoucherEventsHelper.stateData?.let { voucher ->
-                    val latitude = voucher.retailerAddressLatitude
-                    val longitude = voucher.retailerAddressLongitude
-                    val label = voucher.retailerLabel
-                    openMap(context, latitude, longitude, label)
+                    context.openMap(
+                        voucher.retailerAddressLatitude,
+                        voucher.retailerAddressLongitude,
+                        voucher.retailerLabel
+                    )
                 }
             }
 

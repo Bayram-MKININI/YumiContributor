@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
@@ -21,6 +22,7 @@ import net.noliaware.yumi_contributor.commun.util.ViewModelState
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.navDismiss
 import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromSharedEvent
+import net.noliaware.yumi_contributor.commun.util.toast
 import net.noliaware.yumi_contributor.feature_message.presentation.adapters.MessagePriorityAdapter
 import net.noliaware.yumi_contributor.feature_message.presentation.adapters.MessageSubjectsAdapter
 import net.noliaware.yumi_contributor.feature_message.presentation.views.PriorityUI
@@ -155,7 +157,12 @@ class SendMailFragment : AppCompatDialogFragment() {
 
     private fun sendNewMail(priority: Int, text: String) {
         val selectedSubjectIndex = sendMailView?.getSelectedSubjectIndex() ?: -1
-        if (selectedSubjectIndex == -1) {
+        when {
+            selectedSubjectIndex == -1 -> R.string.empty_mail_subject_error
+            text.isEmpty() -> R.string.empty_mail_body_error
+            else -> null
+        }?.let { messageRes ->
+            context.toast(messageRes, Toast.LENGTH_SHORT)
             return
         }
         args.subjects?.get(selectedSubjectIndex)?.let { messageSubject ->

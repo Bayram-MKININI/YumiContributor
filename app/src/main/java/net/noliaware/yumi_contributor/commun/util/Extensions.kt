@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Color
@@ -14,7 +13,6 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
-import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
@@ -32,7 +30,6 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.net.toUri
-import androidx.core.os.bundleOf
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
@@ -66,7 +63,6 @@ import net.noliaware.yumi_contributor.commun.domain.model.AppMessageType
 import net.noliaware.yumi_contributor.commun.domain.model.SessionData
 import retrofit2.HttpException
 import java.io.IOException
-import java.io.Serializable
 import java.math.BigInteger
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
@@ -75,9 +71,12 @@ import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-fun isNetworkReachable(context: Context): Boolean {
-    val connectivityManager =
-        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+fun isNetworkReachable(
+    context: Context
+): Boolean {
+    val connectivityManager = context.getSystemService(
+        Context.CONNECTIVITY_SERVICE
+    ) as ConnectivityManager
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         val network = connectivityManager.activeNetwork ?: return false
         val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
@@ -94,11 +93,16 @@ fun isNetworkReachable(context: Context): Boolean {
     }
 }
 
-fun generateToken(timestamp: String, methodName: String, randomString: String): String {
-    return "noliaware|$timestamp|${methodName}|${timestamp.reversed()}|$randomString".sha256()
-}
+fun generateToken(
+    timestamp: String,
+    methodName: String,
+    randomString: String
+) = "noliaware|$timestamp|${methodName}|${timestamp.reversed()}|$randomString".sha256()
 
-fun getCommonWSParams(sessionData: SessionData, tokenKey: String) = mapOf(
+fun getCommonWSParams(
+    sessionData: SessionData,
+    tokenKey: String
+) = mapOf(
     LOGIN to sessionData.login,
     APP_VERSION to BuildConfig.VERSION_NAME,
     DEVICE_ID to sessionData.deviceId,
@@ -113,18 +117,15 @@ suspend fun <T> FlowCollector<Resource<T>>.handleSessionWithNoFailure(
     appMessage: AppMessageDTO?,
     error: ErrorDTO?
 ): Boolean {
-
     val errorType = session?.let { sessionDTO ->
         sessionData.apply {
             sessionId = sessionDTO.sessionId
             sessionTokens[tokenKey] = sessionDTO.sessionToken
         }
-
         ErrorType.RECOVERABLE_ERROR
     } ?: run {
         ErrorType.SYSTEM_ERROR
     }
-
     error?.let { errorDTO ->
         emit(
             Resource.Error(
@@ -202,11 +203,8 @@ fun Int.parseSecondsToMinutesString(): String = SimpleDateFormat(
 ).format(this * 1000L)
 
 fun Fragment.handleSharedEvent(sharedEvent: UIEvent) = context?.let {
-
     when (sharedEvent) {
-
         is UIEvent.ShowAppMessage -> {
-
             val appMessage = sharedEvent.appMessage
             when (appMessage.type) {
                 AppMessageType.POPUP -> {
@@ -222,7 +220,6 @@ fun Fragment.handleSharedEvent(sharedEvent: UIEvent) = context?.let {
                             show()
                         }
                 }
-
                 AppMessageType.SNACKBAR -> {
                     Snackbar.make(
                         requireView(),
@@ -230,30 +227,21 @@ fun Fragment.handleSharedEvent(sharedEvent: UIEvent) = context?.let {
                         Snackbar.LENGTH_LONG
                     ).show()
                 }
-
                 AppMessageType.TOAST -> {
-                    Toast.makeText(
-                        context,
-                        appMessage.body,
-                        Toast.LENGTH_LONG
-                    ).show()
+                    context.toast(appMessage.body)
                 }
-
                 else -> Unit
             }
         }
-
         is UIEvent.ShowError -> {
-            Toast.makeText(
-                context,
-                getString(sharedEvent.errorStrRes),
-                Toast.LENGTH_LONG
-            ).show()
+            context.toast(sharedEvent.errorStrRes)
         }
     }
 }
 
-fun Fragment.redirectToLoginScreenFromSharedEvent(sharedEvent: UIEvent) {
+fun Fragment.redirectToLoginScreenFromSharedEvent(
+    sharedEvent: UIEvent
+) {
     if (sharedEvent is UIEvent.ShowError) {
         if (sharedEvent.errorType == ErrorType.SYSTEM_ERROR) {
             redirectToLoginScreenInternal()
@@ -261,7 +249,9 @@ fun Fragment.redirectToLoginScreenFromSharedEvent(sharedEvent: UIEvent) {
     }
 }
 
-fun Fragment.handlePaginationError(loadState: CombinedLoadStates): Boolean {
+fun Fragment.handlePaginationError(
+    loadState: CombinedLoadStates
+): Boolean {
     when {
         loadState.prepend is LoadState.Error -> loadState.prepend as LoadState.Error
         loadState.append is LoadState.Error -> loadState.append as LoadState.Error
@@ -296,20 +286,14 @@ private fun Fragment.redirectToLoginScreenInternal() {
     ) as? NavHostFragment)?.findNavController()?.setGraph(R.navigation.app_nav_graph)
 }
 
-fun <T : Serializable?> Bundle.getSerializableCompat(key: String, clazz: Class<T>): T? =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        getSerializable(key, clazz)
-    } else {
-        @Suppress("DEPRECATION")
-        (getSerializable(key) as T)
-    }
-
 fun ViewGroup.inflate(
     layoutRes: Int,
     attachToRoot: Boolean = false
 ): View = LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
 
-fun Context.drawableIdByName(resIdName: String?): Int {
+fun Context.drawableIdByName(
+    resIdName: String?
+): Int {
     resIdName?.let {
         return resources.getIdentifier(it, "drawable", packageName)
     }
@@ -329,31 +313,59 @@ fun View.translateYByValue(
     value: Float
 ): ObjectAnimator = ObjectAnimator.ofFloat(this, "translationY", value)
 
-fun View.layoutToTopLeft(left: Int, top: Int) {
+fun Context?.toast(
+    text: CharSequence,
+    duration: Int = Toast.LENGTH_LONG
+) = this?.let {
+    Toast.makeText(it, text, duration).show()
+}
+
+fun Context?.toast(
+    @StringRes textId: Int,
+    duration: Int = Toast.LENGTH_LONG
+) = this?.let {
+    Toast.makeText(it, textId, duration).show()
+}
+
+fun View.layoutToTopLeft(
+    left: Int,
+    top: Int
+) {
     val right = left + measuredWidth
     val bottom = top + measuredHeight
     layout(left, top, right, bottom)
 }
 
-fun View.layoutToTopRight(right: Int, top: Int) {
+fun View.layoutToTopRight(
+    right: Int,
+    top: Int
+) {
     val left = right - measuredWidth
     val bottom = top + measuredHeight
     layout(left, top, right, bottom)
 }
 
-fun View.layoutToBottomLeft(left: Int, bottom: Int) {
+fun View.layoutToBottomLeft(
+    left: Int,
+    bottom: Int
+) {
     val right = left + measuredWidth
     val top = bottom - measuredHeight
     layout(left, top, right, bottom)
 }
 
-fun View.layoutToBottomRight(right: Int, bottom: Int) {
+fun View.layoutToBottomRight(
+    right: Int,
+    bottom: Int
+) {
     val left = right - measuredWidth
     val top = bottom - measuredHeight
     layout(left, top, right, bottom)
 }
 
-fun View.convertDpToPx(dpValue: Int): Int = TypedValue.applyDimension(
+fun View.convertDpToPx(
+    dpValue: Int
+): Int = TypedValue.applyDimension(
     TypedValue.COMPLEX_UNIT_DIP, dpValue.toFloat(), resources.displayMetrics
 ).toInt()
 
@@ -368,7 +380,9 @@ fun View.getLocationRectOnScreen(): Rect {
     }
 }
 
-fun ShimmerFrameLayout.activateShimmer(activated: Boolean) {
+fun ShimmerFrameLayout.activateShimmer(
+    activated: Boolean
+) {
     Shimmer.AlphaHighlightBuilder()
         .setBaseAlpha(if (activated) 0.4f else 1f)
         .setDuration(resources.getInteger(R.integer.shimmer_animation_duration_ms).toLong())
@@ -417,14 +431,15 @@ fun Context.hideKeyboard() {
 inline fun <reified T : View> View.find(id: Int): T = findViewById(id)
 inline fun <reified T : View> Activity.find(id: Int): T = findViewById(id)
 inline fun <reified T : View> Fragment.find(id: Int): T = view?.findViewById(id) as T
-inline fun <reified T : View> RecyclerView.ViewHolder.find(id: Int): T =
-    itemView.findViewById(id) as T
-
+inline fun <reified T : View> RecyclerView.ViewHolder.find(
+    id: Int
+): T = itemView.findViewById(id) as T
 inline fun <reified T : View> View.findOptional(id: Int): T? = findViewById(id) as? T
 inline fun <reified T : View> Activity.findOptional(id: Int): T? = findViewById(id) as? T
 inline fun <reified T : View> Fragment.findOptional(id: Int): T? = view?.findViewById(id) as? T
-inline fun <reified T : View> RecyclerView.ViewHolder.findOptional(id: Int): T? =
-    itemView.findViewById(id) as? T
+inline fun <reified T : View> RecyclerView.ViewHolder.findOptional(
+    id: Int
+): T? = itemView.findViewById(id) as? T
 
 fun String.sha256(): String {
     return try {
@@ -443,32 +458,28 @@ fun String.sha256(): String {
 }
 
 @ColorInt
-fun Context.getColorCompat(@ColorRes colorRes: Int): Int {
-    return ContextCompat.getColor(this, colorRes)
-}
+fun Context.getColorCompat(
+    @ColorRes colorRes: Int
+) = ContextCompat.getColor(this, colorRes)
 
 @ColorInt
-fun String.parseHexColor(): Int {
-    return if (isEmpty()) {
-        Color.TRANSPARENT
-    } else {
-        Color.parseColor(this)
-    }
+fun String.parseHexColor() = if (isEmpty()) {
+    Color.TRANSPARENT
+} else {
+    Color.parseColor(this)
 }
 
-fun Context.getDrawableCompat(@DrawableRes drawableRes: Int) =
-    AppCompatResources.getDrawable(this, drawableRes)
+fun Context.getDrawableCompat(
+    @DrawableRes drawableRes: Int
+) = AppCompatResources.getDrawable(this, drawableRes)
 
 @CheckResult
-fun Drawable.tint(@ColorInt color: Int): Drawable {
+fun Drawable.tint(
+    @ColorInt color: Int
+): Drawable {
     val tintedDrawable = DrawableCompat.wrap(this).mutate()
     DrawableCompat.setTint(tintedDrawable, color)
     return tintedDrawable
-}
-
-@CheckResult
-fun Drawable.tint(context: Context, @ColorRes color: Int): Drawable {
-    return tint(context.getColorCompat(color))
 }
 
 fun Number.formatNumber(): String = NumberFormat.getNumberInstance(Locale.getDefault()).format(this)
@@ -499,11 +510,7 @@ fun String.decorateText(
     )
 }
 
-fun <T> unsafeLazy(initializer: () -> T) = lazy(LazyThreadSafetyMode.NONE, initializer)
-val <T> T.exhaustive: T get() = this
-
-fun openMap(
-    context: Context?,
+fun Context?.openMap(
     latitude: String?,
     longitude: String?,
     label: String?
@@ -514,13 +521,9 @@ fun openMap(
         .appendQueryParameter("q", "$latitude,$longitude($label)")
     val mapIntent = Intent(Intent.ACTION_VIEW, uriBuilder.build())
     try {
-        context?.startActivity(mapIntent)
+        this?.startActivity(mapIntent)
     } catch (ex: ActivityNotFoundException) {
-        Toast.makeText(
-            context?.applicationContext,
-            R.string.application_not_found,
-            Toast.LENGTH_LONG
-        ).show();
+        toast(R.string.application_not_found)
     }
 }
 
@@ -532,17 +535,16 @@ fun Context.startWebBrowserAtURL(url: String) {
     }
 }
 
-fun Context.openWebPage(url: String): Boolean {
+fun Context.openWebPage(
+    url: String
+): Boolean {
     // Format the URI properly.
     val uri = url.toWebUri()
-
     // Try using Chrome Custom Tabs.
     try {
-
         val params = CustomTabColorSchemeParams.Builder()
             .setToolbarColor(getColorCompat(R.color.colorPrimary))
             .build()
-
         val intent = CustomTabsIntent.Builder()
             .setColorSchemeParams(CustomTabsIntent.COLOR_SCHEME_DARK, params)
             .setShowTitle(true)
@@ -552,7 +554,6 @@ fun Context.openWebPage(url: String): Boolean {
     } catch (ex: Exception) {
         ex.printStackTrace()
     }
-
     // Fall back to launching a default web browser intent.
     try {
         val intent = Intent(Intent.ACTION_VIEW, uri)
@@ -563,33 +564,20 @@ fun Context.openWebPage(url: String): Boolean {
     } catch (ex: Exception) {
         ex.printStackTrace()
     }
-
     // We were unable to show the web page.
     return false
 }
 
-fun String.toWebUri(): Uri {
-    return (
-            if (startsWith("http://") || startsWith("https://"))
-                this
-            else
-                "https://$this"
-            ).toUri()
-}
+fun String.toWebUri() = if (startsWith("http://") || startsWith("https://")) {
+    this
+} else {
+    "https://$this"
+}.toUri()
 
-fun Context.makeCall(phoneNumber: String) {
+fun Context.makeCall(
+    phoneNumber: String
+) {
     val intent = Intent(Intent.ACTION_DIAL)
     intent.data = Uri.parse("tel:$phoneNumber")
     startActivity(intent)
-}
-
-fun Context.toActivity(): Activity? {
-    var context = this
-    while (context is ContextWrapper) {
-        if (context is Activity) {
-            return context
-        }
-        context = context.baseContext
-    }
-    return null
 }

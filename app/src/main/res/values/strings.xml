@@ -96,6 +96,8 @@
     <string name="new_mail">Nouveau message</string>
     <string name="reply">Répondre</string>
     <string name="mail_body">Message</string>
+    <string name="empty_mail_subject_error">Veuillez sélectionner l\'objet du message</string>
+    <string name="empty_mail_body_error">Le contenu du message est vide</string>
     <string name="delete">Suppression</string>
     <string name="delete_mail_confirmation">Voulez‑vous vraiment supprimer ce message ?</string>
 
