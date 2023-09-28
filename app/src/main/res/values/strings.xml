@@ -49,6 +49,7 @@
     <string name="cancellation_date_value">Annulé le %s à %s</string>
     <string name="expiry_date_value">Valable jusqu\'au %s</string>
     <string name="information">i</string>
+    <string name="more">Voir plus</string>
     <string name="go_to_retailer">Rendez-vous chez :</string>
     <string name="call">Appeler</string>
     <string name="write_email">Écrire un e-mail</string>

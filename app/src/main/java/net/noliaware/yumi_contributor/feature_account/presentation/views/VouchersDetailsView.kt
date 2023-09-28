@@ -30,6 +30,7 @@ class VouchersDetailsView @JvmOverloads constructor(
     private lateinit var sponsorTextView: TextView
     lateinit var informationTextView: TextView
     private lateinit var descriptionTextView: TextView
+    lateinit var moreTextView: TextView
     private lateinit var goToTextView: TextView
     private lateinit var locationBackgroundView: View
     private lateinit var retailerTextView: TextView
@@ -69,6 +70,7 @@ class VouchersDetailsView @JvmOverloads constructor(
         sponsorTextView = findViewById(R.id.sponsor_text_view)
         informationTextView = findViewById(R.id.information_text_view)
         descriptionTextView = findViewById(R.id.description_text_view)
+        moreTextView = findViewById(R.id.more_text_view)
         goToTextView = findViewById(R.id.go_to_text_view)
         locationBackgroundView = findViewById(R.id.location_background)
         retailerTextView = findViewById(R.id.retailer_text_view)
@@ -97,6 +99,10 @@ class VouchersDetailsView @JvmOverloads constructor(
         vouchersDetailsViewAdapter.voucherDescription?.let {
             descriptionTextView.isVisible = true
             descriptionTextView.text = vouchersDetailsViewAdapter.voucherDescription
+        }
+
+        if (vouchersDetailsViewAdapter.moreActionAvailable) {
+            moreTextView.isVisible = true
         }
 
         retailerTextView.text = vouchersDetailsViewAdapter.retailerLabel
@@ -158,10 +164,16 @@ class VouchersDetailsView @JvmOverloads constructor(
             )
         }
 
-        descriptionTextView.measure(
-            MeasureSpec.makeMeasureSpec(viewWidth * 9 / 10, MeasureSpec.AT_MOST),
-            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
-        )
+        if (descriptionTextView.isVisible) {
+            descriptionTextView.measure(
+                MeasureSpec.makeMeasureSpec(viewWidth * 9 / 10, MeasureSpec.AT_MOST),
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+            )
+        }
+
+        if (moreTextView.isVisible) {
+            moreTextView.measureWrapContent()
+        }
 
         goToTextView.measureWrapContent()
 
@@ -181,8 +193,8 @@ class VouchersDetailsView @JvmOverloads constructor(
 
         if (mailImageView.isVisible) {
             mailImageView.measure(
-                MeasureSpec.makeMeasureSpec(convertDpToPx(40), MeasureSpec.EXACTLY),
-                MeasureSpec.makeMeasureSpec(convertDpToPx(40), MeasureSpec.EXACTLY)
+                MeasureSpec.makeMeasureSpec(convertDpToPx(30), MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(convertDpToPx(30), MeasureSpec.EXACTLY)
             )
 
             mailTextView.measureWrapContent()
@@ -199,7 +211,8 @@ class VouchersDetailsView @JvmOverloads constructor(
             MeasureSpec.makeMeasureSpec(locationBackgroundViewHeight, MeasureSpec.EXACTLY)
         )
 
-        val contentHeight = titleFillableTextWidget.measuredHeight + createdFillableTextWidget.measuredHeight + separatorView.measuredHeight +
+        val contentHeight = titleFillableTextWidget.measuredHeight + createdFillableTextWidget.measuredHeight +
+                separatorView.measuredHeight +
                 if (sponsorTextView.isVisible) {
                     sponsorBackgroundView.measuredHeight + convertDpToPx(15)
                 } else {
@@ -210,8 +223,13 @@ class VouchersDetailsView @JvmOverloads constructor(
                 } else {
                     0
                 } +
-                goToTextView.measuredHeight + locationBackgroundView.measuredHeight + openLocationLayout.measuredHeight / 2 +
-                convertDpToPx(130)
+                if (moreTextView.isVisible) {
+                    moreTextView.measuredHeight + convertDpToPx(10)
+                } else {
+                    0
+                } +
+                goToTextView.measuredHeight + locationBackgroundView.measuredHeight +
+                openLocationLayout.measuredHeight / 2 + convertDpToPx(130)
 
 
         viewHeight = Integer.max(contentHeight, viewHeight)
@@ -255,46 +273,47 @@ class VouchersDetailsView @JvmOverloads constructor(
         )
 
         val sponsorViewBottom = if (sponsorTextView.isVisible) {
-
             sponsorBackgroundView.layoutToTopLeft(
                 (viewWidth - sponsorBackgroundView.measuredWidth) / 2,
                 separatorView.bottom + convertDpToPx(15)
             )
-
             sponsorTextView.layoutToTopLeft(
                 sponsorBackgroundView.left + convertDpToPx(15),
                 sponsorBackgroundView.top + convertDpToPx(10)
             )
-
             informationTextView.layoutToTopRight(
                 sponsorBackgroundView.right - convertDpToPx(15),
                 sponsorTextView.top
             )
-
             sponsorBackgroundView.bottom
-
         } else {
-
             separatorView.bottom
         }
 
         val descriptionViewBottom = if (descriptionTextView.isVisible) {
-
             descriptionTextView.layoutToTopLeft(
                 titleFillableTextWidget.left,
                 sponsorViewBottom + convertDpToPx(15)
             )
-
             descriptionTextView.bottom
-
         } else {
-
             sponsorViewBottom
+        }
+
+        val moreViewBottom = if (moreTextView.isVisible) {
+            val edgeSpace = viewWidth * 5 / 100
+            moreTextView.layoutToTopRight(
+                viewWidth - edgeSpace,
+                descriptionViewBottom + convertDpToPx(10)
+            )
+            moreTextView.bottom
+        } else {
+            descriptionViewBottom
         }
 
         goToTextView.layoutToTopLeft(
             titleFillableTextWidget.left,
-            descriptionViewBottom + convertDpToPx(15)
+            moreViewBottom + convertDpToPx(15)
         )
 
         locationBackgroundView.layoutToTopLeft(

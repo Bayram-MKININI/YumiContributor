@@ -47,6 +47,7 @@ class VouchersDetailsContainerView @JvmOverloads constructor(
         val partnerAvailable: Boolean,
         val partnerLabel: String? = null,
         val voucherDescription: String? = null,
+        val moreActionAvailable: Boolean,
         val retailerLabel: String = "",
         val retailerAddress: String = "",
         val displayVoucherActionNotAvailable: Boolean = false,
@@ -56,6 +57,7 @@ class VouchersDetailsContainerView @JvmOverloads constructor(
     interface VouchersDetailsViewCallback {
         fun onBackButtonClicked()
         fun onPartnerInfoClicked()
+        fun onMoreButtonClicked()
         fun onPhoneButtonClicked()
         fun onLocationClicked()
         fun onDisplayVoucherButtonClicked()
@@ -77,6 +79,7 @@ class VouchersDetailsContainerView @JvmOverloads constructor(
         shimmerView = findViewById(R.id.shimmer_view)
         vouchersDetailsView = shimmerView.findViewById(R.id.content_layout)
         vouchersDetailsView.informationTextView.setOnClickListener(onButtonClickListener)
+        vouchersDetailsView.moreTextView.setOnClickListener(onButtonClickListener)
         vouchersDetailsView.openLocationLayout.setOnClickListener(onButtonClickListener)
         vouchersDetailsView.phoneImageView.setOnClickListener(onButtonClickListener)
 
@@ -91,6 +94,7 @@ class VouchersDetailsContainerView @JvmOverloads constructor(
             when (it.id) {
                 R.id.back_view -> callback?.onBackButtonClicked()
                 R.id.information_text_view -> callback?.onPartnerInfoClicked()
+                R.id.more_text_view -> callback?.onMoreButtonClicked()
                 R.id.phone_image_view -> callback?.onPhoneButtonClicked()
                 R.id.open_location_layout -> callback?.onLocationClicked()
                 R.id.display_voucher_layout -> callback?.onDisplayVoucherButtonClicked()
@@ -154,8 +158,7 @@ class VouchersDetailsContainerView @JvmOverloads constructor(
         displayVoucherLayout.measureWrapContent()
         voucherStatusTextView.measureWrapContent()
 
-        val parentContentViewHeight =
-            viewHeight - (headerView.measuredHeight + categoryImageView.measuredHeight / 2 +
+        val parentContentViewHeight = viewHeight - (headerView.measuredHeight + categoryImageView.measuredHeight / 2 +
                     convertDpToPx(25))
 
         parentContentView.measure(
@@ -197,7 +200,6 @@ class VouchersDetailsContainerView @JvmOverloads constructor(
                     parentContentView.height - convertDpToPx(40)
                 )
             }
-
             displayVoucherLayout.isVisible -> {
                 displayVoucherLayout.layoutToBottomLeft(
                     (parentContentView.measuredWidth - displayVoucherLayout.measuredWidth) / 2,

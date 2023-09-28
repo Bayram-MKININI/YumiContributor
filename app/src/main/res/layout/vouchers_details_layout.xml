@@ -102,7 +102,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/rectangle_rounded_green"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        tools:visibility="visible" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/sponsor_text_view"
@@ -111,7 +112,9 @@
                         android:fontFamily="@font/omnes_medium"
                         android:textColor="@color/grey_2"
                         android:textSize="15sp"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        tools:text="La mairie 99 remercie sponsor pour le financement de ce coupon"
+                        tools:visibility="visible" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/information_text_view"
@@ -125,7 +128,8 @@
                         android:text="@string/information"
                         android:textColor="@android:color/white"
                         android:textSize="15sp"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        tools:visibility="visible" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/description_text_view"
@@ -134,7 +138,21 @@
                         android:fontFamily="@font/omnes_regular"
                         android:textColor="@color/grey_2"
                         android:textSize="13sp"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        tools:text="Panier de légumes de saison"
+                        tools:visibility="visible" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/more_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:fontFamily="@font/omnes_medium_italic"
+                        android:text="@string/more"
+                        android:textColor="@color/colorPrimary"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/go_to_text_view"
@@ -195,9 +213,10 @@
                         android:adjustViewBounds="true"
                         android:background="@drawable/circle_primary"
                         android:clickable="true"
-                        android:padding="12dp"
+                        android:padding="7dp"
                         android:src="@drawable/ic_mail_on"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        tools:visibility="visible" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/mail_text_view"
@@ -207,7 +226,8 @@
                         android:text="@string/write_email"
                         android:textColor="@color/colorPrimary"
                         android:textSize="14sp"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        tools:visibility="visible" />
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:id="@+id/open_location_layout"
