@@ -8,9 +8,15 @@ import net.noliaware.yumi_contributor.commun.ApiParameters.LIST_PAGE_SIZE
 import net.noliaware.yumi_contributor.commun.ApiParameters.OFFSET
 import net.noliaware.yumi_contributor.commun.data.remote.RemoteApi
 import net.noliaware.yumi_contributor.commun.domain.model.SessionData
-import net.noliaware.yumi_contributor.commun.util.*
+import net.noliaware.yumi_contributor.commun.util.ErrorType
+import net.noliaware.yumi_contributor.commun.util.PaginationException
+import net.noliaware.yumi_contributor.commun.util.currentTimeInMillis
+import net.noliaware.yumi_contributor.commun.util.generateToken
+import net.noliaware.yumi_contributor.commun.util.getCommonWSParams
+import net.noliaware.yumi_contributor.commun.util.handlePagingSourceError
+import net.noliaware.yumi_contributor.commun.util.randomString
+import net.noliaware.yumi_contributor.commun.util.resolvePaginatedListErrorIfAny
 import net.noliaware.yumi_contributor.feature_message.domain.model.Message
-import java.util.*
 
 class OutboxMessagePagingSource(
     private val api: RemoteApi,
@@ -29,8 +35,8 @@ class OutboxMessagePagingSource(
             // Start refresh at page 1 if undefined.
             val nextPage = params.key ?: 0
 
-            val timestamp = System.currentTimeMillis().toString()
-            val randomString = UUID.randomUUID().toString()
+            val timestamp = currentTimeInMillis()
+            val randomString = randomString()
 
             val remoteData = api.fetchOutboxMessages(
                 timestamp = timestamp,

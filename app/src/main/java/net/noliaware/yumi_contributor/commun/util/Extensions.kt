@@ -67,6 +67,7 @@ import java.math.BigInteger
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
+import java.security.SecureRandom
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -91,6 +92,16 @@ fun isNetworkReachable(
         @Suppress("DEPRECATION")
         return networkInfo.isConnected
     }
+}
+
+fun currentTimeInMillis() = System.currentTimeMillis().toString()
+
+fun randomString(
+    len: Int = 36
+): String {
+    val random = SecureRandom()
+    val chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".toCharArray()
+    return (1..len).map { chars[random.nextInt(chars.size)] }.joinToString("")
 }
 
 fun generateToken(

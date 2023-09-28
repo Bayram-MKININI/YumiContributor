@@ -8,15 +8,16 @@ import net.noliaware.yumi_contributor.commun.data.remote.RemoteApi
 import net.noliaware.yumi_contributor.commun.domain.model.SessionData
 import net.noliaware.yumi_contributor.commun.util.ErrorType
 import net.noliaware.yumi_contributor.commun.util.Resource
+import net.noliaware.yumi_contributor.commun.util.currentTimeInMillis
 import net.noliaware.yumi_contributor.commun.util.generateToken
 import net.noliaware.yumi_contributor.commun.util.getCommonWSParams
 import net.noliaware.yumi_contributor.commun.util.handleSessionWithNoFailure
+import net.noliaware.yumi_contributor.commun.util.randomString
 import net.noliaware.yumi_contributor.feature_profile.domain.model.BOSignIn
 import net.noliaware.yumi_contributor.feature_profile.domain.model.UserProfile
 import net.noliaware.yumi_contributor.feature_profile.domain.repository.ProfileRepository
 import okio.IOException
 import retrofit2.HttpException
-import java.util.UUID
 import javax.inject.Inject
 
 class ProfileRepositoryImpl @Inject constructor(
@@ -29,9 +30,8 @@ class ProfileRepositoryImpl @Inject constructor(
         emit(Resource.Loading())
 
         try {
-
-            val timestamp = System.currentTimeMillis().toString()
-            val randomString = UUID.randomUUID().toString()
+            val timestamp = currentTimeInMillis()
+            val randomString = randomString()
 
             val remoteData = api.fetchAccount(
                 timestamp = timestamp,
@@ -76,9 +76,8 @@ class ProfileRepositoryImpl @Inject constructor(
         emit(Resource.Loading())
 
         try {
-
-            val timestamp = System.currentTimeMillis().toString()
-            val randomString = UUID.randomUUID().toString()
+            val timestamp = currentTimeInMillis()
+            val randomString = randomString()
 
             val remoteData = api.fetchBackOfficeSignInCode(
                 timestamp = timestamp,

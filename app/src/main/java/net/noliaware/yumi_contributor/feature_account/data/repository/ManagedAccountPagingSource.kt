@@ -10,12 +10,13 @@ import net.noliaware.yumi_contributor.commun.data.remote.RemoteApi
 import net.noliaware.yumi_contributor.commun.domain.model.SessionData
 import net.noliaware.yumi_contributor.commun.util.ErrorType
 import net.noliaware.yumi_contributor.commun.util.PaginationException
+import net.noliaware.yumi_contributor.commun.util.currentTimeInMillis
 import net.noliaware.yumi_contributor.commun.util.generateToken
 import net.noliaware.yumi_contributor.commun.util.getCommonWSParams
 import net.noliaware.yumi_contributor.commun.util.handlePagingSourceError
+import net.noliaware.yumi_contributor.commun.util.randomString
 import net.noliaware.yumi_contributor.commun.util.resolvePaginatedListErrorIfAny
 import net.noliaware.yumi_contributor.feature_account.domain.model.ManagedAccount
-import java.util.UUID
 
 class ManagedAccountPagingSource(
     private val api: RemoteApi, private val sessionData: SessionData
@@ -33,8 +34,8 @@ class ManagedAccountPagingSource(
             // Start refresh at page 1 if undefined.
             val nextPage = params.key ?: 0
 
-            val timestamp = System.currentTimeMillis().toString()
-            val randomString = UUID.randomUUID().toString()
+            val timestamp = currentTimeInMillis()
+            val randomString = randomString()
 
             val remoteData = api.fetchManagedAccounts(
                 timestamp = timestamp,

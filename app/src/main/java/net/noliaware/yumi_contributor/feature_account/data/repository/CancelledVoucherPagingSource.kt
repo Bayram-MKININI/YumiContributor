@@ -11,12 +11,13 @@ import net.noliaware.yumi_contributor.commun.data.remote.RemoteApi
 import net.noliaware.yumi_contributor.commun.domain.model.SessionData
 import net.noliaware.yumi_contributor.commun.util.ErrorType
 import net.noliaware.yumi_contributor.commun.util.PaginationException
+import net.noliaware.yumi_contributor.commun.util.currentTimeInMillis
 import net.noliaware.yumi_contributor.commun.util.generateToken
 import net.noliaware.yumi_contributor.commun.util.getCommonWSParams
 import net.noliaware.yumi_contributor.commun.util.handlePagingSourceError
+import net.noliaware.yumi_contributor.commun.util.randomString
 import net.noliaware.yumi_contributor.commun.util.resolvePaginatedListErrorIfAny
 import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
-import java.util.UUID
 
 class CancelledVoucherPagingSource(
     private val api: RemoteApi,
@@ -36,8 +37,8 @@ class CancelledVoucherPagingSource(
             // Start refresh at page 1 if undefined.
             val nextPage = params.key ?: 0
 
-            val timestamp = System.currentTimeMillis().toString()
-            val randomString = UUID.randomUUID().toString()
+            val timestamp = currentTimeInMillis()
+            val randomString = randomString()
 
             val remoteData = api.fetchCancelledVouchersForCategory(
                 timestamp = timestamp,
