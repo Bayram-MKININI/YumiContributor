@@ -44,6 +44,7 @@ import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kotlinx.coroutines.flow.FlowCollector
 import net.noliaware.yumi_contributor.BuildConfig
 import net.noliaware.yumi_contributor.R
@@ -96,6 +97,14 @@ fun isNetworkReachable(
 
 fun currentTimeInMillis() = System.currentTimeMillis().toString()
 
+fun Exception.recordNonFatal() {
+    if (BuildConfig.DEBUG) {
+        printStackTrace()
+    } else {
+        FirebaseCrashlytics.getInstance().recordException(this)
+    }
+}
+
 fun randomString(
     len: Int = 36
 ): String {
@@ -109,6 +118,8 @@ fun generateToken(
     methodName: String,
     randomString: String
 ) = "noliaware|$timestamp|${methodName}|${timestamp.reversed()}|$randomString".sha256()
+
+fun String.isLoginNotValid() = contains("[^A-Za-z0-9@_.-]".toRegex())
 
 fun getCommonWSParams(
     sessionData: SessionData,
@@ -171,6 +182,7 @@ fun resolvePaginatedListErrorIfAny(
 inline fun <reified T : Any, reified K : Any> handlePagingSourceError(
     ex1: Exception
 ): PagingSource.LoadResult.Error<T, K> {
+    ex1.recordNonFatal()
     try {
         when (ex1) {
             is HttpException -> ErrorType.SYSTEM_ERROR
@@ -183,6 +195,19 @@ inline fun <reified T : Any, reified K : Any> handlePagingSourceError(
         }
     } catch (ex2: Exception) {
         return PagingSource.LoadResult.Error(ex2)
+    }
+}
+
+suspend inline fun <reified T : Any> FlowCollector<Resource<T>>.handleRemoteCallError(
+    ex: Exception
+) {
+    ex.recordNonFatal()
+    when (ex) {
+        is HttpException -> ErrorType.SYSTEM_ERROR
+        is IOException -> ErrorType.NETWORK_ERROR
+        else -> null
+    }?.let {
+        emit(Resource.Error(errorType = it))
     }
 }
 
@@ -534,6 +559,7 @@ fun Context?.openMap(
     try {
         this?.startActivity(mapIntent)
     } catch (ex: ActivityNotFoundException) {
+        ex.recordNonFatal()
         toast(R.string.application_not_found)
     }
 }
@@ -563,7 +589,7 @@ fun Context.openWebPage(
         intent.launchUrl(this, uri)
         return true
     } catch (ex: Exception) {
-        ex.printStackTrace()
+        ex.recordNonFatal()
     }
     // Fall back to launching a default web browser intent.
     try {
@@ -573,7 +599,7 @@ fun Context.openWebPage(
             return true
         }
     } catch (ex: Exception) {
-        ex.printStackTrace()
+        ex.recordNonFatal()
     }
     // We were unable to show the web page.
     return false

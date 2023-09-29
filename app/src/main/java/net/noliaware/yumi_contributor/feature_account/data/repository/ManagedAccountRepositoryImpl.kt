@@ -20,11 +20,11 @@ import net.noliaware.yumi_contributor.commun.ApiParameters.USER_ID
 import net.noliaware.yumi_contributor.commun.ApiParameters.VOUCHER_ID
 import net.noliaware.yumi_contributor.commun.data.remote.RemoteApi
 import net.noliaware.yumi_contributor.commun.domain.model.SessionData
-import net.noliaware.yumi_contributor.commun.util.ErrorType
 import net.noliaware.yumi_contributor.commun.util.Resource
 import net.noliaware.yumi_contributor.commun.util.currentTimeInMillis
 import net.noliaware.yumi_contributor.commun.util.generateToken
 import net.noliaware.yumi_contributor.commun.util.getCommonWSParams
+import net.noliaware.yumi_contributor.commun.util.handleRemoteCallError
 import net.noliaware.yumi_contributor.commun.util.handleSessionWithNoFailure
 import net.noliaware.yumi_contributor.commun.util.randomString
 import net.noliaware.yumi_contributor.feature_account.domain.model.Category
@@ -32,8 +32,6 @@ import net.noliaware.yumi_contributor.feature_account.domain.model.ManagedAccoun
 import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStateData
 import net.noliaware.yumi_contributor.feature_account.domain.repository.ManagedAccountRepository
-import okio.IOException
-import retrofit2.HttpException
 import javax.inject.Inject
 
 class ManagedAccountRepositoryImpl @Inject constructor(
@@ -77,10 +75,8 @@ class ManagedAccountRepositoryImpl @Inject constructor(
                 )
             }
 
-        } catch (ex: HttpException) {
-            emit(Resource.Error(errorType = ErrorType.SYSTEM_ERROR))
-        } catch (ex: IOException) {
-            emit(Resource.Error(errorType = ErrorType.NETWORK_ERROR))
+        } catch (ex: Exception) {
+            handleRemoteCallError(ex)
         }
     }
 
@@ -122,10 +118,8 @@ class ManagedAccountRepositoryImpl @Inject constructor(
                 }
             }
 
-        } catch (ex: HttpException) {
-            emit(Resource.Error(errorType = ErrorType.SYSTEM_ERROR))
-        } catch (ex: IOException) {
-            emit(Resource.Error(errorType = ErrorType.NETWORK_ERROR))
+        } catch (ex: Exception) {
+            handleRemoteCallError(ex)
         }
     }
 
@@ -163,10 +157,8 @@ class ManagedAccountRepositoryImpl @Inject constructor(
                 }
             }
 
-        } catch (ex: HttpException) {
-            emit(Resource.Error(errorType = ErrorType.SYSTEM_ERROR))
-        } catch (ex: IOException) {
-            emit(Resource.Error(errorType = ErrorType.NETWORK_ERROR))
+        } catch (ex: Exception) {
+            handleRemoteCallError(ex)
         }
     }
 
@@ -217,10 +209,8 @@ class ManagedAccountRepositoryImpl @Inject constructor(
                 }
             }
 
-        } catch (ex: HttpException) {
-            emit(Resource.Error(errorType = ErrorType.SYSTEM_ERROR))
-        } catch (ex: IOException) {
-            emit(Resource.Error(errorType = ErrorType.NETWORK_ERROR))
+        } catch (ex: Exception) {
+            handleRemoteCallError(ex)
         }
     }
 
@@ -268,10 +258,8 @@ class ManagedAccountRepositoryImpl @Inject constructor(
                 }
             }
 
-        } catch (ex: HttpException) {
-            emit(Resource.Error(errorType = ErrorType.SYSTEM_ERROR))
-        } catch (ex: IOException) {
-            emit(Resource.Error(errorType = ErrorType.NETWORK_ERROR))
+        } catch (ex: Exception) {
+            handleRemoteCallError(ex)
         }
     }
 
@@ -324,10 +312,8 @@ class ManagedAccountRepositoryImpl @Inject constructor(
                 }
             }
 
-        } catch (ex: HttpException) {
-            emit(Resource.Error(errorType = ErrorType.SYSTEM_ERROR))
-        } catch (ex: IOException) {
-            emit(Resource.Error(errorType = ErrorType.NETWORK_ERROR))
+        } catch (ex: Exception) {
+            handleRemoteCallError(ex)
         }
     }
 
@@ -380,10 +366,8 @@ class ManagedAccountRepositoryImpl @Inject constructor(
                 }
             }
 
-        } catch (ex: HttpException) {
-            emit(Resource.Error(errorType = ErrorType.SYSTEM_ERROR))
-        } catch (ex: IOException) {
-            emit(Resource.Error(errorType = ErrorType.NETWORK_ERROR))
+        } catch (ex: Exception) {
+            handleRemoteCallError(ex)
         }
     }
 
@@ -434,10 +418,8 @@ class ManagedAccountRepositoryImpl @Inject constructor(
                 }
             }
 
-        } catch (ex: HttpException) {
-            emit(Resource.Error(errorType = ErrorType.SYSTEM_ERROR))
-        } catch (ex: IOException) {
-            emit(Resource.Error(errorType = ErrorType.NETWORK_ERROR))
+        } catch (ex: Exception) {
+            handleRemoteCallError(ex)
         }
     }
 
@@ -481,10 +463,8 @@ class ManagedAccountRepositoryImpl @Inject constructor(
                 }
             }
 
-        } catch (ex: HttpException) {
-            emit(Resource.Error(errorType = ErrorType.SYSTEM_ERROR))
-        } catch (ex: IOException) {
-            emit(Resource.Error(errorType = ErrorType.NETWORK_ERROR))
+        } catch (ex: Exception) {
+            handleRemoteCallError(ex)
         }
     }
 
@@ -524,10 +504,8 @@ class ManagedAccountRepositoryImpl @Inject constructor(
                 )
             }
 
-        } catch (ex: HttpException) {
-            emit(Resource.Error(errorType = ErrorType.SYSTEM_ERROR))
-        } catch (ex: IOException) {
-            emit(Resource.Error(errorType = ErrorType.NETWORK_ERROR))
+        } catch (ex: Exception) {
+            handleRemoteCallError(ex)
         }
     }
 

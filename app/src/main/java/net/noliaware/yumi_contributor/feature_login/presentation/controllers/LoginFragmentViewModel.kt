@@ -20,6 +20,7 @@ import net.noliaware.yumi_contributor.commun.RemoteConfig.KEY_FORCE_UPDATE_URL
 import net.noliaware.yumi_contributor.commun.presentation.EventsHelper
 import net.noliaware.yumi_contributor.commun.util.ViewModelState
 import net.noliaware.yumi_contributor.commun.util.ViewModelState.*
+import net.noliaware.yumi_contributor.commun.util.recordNonFatal
 import net.noliaware.yumi_contributor.feature_login.domain.repository.DataStoreRepository
 import net.noliaware.yumi_contributor.feature_login.domain.repository.LoginRepository
 import net.noliaware.yumi_contributor.feature_login.domain.model.AccountData
@@ -114,7 +115,7 @@ class LoginFragmentViewModel @Inject constructor(
                 if (pushToken.isNullOrBlank())
                     pushToken = FirebaseMessaging.getInstance().token.await()
             } catch (e: Exception) {
-                e.printStackTrace()
+                e.recordNonFatal()
             }
 
             repository.getInitData(
@@ -144,7 +145,7 @@ class LoginFragmentViewModel @Inject constructor(
                 }
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            e.recordNonFatal()
         }
         return false
     }

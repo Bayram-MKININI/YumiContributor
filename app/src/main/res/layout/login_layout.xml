@@ -354,6 +354,7 @@
                     android:fontFamily="@font/omnes_regular"
                     android:imeOptions="actionDone|flagNoExtractUi"
                     android:inputType="textEmailAddress"
+                    android:maxLength="112"
                     android:textColor="@color/grey_2"
                     android:textSize="15sp" />
             </com.google.android.material.textfield.TextInputLayout>

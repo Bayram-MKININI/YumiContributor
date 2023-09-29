@@ -46,12 +46,14 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:shimmer_auto_start="false"
-        app:shimmer_base_alpha="1">
+        app:shimmer_base_alpha="1"
+        tools:visibility="gone">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/shimmer_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:overScrollMode="never" />
     </com.facebook.shimmer.ShimmerFrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -59,5 +61,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:overScrollMode="never"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:layoutManager="LinearLayoutManager"
+        tools:listitem="@layout/voucher_item_layout"
+        tools:visibility="visible" />
 </net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersListView>

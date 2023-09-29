@@ -14,6 +14,7 @@ import net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView
 import net.noliaware.yumi_contributor.commun.util.activateShimmer
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.hideKeyboard
+import net.noliaware.yumi_contributor.commun.util.isLoginNotValid
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import net.noliaware.yumi_contributor.commun.util.weak
@@ -104,13 +105,17 @@ class LoginView @JvmOverloads constructor(
 
     private fun validateLogin(): Boolean {
         val login = inputLogin.text.toString().trim()
-        if (login.isEmpty()) {
-            inputLayoutLogin.error = context.getString(R.string.login_empty_error)
+        when {
+            login.isEmpty() -> context.getString(R.string.login_empty_error)
+            login.isLoginNotValid() -> context.getString(R.string.login_unsafe_error)
+            else -> null
+        }?.let {
+            inputLayoutLogin.error = it
             return false
-        } else {
+        } ?: run {
             inputLayoutLogin.isErrorEnabled = false
+            return true
         }
-        return true
     }
 
     fun setStartAnimationState() {

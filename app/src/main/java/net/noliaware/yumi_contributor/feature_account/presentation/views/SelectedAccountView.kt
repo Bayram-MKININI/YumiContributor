@@ -111,7 +111,7 @@ class SelectedAccountView @JvmOverloads constructor(
 
         titleFillableTextWidget.measure(
             MeasureSpec.makeMeasureSpec(viewWidth * 6 / 10, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(convertDpToPx(24), MeasureSpec.EXACTLY)
+            MeasureSpec.makeMeasureSpec(convertDpToPx(25), MeasureSpec.EXACTLY)
         )
 
         availableTabView.measureWrapContent()

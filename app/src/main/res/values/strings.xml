@@ -12,6 +12,7 @@
     <string name="enter_code_message">Saisissez votre code</string>
     <string name="enter_code_description">Saisissez votre code à 6 chiffres</string>
     <string name="login_empty_error">Le champ identifiant est vide</string>
+    <string name="login_unsafe_error">Le format de l\'identifiant est incorrect</string>
     <string name="hint_login">Identifiant</string>
     <string name="confirm">Valider</string>
     <string name="erase">Effacer</string>
