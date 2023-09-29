@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:shimmer_auto_start="false"
-        app:shimmer_base_alpha="1">
+        app:shimmer_base_alpha="1"
+        tools:visibility="gone">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/shimmer_recycler_view"
@@ -27,7 +28,10 @@
         android:clipToPadding="false"
         android:overScrollMode="never"
         android:paddingBottom="50dp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:layoutManager="LinearLayoutManager"
+        tools:listitem="@layout/message_item_layout"
+        tools:visibility="visible" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/empty_message_text_view"
@@ -36,7 +40,6 @@
         android:fontFamily="@font/omnes_regular"
         android:textColor="@color/grey_2"
         android:textSize="16sp"
-        android:visibility="gone"
-        tools:text="Aucun message reçu"
-        tools:visibility="visible" />
+        android:visibility="gone" />
+
 </net.noliaware.yumi_contributor.feature_message.presentation.views.MessagesListView>
