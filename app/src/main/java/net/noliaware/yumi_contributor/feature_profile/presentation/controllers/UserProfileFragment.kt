@@ -16,6 +16,7 @@ import net.noliaware.yumi_contributor.commun.util.ViewModelState.DataState
 import net.noliaware.yumi_contributor.commun.util.ViewModelState.LoadingState
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromSharedEvent
+import net.noliaware.yumi_contributor.commun.util.safeNavigate
 import net.noliaware.yumi_contributor.feature_login.domain.model.TFAMode
 import net.noliaware.yumi_contributor.feature_profile.domain.model.UserProfile
 import net.noliaware.yumi_contributor.feature_profile.presentation.views.ProfileParentView
@@ -110,13 +111,13 @@ class UserProfileFragment : Fragment() {
     private val profileViewCallback: ProfileViewCallback by lazy {
         object : ProfileViewCallback {
             override fun onGetCodeButtonClicked() {
-                findNavController().navigate(
+                findNavController().safeNavigate(
                     UserProfileFragmentDirections.actionUserProfileFragmentToBOSignInFragment()
                 )
             }
 
             override fun onPrivacyPolicyButtonClicked() {
-                findNavController().navigate(
+                findNavController().safeNavigate(
                     UserProfileFragmentDirections.actionUserProfileFragmentToPrivacyPolicyFragment(
                         privacyPolicyUrl = args.accountData.privacyPolicyUrl,
                         isPrivacyPolicyConfirmationRequired = false

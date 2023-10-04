@@ -31,8 +31,11 @@ import net.noliaware.yumi_contributor.commun.util.openWebPage
 import net.noliaware.yumi_contributor.commun.util.parseDateToFormat
 import net.noliaware.yumi_contributor.commun.util.parseTimeToFormat
 import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromSharedEvent
+import net.noliaware.yumi_contributor.commun.util.safeNavigate
 import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherCodeData
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherRetrievalMode
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherRetrievalMode.*
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStateData
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus.CANCELLED
@@ -150,7 +153,8 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
                 moreActionAvailable = voucher.productWebpage?.isNotEmpty() == true,
                 retailerLabel = voucher.retailerLabel.orEmpty(),
                 retailerAddress = retailerAddress,
-                displayVoucherActionNotAvailable = voucher.voucherStatus != USABLE,
+                retrievalMode = mapRetrievalMode(voucher.voucherRetrievalMode),
+                openVoucherActionNotAvailable = voucher.voucherStatus != USABLE,
                 voucherStatus = mapVoucherStatus(voucher.voucherStatus)
             )
         )
@@ -176,15 +180,25 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
         else -> ""
     }
 
-    private fun mapVoucherStatus(voucherStatus: VoucherStatus?) =
-        when (voucherStatus) {
-            CONSUMED -> getString(R.string.voucher_consumed)
-            CANCELLED -> getString(R.string.voucher_canceled)
-            INEXISTENT -> getString(R.string.voucher_inexistent)
-            else -> ""
-        }
+    private fun mapRetrievalMode(
+        retrievalMode: VoucherRetrievalMode?
+    ) = when (retrievalMode) {
+        BOTH -> getString(R.string.retrievable_by_beneficiary_also)
+        else -> null
+    }
 
-    private fun handleVoucherStateDataUpdated(voucherStateData: VoucherStateData) {
+    private fun mapVoucherStatus(
+        voucherStatus: VoucherStatus?
+    ) = when (voucherStatus) {
+        CONSUMED -> getString(R.string.voucher_consumed)
+        CANCELLED -> getString(R.string.voucher_canceled)
+        INEXISTENT -> getString(R.string.voucher_inexistent)
+        else -> ""
+    }
+
+    private fun handleVoucherStateDataUpdated(
+        voucherStateData: VoucherStateData
+    ) {
         val updatedVoucher = viewModel.getVoucherEventsHelper.stateData?.copy(
             voucherStatus = voucherStateData.voucherStatus,
             voucherUseDate = voucherStateData.voucherUseDate,
@@ -235,7 +249,7 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
 
             override fun onDisplayVoucherButtonClicked() {
                 viewModel.getVoucherEventsHelper.stateData?.let { voucher ->
-                    findNavController().navigate(
+                    findNavController().safeNavigate(
                         VoucherDetailsFragmentDirections.actionVoucherDetailsFragmentToQrCodeFragment(
                             args.categoryUI,
                             VoucherCodeData(

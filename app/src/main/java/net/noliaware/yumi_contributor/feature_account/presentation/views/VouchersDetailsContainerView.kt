@@ -50,7 +50,8 @@ class VouchersDetailsContainerView @JvmOverloads constructor(
         val moreActionAvailable: Boolean,
         val retailerLabel: String = "",
         val retailerAddress: String = "",
-        val displayVoucherActionNotAvailable: Boolean = false,
+        val retrievalMode: String? = null,
+        val openVoucherActionNotAvailable: Boolean = false,
         val voucherStatus: String = ""
     )
 
@@ -121,7 +122,7 @@ class VouchersDetailsContainerView @JvmOverloads constructor(
     fun fillViewWithData(vouchersDetailsViewAdapter: VouchersDetailsViewAdapter) {
         vouchersDetailsView.fillViewWithData(vouchersDetailsViewAdapter)
 
-        if (vouchersDetailsViewAdapter.displayVoucherActionNotAvailable) {
+        if (vouchersDetailsViewAdapter.openVoucherActionNotAvailable) {
             voucherStatusTextView.isVisible = true
             displayVoucherLayout.isGone = true
             voucherStatusTextView.text = vouchersDetailsViewAdapter.voucherStatus
@@ -159,7 +160,7 @@ class VouchersDetailsContainerView @JvmOverloads constructor(
         voucherStatusTextView.measureWrapContent()
 
         val parentContentViewHeight = viewHeight - (headerView.measuredHeight + categoryImageView.measuredHeight / 2 +
-                    convertDpToPx(25))
+                convertDpToPx(25))
 
         parentContentView.measure(
             MeasureSpec.makeMeasureSpec(viewWidth * 95 / 100, MeasureSpec.EXACTLY),

@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.time.delay
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.OnBackPressedHandler
+import net.noliaware.yumi_contributor.commun.util.safeNavigate
 import net.noliaware.yumi_contributor.feature_account.presentation.views.HomeMenuView.HomeMenuViewCallback
 import net.noliaware.yumi_contributor.feature_account.presentation.views.HomeView
 import net.noliaware.yumi_contributor.feature_login.domain.model.AccountData
@@ -77,7 +78,7 @@ class HomeFragment : Fragment() {
         if (accountData.shouldConfirmPrivacyPolicy) {
             viewLifecycleOwner.lifecycleScope.launch {
                 delay(Duration.ofMillis(150))
-                findNavController().navigate(
+                findNavController().safeNavigate(
                     HomeFragmentDirections.actionHomeFragmentToPrivacyPolicyFragment(
                         privacyPolicyUrl = accountData.privacyPolicyUrl,
                         isPrivacyPolicyConfirmationRequired = true

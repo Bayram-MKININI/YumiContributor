@@ -26,6 +26,7 @@ import net.noliaware.yumi_contributor.commun.util.navDismiss
 import net.noliaware.yumi_contributor.commun.util.parseDateToFormat
 import net.noliaware.yumi_contributor.commun.util.parseTimeToFormat
 import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromSharedEvent
+import net.noliaware.yumi_contributor.commun.util.safeNavigate
 import net.noliaware.yumi_contributor.feature_message.domain.model.Message
 import net.noliaware.yumi_contributor.feature_message.presentation.views.ReadMailView
 import net.noliaware.yumi_contributor.feature_message.presentation.views.ReadMailView.*
@@ -139,7 +140,7 @@ class ReadInboxMailFragment : AppCompatDialogFragment() {
             }
 
             override fun onComposeButtonClicked() {
-                findNavController().navigate(
+                findNavController().safeNavigate(
                     ReadInboxMailFragmentDirections.actionReadInboxMailFragmentToSendMailFragment(
                         message = viewModel.getMessageEventsHelper.stateData
                     )

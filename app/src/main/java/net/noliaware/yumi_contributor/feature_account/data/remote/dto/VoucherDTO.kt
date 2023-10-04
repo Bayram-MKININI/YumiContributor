@@ -3,6 +3,7 @@ package net.noliaware.yumi_contributor.feature_account.data.remote.dto
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherRetrievalMode
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus
 
 @JsonClass(generateAdapter = true)
@@ -23,6 +24,8 @@ data class VoucherDTO(
     val voucherUseDate: String?,
     @Json(name = "voucherUseTime")
     val voucherUseTime: String?,
+    @Json(name = "voucherUseMode")
+    val voucherUseMode: Int?,
     @Json(name = "productLabel")
     val productLabel: String?,
     @Json(name = "productDescription")
@@ -73,6 +76,7 @@ data class VoucherDTO(
         voucherExpiryDate = voucherExpiryDate,
         voucherUseDate = voucherUseDate,
         voucherUseTime = voucherUseTime,
+        voucherRetrievalMode = VoucherRetrievalMode.fromValue(voucherUseMode),
         productLabel = productLabel,
         productDescription = productDescription,
         productWebpage = productWebpage,

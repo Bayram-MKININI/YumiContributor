@@ -33,6 +33,8 @@ import androidx.core.net.toUri
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.paging.CombinedLoadStates
@@ -310,6 +312,12 @@ fun Fragment.handlePaginationError(
         }
     }
     return false
+}
+
+fun NavController.safeNavigate(
+    direction: NavDirections
+) = currentDestination?.getAction(direction.actionId)?.run {
+    navigate(direction)
 }
 
 fun Fragment.navDismiss() {

@@ -187,6 +187,17 @@
                         android:textSize="14sp"
                         tools:text="7 Boulevard Leon Kennedy\n63000 Puy-de-Dome" />
 
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/retrieval_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/omnes_medium"
+                        android:textColor="@color/grey_2"
+                        android:textSize="14sp"
+                        android:visibility="gone"
+                        tools:text="Coupon également récupérable par le bénéficiaire"
+                        tools:visibility="visible" />
+
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/phone_image_view"
                         android:layout_width="wrap_content"

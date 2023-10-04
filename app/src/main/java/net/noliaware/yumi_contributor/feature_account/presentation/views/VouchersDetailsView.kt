@@ -35,6 +35,7 @@ class VouchersDetailsView @JvmOverloads constructor(
     private lateinit var locationBackgroundView: View
     private lateinit var retailerTextView: TextView
     private lateinit var addressTextView: TextView
+    private lateinit var retrievalTextView: TextView
     lateinit var phoneImageView: ImageView
     private lateinit var phoneTextView: TextView
     private lateinit var mailImageView: ImageView
@@ -75,6 +76,7 @@ class VouchersDetailsView @JvmOverloads constructor(
         locationBackgroundView = findViewById(R.id.location_background)
         retailerTextView = findViewById(R.id.retailer_text_view)
         addressTextView = findViewById(R.id.address_text_view)
+        retrievalTextView = findViewById(R.id.retrieval_text_view)
         phoneImageView = findViewById(R.id.phone_image_view)
         phoneTextView = findViewById(R.id.phone_text_view)
         mailImageView = findViewById(R.id.mail_image_view)
@@ -85,7 +87,7 @@ class VouchersDetailsView @JvmOverloads constructor(
     fun fillViewWithData(vouchersDetailsViewAdapter: VouchersDetailsViewAdapter) {
 
         titleFillableTextWidget.setText(vouchersDetailsViewAdapter.title)
-        crossOutView.isVisible = vouchersDetailsViewAdapter.displayVoucherActionNotAvailable
+        crossOutView.isVisible = vouchersDetailsViewAdapter.openVoucherActionNotAvailable
         createdFillableTextWidget.setText(vouchersDetailsViewAdapter.startDate)
         expiryTextView.text = vouchersDetailsViewAdapter.endDate
 
@@ -107,6 +109,11 @@ class VouchersDetailsView @JvmOverloads constructor(
 
         retailerTextView.text = vouchersDetailsViewAdapter.retailerLabel
         addressTextView.text = vouchersDetailsViewAdapter.retailerAddress
+
+        vouchersDetailsViewAdapter.retrievalMode?.let {
+            retrievalTextView.isVisible = true
+            retrievalTextView.text = vouchersDetailsViewAdapter.retrievalMode
+        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -184,6 +191,13 @@ class VouchersDetailsView @JvmOverloads constructor(
 
         addressTextView.measureWrapContent()
 
+        if (retrievalTextView.isVisible) {
+            retrievalTextView.measure(
+                MeasureSpec.makeMeasureSpec(viewWidth * 8 / 10, MeasureSpec.AT_MOST),
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+            )
+        }
+
         phoneImageView.measure(
             MeasureSpec.makeMeasureSpec(convertDpToPx(30), MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(convertDpToPx(30), MeasureSpec.EXACTLY)
@@ -203,7 +217,11 @@ class VouchersDetailsView @JvmOverloads constructor(
         openLocationLayout.measureWrapContent()
 
         val locationBackgroundViewHeight = retailerTextView.measuredHeight + addressTextView.measuredHeight +
-                phoneImageView.measuredHeight + openLocationLayout.measuredHeight / 2 +
+                if (retrievalTextView.isVisible) {
+                    retrievalTextView.measuredHeight + convertDpToPx(10)
+                } else {
+                    0
+                } + phoneImageView.measuredHeight + openLocationLayout.measuredHeight / 2 +
                 convertDpToPx(50)
 
         locationBackgroundView.measure(
@@ -331,9 +349,19 @@ class VouchersDetailsView @JvmOverloads constructor(
             retailerTextView.bottom + convertDpToPx(10)
         )
 
+        val retrievalTextViewBottom = if (retrievalTextView.isVisible) {
+            retrievalTextView.layoutToTopLeft(
+                retailerTextView.left,
+                addressTextView.bottom + convertDpToPx(10)
+            )
+            retrievalTextView.bottom
+        } else {
+            addressTextView.bottom
+        }
+
         phoneImageView.layoutToTopLeft(
             retailerTextView.left,
-            addressTextView.bottom + convertDpToPx(15)
+            retrievalTextViewBottom + convertDpToPx(15)
         )
 
         phoneTextView.layoutToTopLeft(
