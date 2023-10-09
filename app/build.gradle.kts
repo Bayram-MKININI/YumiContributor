@@ -83,7 +83,7 @@ dependencies {
 
     // Support Libraries
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.constraintlayout:constraintlayout:+")
+    implementation("androidx.constraintlayout:constraintlayout:2.2.0-alpha13")
 
     // Network
     implementation(platform("com.squareup.okhttp3:okhttp-bom:4.11.0"))
@@ -100,12 +100,12 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // DI
-    implementation("com.google.dagger:hilt-android:2.48")
-    ksp("com.google.dagger:hilt-compiler:2.48")
+    implementation("com.google.dagger:hilt-android:2.48.1")
+    ksp("com.google.dagger:hilt-compiler:2.48.1")
 
     // UI
-    implementation("com.google.android.material:material:1.9.0")
-    implementation("androidx.activity:activity-ktx:1.7.2")
+    implementation("com.google.android.material:material:1.10.0")
+    implementation("androidx.activity:activity-ktx:1.8.0")
     implementation("androidx.fragment:fragment-ktx:1.6.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.paging:paging-runtime-ktx:3.2.1")
