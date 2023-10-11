@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.util.ViewModelState
+import net.noliaware.yumi_contributor.commun.util.ViewState.DataState
+import net.noliaware.yumi_contributor.commun.util.ViewState.LoadingState
+import net.noliaware.yumi_contributor.commun.util.collectLifecycleAware
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.isNetworkReachable
 import net.noliaware.yumi_contributor.commun.util.navDismiss
@@ -56,20 +56,16 @@ class PrivacyPolicyFragment : AppCompatDialogFragment() {
     }
 
     private fun collectFlows() {
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.privacyPolicyStatusEventsHelper.eventFlow.collectLatest { sharedEvent ->
-                handleSharedEvent(sharedEvent)
-                redirectToLoginScreenFromSharedEvent(sharedEvent)
-            }
+        viewModel.privacyPolicyStatusEventsHelper.eventFlow.collectLifecycleAware(viewLifecycleOwner) { sharedEvent ->
+            handleSharedEvent(sharedEvent)
+            redirectToLoginScreenFromSharedEvent(sharedEvent)
         }
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.privacyPolicyStatusEventsHelper.stateFlow.collectLatest { vmState ->
-                when (vmState) {
-                    is ViewModelState.LoadingState -> Unit
-                    is ViewModelState.DataState -> vmState.data?.let { result ->
-                        if (result) {
-                            navDismiss()
-                        }
+        viewModel.privacyPolicyStatusEventsHelper.stateFlow.collectLifecycleAware(viewLifecycleOwner) { viewState ->
+            when (viewState) {
+                is LoadingState -> Unit
+                is DataState -> viewState.data?.let { result ->
+                    if (result) {
+                        navDismiss()
                     }
                 }
             }

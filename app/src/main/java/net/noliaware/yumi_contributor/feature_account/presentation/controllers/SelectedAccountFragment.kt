@@ -9,15 +9,16 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.FragmentKeys.AVAILABLE_VOUCHERS_LIST_REQUEST_KEY
-import net.noliaware.yumi_contributor.commun.util.ViewModelState
+import net.noliaware.yumi_contributor.commun.util.ViewState.DataState
+import net.noliaware.yumi_contributor.commun.util.ViewState.LoadingState
+import net.noliaware.yumi_contributor.commun.util.collectLifecycleAware
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromSharedEvent
+import net.noliaware.yumi_contributor.feature_account.domain.model.SelectableData.AssignedData
 import net.noliaware.yumi_contributor.feature_account.presentation.views.SelectedAccountParentView
 import net.noliaware.yumi_contributor.feature_account.presentation.views.SelectedAccountParentView.SelectedAccountViewCallback
 
@@ -57,36 +58,40 @@ class SelectedAccountFragment : Fragment() {
     }
 
     private fun collectFlows() {
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            managedAccountsViewModel.selectAccountEventsHelper.eventFlow.collectLatest { sharedEvent ->
-                selectedAccountParentView?.activateLoading(false)
-                handleSharedEvent(sharedEvent)
-                redirectToLoginScreenFromSharedEvent(sharedEvent)
+        managedAccountsViewModel.managedAccountFlow.collectLifecycleAware(viewLifecycleOwner) { managedAccount ->
+            when (managedAccount) {
+                is AssignedData -> {
+                    if (selectedAccountParentView?.getViewPager?.adapter == null) {
+                        setUpView()
+                    }
+                }
+                else -> Unit
             }
         }
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            managedAccountsViewModel.selectAccountEventsHelper.stateFlow.collect { vmState ->
-                when (vmState) {
-                    is ViewModelState.LoadingState -> selectedAccountParentView?.activateLoading(true)
-                    is ViewModelState.DataState -> vmState.data?.let {
-                        selectedAccountParentView?.activateLoading(false)
-                        setUserName()
-                        setUpViewPager()
-                    }
+        managedAccountsViewModel.selectAccountEventsHelper.eventFlow.collectLifecycleAware(viewLifecycleOwner) { sharedEvent ->
+            selectedAccountParentView?.activateLoading(false)
+            managedAccountsViewModel.selectAccountEventsHelper.resetStateData()
+            handleSharedEvent(sharedEvent)
+            redirectToLoginScreenFromSharedEvent(sharedEvent)
+        }
+        managedAccountsViewModel.selectAccountEventsHelper.stateFlow.collectLifecycleAware(viewLifecycleOwner) { viewState ->
+            when (viewState) {
+                is LoadingState -> selectedAccountParentView?.activateLoading(true)
+                is DataState -> viewState.data?.let {
+                    selectedAccountParentView?.activateLoading(false)
+                    managedAccountsViewModel.selectAccountEventsHelper.resetStateData()
+                    setUpView()
                 }
             }
         }
     }
 
-    private fun setUserName() {
+    private fun setUpView() {
         managedAccountsViewModel.getSelectedManagedAccount()?.let { managedAccount ->
             selectedAccountParentView?.setTitle(
                 "${managedAccount.title} ${managedAccount.firstName} ${managedAccount.lastName}"
             )
         }
-    }
-
-    private fun setUpViewPager() {
         SelectedAccountFragmentStateAdapter(childFragmentManager, viewLifecycleOwner.lifecycle).apply {
             selectedAccountParentView?.getViewPager?.adapter = this
         }

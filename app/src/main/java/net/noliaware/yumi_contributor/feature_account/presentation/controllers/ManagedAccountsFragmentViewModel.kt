@@ -12,11 +12,11 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.commun.presentation.EventsHelper
-import net.noliaware.yumi_contributor.feature_account.domain.repository.ManagedAccountRepository
 import net.noliaware.yumi_contributor.feature_account.domain.model.ManagedAccount
 import net.noliaware.yumi_contributor.feature_account.domain.model.SelectableData
 import net.noliaware.yumi_contributor.feature_account.domain.model.SelectableData.AssignedData
 import net.noliaware.yumi_contributor.feature_account.domain.model.SelectableData.SelectedData
+import net.noliaware.yumi_contributor.feature_account.domain.repository.ManagedAccountRepository
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,13 +27,15 @@ class ManagedAccountsFragmentViewModel @Inject constructor(
     val getFilteredAccountEventsHelper = EventsHelper<ManagedAccount>()
     val getUsersAutocompleteListEventsHelper = EventsHelper<List<ManagedAccount>>()
     val selectAccountEventsHelper = EventsHelper<String>()
-    private val _managedAccountFlow: MutableStateFlow<SelectableData<ManagedAccount>> =
-        MutableStateFlow(
-            AssignedData(null)
-        )
+
+    private val _managedAccountFlow: MutableStateFlow<SelectableData<ManagedAccount>> by lazy {
+        MutableStateFlow(AssignedData(null))
+    }
     val managedAccountFlow = _managedAccountFlow.asStateFlow()
 
-    private val _onBackEventFlow = MutableSharedFlow<Unit>()
+    private val _onBackEventFlow: MutableSharedFlow<Unit> by lazy {
+        MutableSharedFlow()
+    }
     val onBackEventFlow = _onBackEventFlow.asSharedFlow()
 
     init {
@@ -42,7 +44,6 @@ class ManagedAccountsFragmentViewModel @Inject constructor(
 
     fun setInitManagedAccount(managedAccount: ManagedAccount) {
         _managedAccountFlow.value = AssignedData(managedAccount)
-        callSelectAccountForId(managedAccount.login)
     }
 
     fun setSelectedManagedAccount(managedAccount: ManagedAccount) {
@@ -90,6 +91,7 @@ class ManagedAccountsFragmentViewModel @Inject constructor(
     fun resetFilteredManagedAccount() {
         getFilteredAccountEventsHelper.resetStateData()
     }
+
     fun resetSelectedManagedAccount() {
         _managedAccountFlow.value = SelectedData(null)
     }

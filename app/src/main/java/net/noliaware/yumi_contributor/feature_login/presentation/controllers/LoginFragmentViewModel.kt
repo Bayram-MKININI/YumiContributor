@@ -18,14 +18,15 @@ import net.noliaware.yumi_contributor.commun.RemoteConfig.KEY_CURRENT_VERSION
 import net.noliaware.yumi_contributor.commun.RemoteConfig.KEY_FORCE_UPDATE_REQUIRED
 import net.noliaware.yumi_contributor.commun.RemoteConfig.KEY_FORCE_UPDATE_URL
 import net.noliaware.yumi_contributor.commun.presentation.EventsHelper
-import net.noliaware.yumi_contributor.commun.util.ViewModelState
-import net.noliaware.yumi_contributor.commun.util.ViewModelState.*
+import net.noliaware.yumi_contributor.commun.util.ViewState
+import net.noliaware.yumi_contributor.commun.util.ViewState.DataState
+import net.noliaware.yumi_contributor.commun.util.ViewState.LoadingState
 import net.noliaware.yumi_contributor.commun.util.recordNonFatal
-import net.noliaware.yumi_contributor.feature_login.domain.repository.DataStoreRepository
-import net.noliaware.yumi_contributor.feature_login.domain.repository.LoginRepository
 import net.noliaware.yumi_contributor.feature_login.domain.model.AccountData
 import net.noliaware.yumi_contributor.feature_login.domain.model.InitData
 import net.noliaware.yumi_contributor.feature_login.domain.model.UserPreferences
+import net.noliaware.yumi_contributor.feature_login.domain.repository.DataStoreRepository
+import net.noliaware.yumi_contributor.feature_login.domain.repository.LoginRepository
 import org.json.JSONArray
 import javax.inject.Inject
 
@@ -35,22 +36,29 @@ class LoginFragmentViewModel @Inject constructor(
     private val dataStoreRepository: DataStoreRepository
 ) : ViewModel() {
 
-    private val _forceUpdateStateFlow: MutableStateFlow<ViewModelState<String>> = MutableStateFlow(DataState())
+    private val _forceUpdateStateFlow: MutableStateFlow<ViewState<String>> by lazy {
+        MutableStateFlow(DataState())
+    }
     val forceUpdateStateFlow = _forceUpdateStateFlow.asStateFlow()
-    private val _prefsStateFlow: MutableStateFlow<ViewModelState<UserPreferences>> = MutableStateFlow(DataState())
-    val prefsStateFlow = _prefsStateFlow.asStateFlow()
-    private var pushToken: String? = null
 
     val forceUpdateUrl
         get() = when (forceUpdateStateFlow.value) {
             is DataState -> (forceUpdateStateFlow.value as DataState<String>).data
             is LoadingState -> null
         }
+
+    private val _prefsStateFlow: MutableStateFlow<ViewState<UserPreferences>> by lazy {
+        MutableStateFlow(DataState())
+    }
+    val prefsStateFlow = _prefsStateFlow.asStateFlow()
+
     private val prefsStateData
         get() = when (prefsStateFlow.value) {
             is DataState -> (prefsStateFlow.value as DataState<UserPreferences>).data
             is LoadingState -> null
         }
+
+    private var pushToken: String? = null
 
     private val firebaseRemoteConfig by lazy {
         FirebaseRemoteConfig.getInstance()
@@ -156,5 +164,9 @@ class LoginFragmentViewModel @Inject constructor(
                 accountDataEventsHelper.handleResponse(result)
             }.launchIn(this)
         }
+    }
+
+    fun resetForceUpdateStateFlow() {
+        _forceUpdateStateFlow.value = DataState(null)
     }
 }

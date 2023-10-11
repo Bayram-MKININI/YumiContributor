@@ -9,15 +9,15 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.OnBackPressedHandler
+import net.noliaware.yumi_contributor.commun.util.collectLifecycleAware
 import net.noliaware.yumi_contributor.commun.util.formatNumber
-import net.noliaware.yumi_contributor.feature_account.domain.model.SelectableData
+import net.noliaware.yumi_contributor.feature_account.domain.model.SelectableData.AssignedData
+import net.noliaware.yumi_contributor.feature_account.domain.model.SelectableData.SelectedData
 import net.noliaware.yumi_contributor.feature_account.presentation.views.ManagedAccountsParentView
 
 @AndroidEntryPoint
@@ -65,36 +65,28 @@ class ManagedAccountsFragment : Fragment(), OnBackPressedHandler {
     }
 
     private fun setUpViewPager() {
-        ManagedAccountsFragmentStateAdapter(
-            childFragmentManager,
-            viewLifecycleOwner.lifecycle
-        ).apply {
+        ManagedAccountsFragmentStateAdapter(childFragmentManager, viewLifecycleOwner.lifecycle).apply {
             managedAccountsParentView?.getViewPager?.adapter = this
         }
     }
 
     private fun collectFlow() {
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            managedAccountsViewModel.onBackEventFlow.collectLatest {
-                managedAccountsViewModel.resetSelectedManagedAccount()
-                managedAccountsParentView?.displayAccountListView()
-                homeViewModel.managedAccount = null
-            }
+        managedAccountsViewModel.onBackEventFlow.collectLifecycleAware(viewLifecycleOwner) {
+            managedAccountsViewModel.resetSelectedManagedAccount()
+            managedAccountsParentView?.displayAccountListView()
+            homeViewModel.managedAccount = null
         }
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            managedAccountsViewModel.managedAccountFlow.collect { managedAccount ->
-                when (managedAccount) {
-                    is SelectableData.AssignedData -> {
-                        managedAccount.data?.let {
-                            managedAccountsParentView?.displaySelectedAccountView(animated = false)
-                        }
+        managedAccountsViewModel.managedAccountFlow.collectLifecycleAware(viewLifecycleOwner) { managedAccount ->
+            when (managedAccount) {
+                is AssignedData -> {
+                    managedAccount.data?.let {
+                        managedAccountsParentView?.displaySelectedAccountView(animated = false)
                     }
-
-                    is SelectableData.SelectedData -> {
-                        managedAccount.data?.let {
-                            homeViewModel.managedAccount = it
-                            managedAccountsParentView?.displaySelectedAccountView()
-                        }
+                }
+                is SelectedData -> {
+                    managedAccount.data?.let {
+                        homeViewModel.managedAccount = it
+                        managedAccountsParentView?.displaySelectedAccountView()
                     }
                 }
             }

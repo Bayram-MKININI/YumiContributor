@@ -33,6 +33,9 @@ import androidx.core.net.toUri
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
@@ -47,7 +50,10 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.BuildConfig
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.*
@@ -314,6 +320,23 @@ fun Fragment.handlePaginationError(
     return false
 }
 
+fun <T> Flow<T>.collectLifecycleAware(
+    owner: LifecycleOwner,
+    action: suspend (value: T) -> Unit
+) {
+    owner.lifecycleScope.launch {
+        this@collectLifecycleAware.flowWithLifecycle(owner.lifecycle).collectLatest {
+            action.invoke(it)
+        }
+    }
+}
+
+private fun Fragment.redirectToLoginScreenInternal() {
+    (activity?.supportFragmentManager?.findFragmentById(
+        R.id.app_nav_host_fragment
+    ) as? NavHostFragment)?.findNavController()?.setGraph(R.navigation.app_nav_graph)
+}
+
 fun NavController.safeNavigate(
     direction: NavDirections
 ) = currentDestination?.getAction(direction.actionId)?.run {
@@ -322,12 +345,6 @@ fun NavController.safeNavigate(
 
 fun Fragment.navDismiss() {
     findNavController().navigateUp()
-}
-
-private fun Fragment.redirectToLoginScreenInternal() {
-    (activity?.supportFragmentManager?.findFragmentById(
-        R.id.app_nav_host_fragment
-    ) as? NavHostFragment)?.findNavController()?.setGraph(R.navigation.app_nav_graph)
 }
 
 fun ViewGroup.inflate(

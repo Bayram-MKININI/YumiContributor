@@ -11,18 +11,18 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.DateTime.HOURS_TIME_FORMAT
 import net.noliaware.yumi_contributor.commun.DateTime.SHORT_DATE_FORMAT
 import net.noliaware.yumi_contributor.commun.FragmentKeys.QR_CODE_REQUEST_KEY
 import net.noliaware.yumi_contributor.commun.FragmentKeys.VOUCHER_DETAILS_REQUEST_KEY
 import net.noliaware.yumi_contributor.commun.FragmentKeys.VOUCHER_ID_RESULT_KEY
-import net.noliaware.yumi_contributor.commun.util.ViewModelState
+import net.noliaware.yumi_contributor.commun.util.ViewState.DataState
+import net.noliaware.yumi_contributor.commun.util.ViewState.LoadingState
+import net.noliaware.yumi_contributor.commun.util.collectLifecycleAware
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.makeCall
 import net.noliaware.yumi_contributor.commun.util.navDismiss
@@ -35,7 +35,7 @@ import net.noliaware.yumi_contributor.commun.util.safeNavigate
 import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherCodeData
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherRetrievalMode
-import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherRetrievalMode.*
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherRetrievalMode.BOTH
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStateData
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus.CANCELLED
@@ -72,6 +72,7 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpFragmentListener()
+        vouchersDetailsContainerView?.activateLoading(true)
         collectFlows()
         vouchersDetailsContainerView?.setUpViewLook(
             color = args.categoryUI.categoryColor,
@@ -90,36 +91,28 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
     }
 
     private fun collectFlows() {
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.getVoucherEventsHelper.eventFlow.collectLatest { sharedEvent ->
-                vouchersDetailsContainerView?.activateLoading(false)
-                handleSharedEvent(sharedEvent)
-                redirectToLoginScreenFromSharedEvent(sharedEvent)
-            }
+        viewModel.getVoucherEventsHelper.eventFlow.collectLifecycleAware(viewLifecycleOwner) { sharedEvent ->
+            vouchersDetailsContainerView?.activateLoading(false)
+            handleSharedEvent(sharedEvent)
+            redirectToLoginScreenFromSharedEvent(sharedEvent)
         }
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.getVoucherEventsHelper.stateFlow.collect { vmState ->
-                when (vmState) {
-                    is ViewModelState.LoadingState -> vouchersDetailsContainerView?.activateLoading(true)
-                    is ViewModelState.DataState -> vmState.data?.let { voucher ->
-                        vouchersDetailsContainerView?.activateLoading(false)
-                        bindViewToData(voucher)
-                    }
+        viewModel.getVoucherEventsHelper.stateFlow.collectLifecycleAware(viewLifecycleOwner) { viewState ->
+            when (viewState) {
+                is LoadingState -> Unit
+                is DataState -> viewState.data?.let { voucher ->
+                    vouchersDetailsContainerView?.activateLoading(false)
+                    bindViewToData(voucher)
                 }
             }
         }
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.getVoucherStateDataEventsHelper.eventFlow.collectLatest { sharedEvent ->
-                redirectToLoginScreenFromSharedEvent(sharedEvent)
-            }
+        viewModel.getVoucherStateDataEventsHelper.eventFlow.collectLifecycleAware(viewLifecycleOwner) { sharedEvent ->
+            redirectToLoginScreenFromSharedEvent(sharedEvent)
         }
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.getVoucherStateDataEventsHelper.stateFlow.collect { vmState ->
-                when (vmState) {
-                    is ViewModelState.LoadingState -> Unit
-                    is ViewModelState.DataState -> vmState.data?.let { voucherStateData ->
-                        handleVoucherStateDataUpdated(voucherStateData)
-                    }
+        viewModel.getVoucherStateDataEventsHelper.stateFlow.collectLifecycleAware(viewLifecycleOwner) { viewState ->
+            when (viewState) {
+                is LoadingState -> Unit
+                is DataState -> viewState.data?.let { voucherStateData ->
+                    handleVoucherStateDataUpdated(voucherStateData)
                 }
             }
         }
@@ -167,16 +160,19 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
             R.string.expiry_date_value,
             voucher.voucherExpiryDate?.parseDateToFormat(SHORT_DATE_FORMAT)
         )
+
         CONSUMED -> getString(
             R.string.usage_date_value,
             voucher.voucherUseDate?.parseDateToFormat(SHORT_DATE_FORMAT),
             voucher.voucherUseTime?.parseTimeToFormat(HOURS_TIME_FORMAT)
         )
+
         CANCELLED -> getString(
             R.string.cancellation_date_value,
             voucher.voucherUseDate?.parseDateToFormat(SHORT_DATE_FORMAT),
             voucher.voucherUseTime?.parseTimeToFormat(HOURS_TIME_FORMAT)
         )
+
         else -> ""
     }
 

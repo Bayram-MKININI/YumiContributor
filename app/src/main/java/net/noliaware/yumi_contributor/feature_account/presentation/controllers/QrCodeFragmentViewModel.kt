@@ -14,9 +14,9 @@ import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.commun.ApiParameters.VOUCHER_CODE_DATA
 import net.noliaware.yumi_contributor.commun.presentation.EventsHelper
 import net.noliaware.yumi_contributor.commun.util.QRCodeGenerator
-import net.noliaware.yumi_contributor.commun.util.ViewModelState
-import net.noliaware.yumi_contributor.commun.util.ViewModelState.DataState
-import net.noliaware.yumi_contributor.commun.util.ViewModelState.LoadingState
+import net.noliaware.yumi_contributor.commun.util.ViewState
+import net.noliaware.yumi_contributor.commun.util.ViewState.DataState
+import net.noliaware.yumi_contributor.commun.util.ViewState.LoadingState
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherCodeData
 import net.noliaware.yumi_contributor.feature_account.domain.repository.ManagedAccountRepository
 import javax.inject.Inject
@@ -27,9 +27,12 @@ class QrCodeFragmentViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _stateFlow: MutableStateFlow<ViewModelState<Bitmap>> = MutableStateFlow(DataState())
-    val stateFlow = _stateFlow.asStateFlow()
-    val voucherCodeData get() = savedStateHandle.get<VoucherCodeData>(VOUCHER_CODE_DATA)
+    private val _qrCodeStateFlow: MutableStateFlow<ViewState<Bitmap>> by lazy {
+        MutableStateFlow(DataState())
+    }
+    val qrCodeStateFlow = _qrCodeStateFlow.asStateFlow()
+
+    private val voucherCodeData get() = savedStateHandle.get<VoucherCodeData>(VOUCHER_CODE_DATA)
     val useVoucherEventsHelper = EventsHelper<Boolean>()
 
     init {
@@ -45,9 +48,9 @@ class QrCodeFragmentViewModel @Inject constructor(
 
     private fun generateQrCodeForCode(code: String, size: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            _stateFlow.value = LoadingState()
+            _qrCodeStateFlow.value = LoadingState()
             QRCodeGenerator.encodeAsBitmap(code, size)?.let { bitmap ->
-                _stateFlow.value = DataState(bitmap)
+                _qrCodeStateFlow.value = DataState(bitmap)
             }
         }
     }

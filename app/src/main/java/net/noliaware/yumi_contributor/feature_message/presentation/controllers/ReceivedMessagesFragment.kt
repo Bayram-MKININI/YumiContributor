@@ -11,8 +11,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.presentation.adapters.ListLoadStateAdapter
+import net.noliaware.yumi_contributor.commun.util.collectLifecycleAware
 import net.noliaware.yumi_contributor.commun.util.handlePaginationError
 import net.noliaware.yumi_contributor.commun.util.safeNavigate
 import net.noliaware.yumi_contributor.feature_message.presentation.adapters.MessageAdapter
@@ -52,14 +54,11 @@ class ReceivedMessagesFragment : Fragment() {
     }
 
     private fun collectFlows() {
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.onReceivedListRefreshedEventFlow.collectLatest {
-                messagesListView?.messageAdapter?.refresh()
-            }
+        viewModel.onReceivedListRefreshedEventFlow.collectLifecycleAware(viewLifecycleOwner) {
+            messagesListView?.messageAdapter?.refresh()
         }
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launch {
             messagesListView?.messageAdapter?.loadStateFlow?.collectLatest { loadState ->
-
                 val noMessagesLoaded = (messagesListView?.messageAdapter?.itemCount ?: 0) < 1
                 when {
                     handlePaginationError(loadState) -> messagesListView?.stopLoading()
@@ -72,7 +71,7 @@ class ReceivedMessagesFragment : Fragment() {
                 }
             }
         }
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.getReceivedMessages().collectLatest {
                 messagesListView?.messageAdapter?.withLoadStateFooter(
                     footer = ListLoadStateAdapter()

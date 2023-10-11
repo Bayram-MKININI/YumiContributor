@@ -10,15 +10,15 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.FragmentKeys.REFRESH_SENT_MESSAGES_REQUEST_KEY
 import net.noliaware.yumi_contributor.commun.domain.model.Priority
 import net.noliaware.yumi_contributor.commun.presentation.mappers.PriorityMapper
-import net.noliaware.yumi_contributor.commun.util.ViewModelState
+import net.noliaware.yumi_contributor.commun.util.ViewState.DataState
+import net.noliaware.yumi_contributor.commun.util.ViewState.LoadingState
+import net.noliaware.yumi_contributor.commun.util.collectLifecycleAware
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.navDismiss
 import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromSharedEvent
@@ -27,7 +27,7 @@ import net.noliaware.yumi_contributor.feature_message.presentation.adapters.Mess
 import net.noliaware.yumi_contributor.feature_message.presentation.adapters.MessageSubjectsAdapter
 import net.noliaware.yumi_contributor.feature_message.presentation.views.PriorityUI
 import net.noliaware.yumi_contributor.feature_message.presentation.views.SendMailView
-import net.noliaware.yumi_contributor.feature_message.presentation.views.SendMailView.*
+import net.noliaware.yumi_contributor.feature_message.presentation.views.SendMailView.SendMailViewCallback
 
 @AndroidEntryPoint
 class SendMailFragment : AppCompatDialogFragment() {
@@ -102,24 +102,20 @@ class SendMailFragment : AppCompatDialogFragment() {
     }
 
     private fun collectFlows() {
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.messageSentEventsHelper.eventFlow.collectLatest { sharedEvent ->
-                handleSharedEvent(sharedEvent)
-                redirectToLoginScreenFromSharedEvent(sharedEvent)
-            }
+        viewModel.messageSentEventsHelper.eventFlow.collectLifecycleAware(viewLifecycleOwner) { sharedEvent ->
+            handleSharedEvent(sharedEvent)
+            redirectToLoginScreenFromSharedEvent(sharedEvent)
         }
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.messageSentEventsHelper.stateFlow.collectLatest { vmState ->
-                when (vmState) {
-                    is ViewModelState.LoadingState -> Unit
-                    is ViewModelState.DataState -> vmState.data?.let { result ->
-                        if (result) {
-                            setFragmentResult(
-                                REFRESH_SENT_MESSAGES_REQUEST_KEY,
-                                bundleOf()
-                            )
-                            navDismiss()
-                        }
+        viewModel.messageSentEventsHelper.stateFlow.collectLifecycleAware(viewLifecycleOwner) { viewState ->
+            when (viewState) {
+                is LoadingState -> Unit
+                is DataState -> viewState.data?.let { result ->
+                    if (result) {
+                        setFragmentResult(
+                            REFRESH_SENT_MESSAGES_REQUEST_KEY,
+                            bundleOf()
+                        )
+                        navDismiss()
                     }
                 }
             }

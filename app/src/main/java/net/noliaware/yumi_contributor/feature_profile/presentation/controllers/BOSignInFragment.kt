@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.util.ViewModelState
+import net.noliaware.yumi_contributor.commun.util.ViewState.DataState
+import net.noliaware.yumi_contributor.commun.util.ViewState.LoadingState
+import net.noliaware.yumi_contributor.commun.util.collectLifecycleAware
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.navDismiss
 import net.noliaware.yumi_contributor.commun.util.parseSecondsToMinutesString
@@ -53,32 +53,26 @@ class BOSignInFragment : AppCompatDialogFragment() {
     }
 
     private fun collectFlows() {
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.eventsHelper.eventFlow.collectLatest { sharedEvent ->
-                handleSharedEvent(sharedEvent)
-                redirectToLoginScreenFromSharedEvent(sharedEvent)
-            }
+        viewModel.eventsHelper.eventFlow.collectLifecycleAware(viewLifecycleOwner) { sharedEvent ->
+            handleSharedEvent(sharedEvent)
+            redirectToLoginScreenFromSharedEvent(sharedEvent)
         }
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.eventsHelper.stateFlow.collect { vmState ->
-                when (vmState) {
-                    is ViewModelState.LoadingState -> Unit
-                    is ViewModelState.DataState -> vmState.data?.let { boSignIn ->
-                        boSignInView?.getBoSignInView?.displayCode(boSignIn.signInCode)
-                        viewModel.startTimerWithPeriod(boSignIn.expiryDelayInSeconds)
-                    }
+        viewModel.eventsHelper.stateFlow.collectLifecycleAware(viewLifecycleOwner) { viewState ->
+            when (viewState) {
+                is LoadingState -> Unit
+                is DataState -> viewState.data?.let { boSignIn ->
+                    boSignInView?.getBoSignInView?.displayCode(boSignIn.signInCode)
+                    viewModel.startTimerWithPeriod(boSignIn.expiryDelayInSeconds)
                 }
             }
         }
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.timerStateFlow.collect { timerState ->
-                boSignInView?.getBoSignInView?.displayRemainingTime(
-                    timerState.secondsRemaining?.parseSecondsToMinutesString() ?: getString(R.string.empty_time)
-                )
-                timerState.secondsRemaining?.let { secondsRemaining ->
-                    if (secondsRemaining <= 0) {
-                        navDismiss()
-                    }
+        viewModel.timerStateFlow.collectLifecycleAware(viewLifecycleOwner) { timerState ->
+            boSignInView?.getBoSignInView?.displayRemainingTime(
+                timerState.secondsRemaining?.parseSecondsToMinutesString() ?: getString(R.string.empty_time)
+            )
+            timerState.secondsRemaining?.let { secondsRemaining ->
+                if (secondsRemaining <= 0) {
+                    navDismiss()
                 }
             }
         }

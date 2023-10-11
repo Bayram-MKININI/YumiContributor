@@ -10,9 +10,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.presentation.adapters.ListLoadStateAdapter
-import net.noliaware.yumi_contributor.commun.util.ViewModelState
+import net.noliaware.yumi_contributor.commun.util.ViewState.*
+import net.noliaware.yumi_contributor.commun.util.collectLifecycleAware
 import net.noliaware.yumi_contributor.commun.util.handlePaginationError
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.makeCall
@@ -58,7 +60,38 @@ class AccountsListFragment : Fragment() {
     }
 
     private fun collectFlows() {
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+        viewModel.getUsersAutocompleteListEventsHelper.eventFlow.collectLifecycleAware(viewLifecycleOwner) { sharedEvent ->
+            handleSharedEvent(sharedEvent)
+            redirectToLoginScreenFromSharedEvent(sharedEvent)
+        }
+        viewModel.getUsersAutocompleteListEventsHelper.stateFlow.collectLifecycleAware(viewLifecycleOwner) { viewState ->
+            when (viewState) {
+                is LoadingState -> Unit
+                is DataState -> viewState.data?.let { usersList ->
+                    accountsListView?.setUpSearchAutoComplete(
+                        usersList.map { managedAccount ->
+                            "${managedAccount.firstName} ${managedAccount.lastName} (${managedAccount.login})"
+                        }
+                    )
+                }
+            }
+        }
+        viewModel.getFilteredAccountEventsHelper.stateFlow.collectLifecycleAware(viewLifecycleOwner) { viewState ->
+            when (viewState) {
+                is LoadingState -> Unit
+                is DataState -> viewState.data?.let { user ->
+                    accountsListView?.filteredManagedAccountsAdapter =
+                        FilteredManagedAccountsAdapter(
+                            dataSet = listOf(user),
+                            accountMapper = ManagedAccountMapper(),
+                            onItemClicked = onAccountClickedAction,
+                            onPhoneButtonClicked = onPhoneButtonClickedAction
+                        )
+                    accountsListView?.displayFilteredAccount()
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
             accountsListView?.paginatedManagedAccountsAdapter?.loadStateFlow?.collectLatest { loadState ->
                 when {
                     handlePaginationError(loadState) -> accountsListView?.stopLoading()
@@ -69,44 +102,7 @@ class AccountsListFragment : Fragment() {
                 }
             }
         }
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.getUsersAutocompleteListEventsHelper.eventFlow.collectLatest { sharedEvent ->
-                    handleSharedEvent(sharedEvent)
-                    redirectToLoginScreenFromSharedEvent(sharedEvent)
-                }
-        }
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.getUsersAutocompleteListEventsHelper.stateFlow.collect { vmState ->
-                    when (vmState) {
-                        is ViewModelState.LoadingState -> Unit
-                        is ViewModelState.DataState -> vmState.data?.let { usersList ->
-                            accountsListView?.setUpSearchAutoComplete(
-                                usersList.map { managedAccount ->
-                                    "${managedAccount.firstName} ${managedAccount.lastName} (${managedAccount.login})"
-                                }
-                            )
-                        }
-                    }
-                }
-        }
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.getFilteredAccountEventsHelper.stateFlow.collect { vmState ->
-                    when (vmState) {
-                        is ViewModelState.LoadingState -> Unit
-                        is ViewModelState.DataState -> vmState.data?.let { user ->
-                            accountsListView?.filteredManagedAccountsAdapter =
-                                FilteredManagedAccountsAdapter(
-                                    dataSet = listOf(user),
-                                    accountMapper = ManagedAccountMapper(),
-                                    onItemClicked = onAccountClickedAction,
-                                    onPhoneButtonClicked = onPhoneButtonClickedAction
-                                )
-                            accountsListView?.displayFilteredAccount()
-                        }
-                    }
-                }
-        }
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.getManagedAccounts().collectLatest {
                 accountsListView?.paginatedManagedAccountsAdapter?.withLoadStateFooter(
                     footer = ListLoadStateAdapter()

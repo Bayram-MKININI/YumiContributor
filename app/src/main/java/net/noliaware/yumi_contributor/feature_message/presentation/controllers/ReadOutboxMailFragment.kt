@@ -10,16 +10,16 @@ import androidx.core.text.HtmlCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.DateTime.HOURS_TIME_FORMAT
 import net.noliaware.yumi_contributor.commun.DateTime.LONG_DATE_WITH_DAY_FORMAT
 import net.noliaware.yumi_contributor.commun.FragmentKeys.REFRESH_SENT_MESSAGES_REQUEST_KEY
 import net.noliaware.yumi_contributor.commun.presentation.mappers.PriorityMapper
-import net.noliaware.yumi_contributor.commun.util.ViewModelState
+import net.noliaware.yumi_contributor.commun.util.ViewState.DataState
+import net.noliaware.yumi_contributor.commun.util.ViewState.LoadingState
+import net.noliaware.yumi_contributor.commun.util.collectLifecycleAware
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.navDismiss
 import net.noliaware.yumi_contributor.commun.util.parseDateToFormat
@@ -27,7 +27,8 @@ import net.noliaware.yumi_contributor.commun.util.parseTimeToFormat
 import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromSharedEvent
 import net.noliaware.yumi_contributor.feature_message.domain.model.Message
 import net.noliaware.yumi_contributor.feature_message.presentation.views.ReadMailView
-import net.noliaware.yumi_contributor.feature_message.presentation.views.ReadMailView.*
+import net.noliaware.yumi_contributor.feature_message.presentation.views.ReadMailView.ReadMailViewAdapter
+import net.noliaware.yumi_contributor.feature_message.presentation.views.ReadMailView.ReadMailViewCallback
 
 @AndroidEntryPoint
 class ReadOutboxMailFragment : AppCompatDialogFragment() {
@@ -78,40 +79,35 @@ class ReadOutboxMailFragment : AppCompatDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        readMailView?.activateLoading(true)
         collectFlows()
     }
 
     private fun collectFlows() {
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.getMessageEventsHelper.eventFlow.collectLatest { sharedEvent ->
-                readMailView?.activateLoading(false)
-                handleSharedEvent(sharedEvent)
-                redirectToLoginScreenFromSharedEvent(sharedEvent)
-            }
+        viewModel.getMessageEventsHelper.eventFlow.collectLifecycleAware(viewLifecycleOwner) { sharedEvent ->
+            readMailView?.activateLoading(false)
+            handleSharedEvent(sharedEvent)
+            redirectToLoginScreenFromSharedEvent(sharedEvent)
         }
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.getMessageEventsHelper.stateFlow.collect { vmState ->
-                when (vmState) {
-                    is ViewModelState.LoadingState -> readMailView?.activateLoading(true)
-                    is ViewModelState.DataState -> vmState.data?.let { message ->
-                        readMailView?.activateLoading(false)
-                        bindViewToData(message)
-                    }
+        viewModel.getMessageEventsHelper.stateFlow.collectLifecycleAware(viewLifecycleOwner) { viewState ->
+            when (viewState) {
+                is LoadingState -> Unit
+                is DataState -> viewState.data?.let { message ->
+                    readMailView?.activateLoading(false)
+                    bindViewToData(message)
                 }
             }
         }
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.deleteMessageEventsHelper.stateFlow.collect { vmState ->
-                when (vmState) {
-                    is ViewModelState.LoadingState -> Unit
-                    is ViewModelState.DataState -> vmState.data?.let { result ->
-                        if (result) {
-                            setFragmentResult(
-                                REFRESH_SENT_MESSAGES_REQUEST_KEY,
-                                bundleOf()
-                            )
-                            navDismiss()
-                        }
+        viewModel.deleteMessageEventsHelper.stateFlow.collectLifecycleAware(viewLifecycleOwner) { viewState ->
+            when (viewState) {
+                is LoadingState -> Unit
+                is DataState -> viewState.data?.let { result ->
+                    if (result) {
+                        setFragmentResult(
+                            REFRESH_SENT_MESSAGES_REQUEST_KEY,
+                            bundleOf()
+                        )
+                        navDismiss()
                     }
                 }
             }

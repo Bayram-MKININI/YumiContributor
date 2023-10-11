@@ -6,12 +6,14 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.*
-import net.noliaware.yumi_contributor.commun.util.ViewModelState.DataState
-import net.noliaware.yumi_contributor.commun.util.ViewModelState.LoadingState
+import net.noliaware.yumi_contributor.commun.util.ViewState.DataState
+import net.noliaware.yumi_contributor.commun.util.ViewState.LoadingState
 
 class EventsHelper<S> {
 
-    private val _stateFlow: MutableStateFlow<ViewModelState<S>> = MutableStateFlow(DataState())
+    private val _stateFlow: MutableStateFlow<ViewState<S>> by lazy {
+        MutableStateFlow(DataState())
+    }
     val stateFlow = _stateFlow.asStateFlow()
 
     val stateData
@@ -20,7 +22,9 @@ class EventsHelper<S> {
             is LoadingState -> null
         }
 
-    private val _eventFlow = MutableSharedFlow<UIEvent>()
+    private val _eventFlow: MutableSharedFlow<UIEvent> by lazy {
+        MutableSharedFlow()
+    }
     val eventFlow = _eventFlow.asSharedFlow()
 
     suspend fun handleResponse(result: Resource<S>) {
@@ -37,12 +41,10 @@ class EventsHelper<S> {
                 _stateFlow.value = LoadingState()
             }
             is Resource.Error -> {
-
                 result.appMessage?.let {
                     _eventFlow.emit(UIEvent.ShowAppMessage(it))
                     return
                 }
-
                 when (result.errorType) {
                     ErrorType.NETWORK_ERROR -> {
                         _eventFlow.emit(

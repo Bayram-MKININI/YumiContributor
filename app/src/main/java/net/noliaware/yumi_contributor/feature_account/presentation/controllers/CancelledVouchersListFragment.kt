@@ -14,6 +14,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.presentation.adapters.ListLoadStateAdapter
 import net.noliaware.yumi_contributor.commun.util.decorateText
@@ -91,7 +92,7 @@ class CancelledVouchersListFragment : AppCompatDialogFragment() {
     }
 
     private fun collectFlows() {
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launch {
             vouchersListView?.voucherAdapter?.loadStateFlow?.collectLatest { loadState ->
                 when {
                     handlePaginationError(loadState) -> vouchersListView?.stopLoading()
@@ -102,7 +103,7 @@ class CancelledVouchersListFragment : AppCompatDialogFragment() {
                 }
             }
         }
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.getVouchers()?.collectLatest {
                 vouchersListView?.voucherAdapter?.withLoadStateFooter(
                     footer = ListLoadStateAdapter()

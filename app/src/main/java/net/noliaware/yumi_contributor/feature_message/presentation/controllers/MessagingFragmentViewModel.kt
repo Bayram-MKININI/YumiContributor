@@ -15,10 +15,14 @@ class MessagingFragmentViewModel @Inject constructor(
     private val messageRepository: MessageRepository
 ) : ViewModel() {
 
-    private val _onReceivedListRefreshedEventFlow = MutableSharedFlow<Unit>()
+    private val _onReceivedListRefreshedEventFlow: MutableSharedFlow<Unit> by lazy {
+        MutableSharedFlow()
+    }
     val onReceivedListRefreshedEventFlow = _onReceivedListRefreshedEventFlow.asSharedFlow()
 
-    private val _onSentListRefreshedEventFlow = MutableSharedFlow<Unit>()
+    private val _onSentListRefreshedEventFlow: MutableSharedFlow<Unit> by lazy {
+        MutableSharedFlow()
+    }
     val onSentListRefreshedEventFlow = _onSentListRefreshedEventFlow.asSharedFlow()
 
     fun getReceivedMessages() = messageRepository.getReceivedMessageList().cachedIn(viewModelScope)

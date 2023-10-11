@@ -3,13 +3,21 @@ package net.noliaware.yumi_contributor.feature_profile.presentation.controllers
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.time.delay
 import net.noliaware.yumi_contributor.commun.presentation.EventsHelper
-import net.noliaware.yumi_contributor.feature_profile.domain.repository.ProfileRepository
 import net.noliaware.yumi_contributor.feature_profile.domain.model.BOSignIn
 import net.noliaware.yumi_contributor.feature_profile.domain.model.TimerState
+import net.noliaware.yumi_contributor.feature_profile.domain.repository.ProfileRepository
 import java.time.Duration
 import javax.inject.Inject
 
@@ -19,7 +27,9 @@ class BOSignInFragmentViewModel @Inject constructor(
 ) : ViewModel() {
 
     val eventsHelper = EventsHelper<BOSignIn>()
-    private var _timerStateFlow = MutableStateFlow(TimerState())
+    private val _timerStateFlow: MutableStateFlow<TimerState> by lazy {
+        MutableStateFlow(TimerState())
+    }
     val timerStateFlow: StateFlow<TimerState> = _timerStateFlow
 
     init {
