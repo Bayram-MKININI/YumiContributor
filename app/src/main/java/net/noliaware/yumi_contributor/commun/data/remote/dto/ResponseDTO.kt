@@ -8,7 +8,7 @@ class ResponseDTO<T>(
     @Json(name = "status")
     val status: Int,
     @Json(name = "actions")
-    val actions: List<ActionDTO> = listOf(),
+    val actions: List<ActionDTO>? = null,
     @Json(name = "session")
     val session: SessionDTO?,
     @Json(name = "message")

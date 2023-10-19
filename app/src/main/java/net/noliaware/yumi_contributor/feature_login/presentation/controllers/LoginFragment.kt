@@ -108,7 +108,9 @@ class LoginFragment : Fragment() {
             when (viewState) {
                 is LoadingState -> Unit
                 is DataState -> viewState.data?.let { userPrefs ->
-                    loginLayout?.setLogin(userPrefs.login)
+                    if (userPrefs.login.isNotEmpty()) {
+                        loginLayout?.setLogin(userPrefs.login)
+                    }
                 }
             }
         }

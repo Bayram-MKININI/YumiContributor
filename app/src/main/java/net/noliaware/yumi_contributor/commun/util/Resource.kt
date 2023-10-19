@@ -13,11 +13,18 @@ sealed class Resource<T>(
     class Success<T>(
         data: T,
         appMessage: AppMessage? = null
-    ) : Resource<T>(data = data, appMessage = appMessage)
+    ) : Resource<T>(
+        data = data,
+        appMessage = appMessage
+    )
 
     class Error<T>(
         errorType: ErrorType,
         errorMessage: String? = null,
         appMessage: AppMessage? = null
-    ) : Resource<T>(errorType = errorType, errorMessage = errorMessage, appMessage = appMessage)
+    ) : Resource<T>(
+        errorType = errorType,
+        errorMessage = errorMessage,
+        appMessage = appMessage
+    )
 }
