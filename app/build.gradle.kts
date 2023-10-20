@@ -38,7 +38,12 @@ android {
     }
 
     buildTypes {
+        getByName("debug") {
+            manifestPlaceholders["crashlyticsCollectionEnabled"] = false
+        }
         getByName("release") {
+            manifestPlaceholders["crashlyticsCollectionEnabled"] = true
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
             isCrunchPngs = true
@@ -46,7 +51,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")
         }
     }
 
@@ -71,7 +75,7 @@ dependencies {
 
     implementation("androidx.core:core-splashscreen:1.0.1")
 
-    implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
+    implementation(platform("com.google.firebase:firebase-bom:32.4.0"))
     implementation("com.google.firebase:firebase-messaging-ktx")
     implementation("com.google.firebase:firebase-config-ktx")
     implementation("com.google.firebase:firebase-crashlytics-ktx")
