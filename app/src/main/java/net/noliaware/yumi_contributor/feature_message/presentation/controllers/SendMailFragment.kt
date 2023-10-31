@@ -33,7 +33,7 @@ import net.noliaware.yumi_contributor.feature_message.presentation.views.SendMai
 class SendMailFragment : AppCompatDialogFragment() {
 
     private var sendMailView: SendMailView? = null
-    private val args: SendMailFragmentArgs by navArgs()
+    private val args by navArgs<SendMailFragmentArgs>()
     private val viewModel by viewModels<SendMailFragmentViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -29,7 +29,7 @@ import java.time.Duration
 class HomeFragment : Fragment() {
 
     private var homeView: HomeView? = null
-    private val args: HomeFragmentArgs by navArgs()
+    private val args by navArgs<HomeFragmentArgs>()
     private val viewModel by activityViewModels<HomeFragmentViewModel>()
     private val navHostFragment by lazy {
         childFragmentManager.findFragmentById(

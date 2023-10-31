@@ -24,7 +24,7 @@ import net.noliaware.yumi_contributor.feature_account.presentation.views.Managed
 class ManagedAccountsFragment : Fragment(), OnBackPressedHandler {
 
     private var managedAccountsParentView: ManagedAccountsParentView? = null
-    private val args: ManagedAccountsFragmentArgs by navArgs()
+    private val args by navArgs<ManagedAccountsFragmentArgs>()
     private val managedAccountsViewModel by viewModels<ManagedAccountsFragmentViewModel>()
     private val homeViewModel by activityViewModels<HomeFragmentViewModel>()
 

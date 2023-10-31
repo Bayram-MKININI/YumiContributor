@@ -20,8 +20,10 @@ class AvailableVouchersListFragmentViewModel @Inject constructor(
     private val selectedCategory get() = savedStateHandle.get<Category>(SELECTED_CATEGORY)
 
     var dataShouldRefresh
-        get() = savedStateHandle.get<Boolean>(DATA_SHOULD_REFRESH)
-        set(value) = savedStateHandle.set(DATA_SHOULD_REFRESH, value)
+        get() = savedStateHandle.getStateFlow(key = DATA_SHOULD_REFRESH, initialValue = false).value
+        set(value) {
+            savedStateHandle[DATA_SHOULD_REFRESH] = value
+        }
 
     fun getVouchers() = selectedCategory?.categoryId?.let { categoryId ->
         repository.getAvailableVoucherList(categoryId).cachedIn(viewModelScope)

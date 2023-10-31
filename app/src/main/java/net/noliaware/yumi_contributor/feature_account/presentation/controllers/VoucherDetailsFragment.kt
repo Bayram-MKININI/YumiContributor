@@ -50,7 +50,7 @@ import net.noliaware.yumi_contributor.feature_account.presentation.views.Voucher
 class VoucherDetailsFragment : AppCompatDialogFragment() {
 
     private var vouchersDetailsContainerView: VouchersDetailsContainerView? = null
-    private val args: VoucherDetailsFragmentArgs by navArgs()
+    private val args by navArgs<VoucherDetailsFragmentArgs>()
     private val viewModel by viewModels<VoucherDetailsFragmentViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {

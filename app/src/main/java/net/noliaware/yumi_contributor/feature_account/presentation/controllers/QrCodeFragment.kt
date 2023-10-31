@@ -31,7 +31,7 @@ import net.noliaware.yumi_contributor.feature_account.presentation.views.QrCodeV
 class QrCodeFragment : AppCompatDialogFragment() {
 
     private var qrCodeView: QrCodeView? = null
-    private val args: QrCodeFragmentArgs by navArgs()
+    private val args by navArgs<QrCodeFragmentArgs>()
     private val viewModel by viewModels<QrCodeFragmentViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {

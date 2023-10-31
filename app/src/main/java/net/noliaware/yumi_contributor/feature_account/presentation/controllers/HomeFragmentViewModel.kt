@@ -12,6 +12,8 @@ class HomeFragmentViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     var managedAccount
-        get() = savedStateHandle.get<ManagedAccount>(MANAGED_ACCOUNT)
-        set(value) = savedStateHandle.set(MANAGED_ACCOUNT, value)
+        get() = savedStateHandle.getStateFlow<ManagedAccount?>(key = MANAGED_ACCOUNT, initialValue = null).value
+        set(value) {
+            savedStateHandle[MANAGED_ACCOUNT] = value
+        }
 }

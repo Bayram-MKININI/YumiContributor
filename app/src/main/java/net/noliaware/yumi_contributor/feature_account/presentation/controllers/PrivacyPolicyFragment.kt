@@ -24,7 +24,7 @@ import net.noliaware.yumi_contributor.feature_account.presentation.views.Privacy
 class PrivacyPolicyFragment : AppCompatDialogFragment() {
 
     private var privacyPolicyView: PrivacyPolicyView? = null
-    private val args: PrivacyPolicyFragmentArgs by navArgs()
+    private val args by navArgs<PrivacyPolicyFragmentArgs>()
     private val viewModel by viewModels<PrivacyPolicyViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {

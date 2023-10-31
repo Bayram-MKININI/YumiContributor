@@ -26,7 +26,7 @@ import net.noliaware.yumi_contributor.feature_profile.presentation.views.Profile
 class UserProfileFragment : Fragment() {
 
     private var profileParentView: ProfileParentView? = null
-    private val args: UserProfileFragmentArgs by navArgs()
+    private val args by navArgs<UserProfileFragmentArgs>()
     private val viewModel by viewModels<UserProfileFragmentViewModel>()
 
     override fun onCreateView(
