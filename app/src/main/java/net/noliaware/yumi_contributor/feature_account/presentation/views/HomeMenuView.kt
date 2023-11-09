@@ -114,26 +114,24 @@ class HomeMenuView @JvmOverloads constructor(
     }
 
     fun setBadgeForMailButton(number: Int) {
-        mailBadgeTextView.isVisible = true
-        animateBadge(mailBadgeTextView)
+        displayBadgeAnimated(mailBadgeTextView)
         mailBadgeTextView.text = number.toString()
     }
 
     fun hideMailButtonBadge() {
-        mailBadgeTextView.isGone = true
+        hideBadgeAnimated(mailBadgeTextView)
     }
 
     fun setBadgeForNotificationButton(number: Int) {
-        notificationBadgeTextView.isVisible = true
-        animateBadge(notificationBadgeTextView)
+        displayBadgeAnimated(notificationBadgeTextView)
         notificationBadgeTextView.text = number.toString()
     }
 
     fun hideNotificationButtonBadge() {
-        notificationBadgeTextView.isGone = true
+        hideBadgeAnimated(notificationBadgeTextView)
     }
 
-    private fun animateBadge(badge: View) {
+    private fun displayBadgeAnimated(badge: View) {
         ScaleAnimation(
             0f,
             1f,
@@ -147,6 +145,39 @@ class HomeMenuView @JvmOverloads constructor(
             duration = 500
             interpolator = OvershootInterpolator(3f)
             fillAfter = true
+            setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation) {
+                    badge.isVisible = true
+                }
+                override fun onAnimationRepeat(animation: Animation) = Unit
+                override fun onAnimationEnd(animation: Animation) = Unit
+            })
+            badge.startAnimation(this)
+        }
+    }
+
+    private fun hideBadgeAnimated(badge: View) {
+        if (badge.isGone) {
+            return
+        }
+        ScaleAnimation(
+            1f,
+            0f,
+            1f,
+            0f,
+            Animation.RELATIVE_TO_SELF,
+            0.2f,
+            Animation.RELATIVE_TO_SELF,
+            0.7f
+        ).apply {
+            duration = 500
+            setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation) = Unit
+                override fun onAnimationRepeat(animation: Animation) = Unit
+                override fun onAnimationEnd(animation: Animation) {
+                    badge.isGone = true
+                }
+            })
             badge.startAnimation(this)
         }
     }
