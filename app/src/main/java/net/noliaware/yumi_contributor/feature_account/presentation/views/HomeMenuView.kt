@@ -4,6 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.View.OnClickListener
+import android.view.animation.Animation
+import android.view.animation.OvershootInterpolator
+import android.view.animation.ScaleAnimation
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isGone
@@ -112,6 +115,7 @@ class HomeMenuView @JvmOverloads constructor(
 
     fun setBadgeForMailButton(number: Int) {
         mailBadgeTextView.isVisible = true
+        animateBadge(mailBadgeTextView)
         mailBadgeTextView.text = number.toString()
     }
 
@@ -121,11 +125,30 @@ class HomeMenuView @JvmOverloads constructor(
 
     fun setBadgeForNotificationButton(number: Int) {
         notificationBadgeTextView.isVisible = true
+        animateBadge(notificationBadgeTextView)
         notificationBadgeTextView.text = number.toString()
     }
 
     fun hideNotificationButtonBadge() {
         notificationBadgeTextView.isGone = true
+    }
+
+    private fun animateBadge(badge: View) {
+        ScaleAnimation(
+            0f,
+            1f,
+            0f,
+            1f,
+            Animation.RELATIVE_TO_SELF,
+            0f,
+            Animation.RELATIVE_TO_SELF,
+            1f
+        ).apply {
+            duration = 500
+            interpolator = OvershootInterpolator(3f)
+            fillAfter = true
+            badge.startAnimation(this)
+        }
     }
 
     private fun resetAllBackgrounds() {

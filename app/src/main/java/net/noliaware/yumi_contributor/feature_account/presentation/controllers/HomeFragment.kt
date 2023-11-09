@@ -64,12 +64,15 @@ class HomeFragment : Fragment() {
     }
 
     private fun setUpBadges(accountData: AccountData) {
-        homeView?.homeMenuView?.let { homeMenuView ->
-            if (accountData.newMessageCount > 0) {
-                homeMenuView.setBadgeForMailButton(accountData.newMessageCount)
-            }
-            if (accountData.newAlertCount > 0) {
-                homeMenuView.setBadgeForNotificationButton(accountData.newAlertCount)
+        viewLifecycleOwner.lifecycleScope.launch {
+            delay(Duration.ofMillis(1000))
+            homeView?.homeMenuView?.let { homeMenuView ->
+                if (accountData.newMessageCount > 0) {
+                    homeMenuView.setBadgeForMailButton(accountData.newMessageCount)
+                }
+                if (accountData.newAlertCount > 0) {
+                    homeMenuView.setBadgeForNotificationButton(accountData.newAlertCount)
+                }
             }
         }
     }
