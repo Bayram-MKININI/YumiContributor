@@ -87,7 +87,7 @@ class VouchersDetailsView @JvmOverloads constructor(
     fun fillViewWithData(vouchersDetailsViewAdapter: VouchersDetailsViewAdapter) {
 
         titleFillableTextWidget.setText(vouchersDetailsViewAdapter.title)
-        crossOutView.isVisible = vouchersDetailsViewAdapter.openVoucherActionNotAvailable
+        crossOutView.isVisible = vouchersDetailsViewAdapter.voucherStatusAvailable
         createdFillableTextWidget.setText(vouchersDetailsViewAdapter.startDate)
         expiryTextView.text = vouchersDetailsViewAdapter.endDate
 
@@ -112,6 +112,7 @@ class VouchersDetailsView @JvmOverloads constructor(
 
         vouchersDetailsViewAdapter.retrievalMode?.let {
             retrievalTextView.isVisible = true
+            retrievalTextView.setTextColor(context.getColorCompat(vouchersDetailsViewAdapter.retrievalModeTextColorRes))
             retrievalTextView.text = vouchersDetailsViewAdapter.retrievalMode
         }
     }

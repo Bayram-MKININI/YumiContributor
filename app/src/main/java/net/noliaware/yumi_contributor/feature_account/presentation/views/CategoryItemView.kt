@@ -2,7 +2,6 @@ package net.noliaware.yumi_contributor.feature_account.presentation.views
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import net.noliaware.yumi_contributor.R
@@ -47,14 +46,15 @@ class CategoryItemView @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val viewWidth = View.MeasureSpec.getSize(widthMeasureSpec)
+        val viewWidth = MeasureSpec.getSize(widthMeasureSpec)
         val viewHeight = MeasureSpec.getSize(heightMeasureSpec)
 
         countTextView.measureWrapContent()
 
+        val iconSize = viewWidth / 2
         iconImageView.measure(
-            MeasureSpec.makeMeasureSpec(viewWidth / 2, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(viewWidth / 2, MeasureSpec.EXACTLY)
+            MeasureSpec.makeMeasureSpec(iconSize, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(iconSize, MeasureSpec.EXACTLY)
         )
 
         titleTextView.measure(
@@ -84,7 +84,7 @@ class CategoryItemView @JvmOverloads constructor(
 
         titleTextView.layoutToTopLeft(
             (viewHeight - titleTextView.measuredWidth) / 2,
-            iconImageView.bottom + convertDpToPx(10)
+            iconImageView.bottom + convertDpToPx(2)
         )
     }
 }

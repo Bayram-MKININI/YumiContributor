@@ -53,6 +53,7 @@
     <string name="more">Voir plus</string>
     <string name="go_to_retailer">Rendez-vous chez :</string>
     <string name="retrievable_by_beneficiary_also">Coupon également récupérable par le bénéficiaire</string>
+    <string name="retrievable_by_beneficiary_only">Coupon uniquement récupérable par le bénéficiaire</string>
     <string name="call">Appeler</string>
     <string name="write_email">Écrire un e-mail</string>
     <string name="see_directions">Voir l\'itinéraire</string>

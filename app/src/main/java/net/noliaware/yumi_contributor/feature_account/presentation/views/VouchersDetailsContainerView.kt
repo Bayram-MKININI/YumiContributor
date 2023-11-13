@@ -7,6 +7,7 @@ import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.ColorRes
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -51,7 +52,9 @@ class VouchersDetailsContainerView @JvmOverloads constructor(
         val retailerLabel: String = "",
         val retailerAddress: String = "",
         val retrievalMode: String? = null,
+        @ColorRes val retrievalModeTextColorRes: Int,
         val openVoucherActionNotAvailable: Boolean = false,
+        val voucherStatusAvailable: Boolean = false,
         val voucherStatus: String = ""
     )
 
@@ -123,11 +126,15 @@ class VouchersDetailsContainerView @JvmOverloads constructor(
         vouchersDetailsView.fillViewWithData(vouchersDetailsViewAdapter)
 
         if (vouchersDetailsViewAdapter.openVoucherActionNotAvailable) {
-            voucherStatusTextView.isVisible = true
             displayVoucherLayout.isGone = true
-            voucherStatusTextView.text = vouchersDetailsViewAdapter.voucherStatus
         } else {
             displayVoucherLayout.isVisible = true
+        }
+
+        if (vouchersDetailsViewAdapter.voucherStatusAvailable) {
+            voucherStatusTextView.isVisible = true
+            voucherStatusTextView.text = vouchersDetailsViewAdapter.voucherStatus
+        } else {
             voucherStatusTextView.isGone = true
         }
     }

@@ -35,6 +35,7 @@ import net.noliaware.yumi_contributor.commun.util.safeNavigate
 import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherCodeData
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherRetrievalMode
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherRetrievalMode.BENEFICIARY
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherRetrievalMode.BOTH
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStateData
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus
@@ -72,8 +73,8 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpFragmentListener()
-        vouchersDetailsContainerView?.activateLoading(true)
         collectFlows()
+        vouchersDetailsContainerView?.activateLoading(true)
         vouchersDetailsContainerView?.setUpViewLook(
             color = args.categoryUI.categoryColor,
             iconName = args.categoryUI.categoryIcon
@@ -147,7 +148,9 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
                 retailerLabel = voucher.retailerLabel.orEmpty(),
                 retailerAddress = retailerAddress,
                 retrievalMode = mapRetrievalMode(voucher.voucherRetrievalMode),
-                openVoucherActionNotAvailable = voucher.voucherStatus != USABLE,
+                retrievalModeTextColorRes = mapRetrievalModeTextColor(voucher),
+                openVoucherActionNotAvailable = mapOpenVoucherActionNotAvailable(voucher),
+                voucherStatusAvailable = voucher.voucherStatus != USABLE,
                 voucherStatus = mapVoucherStatus(voucher.voucherStatus)
             )
         )
@@ -160,28 +163,38 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
             R.string.expiry_date_value,
             voucher.voucherExpiryDate?.parseDateToFormat(SHORT_DATE_FORMAT)
         )
-
         CONSUMED -> getString(
             R.string.usage_date_value,
             voucher.voucherUseDate?.parseDateToFormat(SHORT_DATE_FORMAT),
             voucher.voucherUseTime?.parseTimeToFormat(HOURS_TIME_FORMAT)
         )
-
         CANCELLED -> getString(
             R.string.cancellation_date_value,
             voucher.voucherUseDate?.parseDateToFormat(SHORT_DATE_FORMAT),
             voucher.voucherUseTime?.parseTimeToFormat(HOURS_TIME_FORMAT)
         )
-
         else -> ""
     }
 
     private fun mapRetrievalMode(
         retrievalMode: VoucherRetrievalMode?
     ) = when (retrievalMode) {
+        BENEFICIARY -> getString(R.string.retrievable_by_beneficiary_only)
         BOTH -> getString(R.string.retrievable_by_beneficiary_also)
         else -> null
     }
+
+    private fun mapRetrievalModeTextColor(
+        voucher: Voucher
+    ) = when {
+        voucher.voucherStatus != USABLE -> R.color.grey_2
+        voucher.voucherRetrievalMode == BENEFICIARY -> R.color.color_bittersweet
+        else -> R.color.grey_2
+    }
+
+    private fun mapOpenVoucherActionNotAvailable(
+        voucher: Voucher
+    ) = voucher.voucherStatus != USABLE || voucher.voucherRetrievalMode == BENEFICIARY
 
     private fun mapVoucherStatus(
         voucherStatus: VoucherStatus?
