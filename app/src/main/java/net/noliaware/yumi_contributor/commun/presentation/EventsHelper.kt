@@ -6,6 +6,9 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.*
+import net.noliaware.yumi_contributor.commun.util.ErrorUI.*
+import net.noliaware.yumi_contributor.commun.util.ServiceError.*
+import net.noliaware.yumi_contributor.commun.util.UIEvent.*
 import net.noliaware.yumi_contributor.commun.util.ViewState.DataState
 import net.noliaware.yumi_contributor.commun.util.ViewState.LoadingState
 
@@ -34,7 +37,7 @@ class EventsHelper<S> {
                     _stateFlow.value = DataState(it)
                 }
                 result.appMessage?.let {
-                    _eventFlow.emit(UIEvent.ShowAppMessage(it))
+                    _eventFlow.emit(ShowAppMessage(it))
                 }
             }
             is Resource.Loading -> {
@@ -42,27 +45,20 @@ class EventsHelper<S> {
             }
             is Resource.Error -> {
                 result.appMessage?.let {
-                    _eventFlow.emit(UIEvent.ShowAppMessage(it))
+                    _eventFlow.emit(ShowAppMessage(it))
                     return
                 }
-                when (result.errorType) {
-                    ErrorType.NETWORK_ERROR -> {
-                        _eventFlow.emit(
-                            UIEvent.ShowError(
-                                errorType = ErrorType.NETWORK_ERROR,
-                                errorStrRes = R.string.error_no_network
-                            )
-                        )
+                val errorUI = when (val serviceError = result.serviceError) {
+                    is ErrNetwork -> ErrUINetwork(R.string.error_no_network)
+                    is ErrSystem -> {
+                        serviceError.errorMessage?.let { errorMessage ->
+                            ErrUISystem(errorMessage = errorMessage)
+                        } ?: ErrUISystem(errorStrRes = R.string.error_contact_support)
                     }
-                    ErrorType.SYSTEM_ERROR -> {
-                        _eventFlow.emit(
-                            UIEvent.ShowError(
-                                errorType = ErrorType.SYSTEM_ERROR,
-                                errorStrRes = R.string.error_contact_support
-                            )
-                        )
-                    }
-                    else -> Unit
+                    else -> null
+                }
+                errorUI?.let {
+                    _eventFlow.emit(ShowError(errorUI = it))
                 }
             }
         }

@@ -163,11 +163,15 @@ class VouchersDetailsContainerView @JvmOverloads constructor(
             MeasureSpec.makeMeasureSpec(convertDpToPx(86), MeasureSpec.EXACTLY)
         )
 
-        displayVoucherLayout.measureWrapContent()
-        voucherStatusTextView.measureWrapContent()
+        if (displayVoucherLayout.isVisible) {
+            displayVoucherLayout.measureWrapContent()
+        }
+        if (voucherStatusTextView.isVisible) {
+            voucherStatusTextView.measureWrapContent()
+        }
 
-        val parentContentViewHeight = viewHeight - (headerView.measuredHeight + categoryImageView.measuredHeight / 2 +
-                convertDpToPx(25))
+        val parentContentViewHeight = viewHeight -
+                (headerView.measuredHeight + categoryImageView.measuredHeight / 2 + convertDpToPx(25))
 
         parentContentView.measure(
             MeasureSpec.makeMeasureSpec(viewWidth * 95 / 100, MeasureSpec.EXACTLY),

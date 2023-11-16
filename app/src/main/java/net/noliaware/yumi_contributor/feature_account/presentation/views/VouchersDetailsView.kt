@@ -12,8 +12,12 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.presentation.views.FillableTextWidget
-import net.noliaware.yumi_contributor.commun.util.*
-import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView.*
+import net.noliaware.yumi_contributor.commun.util.convertDpToPx
+import net.noliaware.yumi_contributor.commun.util.getColorCompat
+import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
+import net.noliaware.yumi_contributor.commun.util.layoutToTopRight
+import net.noliaware.yumi_contributor.commun.util.measureWrapContent
+import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView.VouchersDetailsViewAdapter
 
 class VouchersDetailsView @JvmOverloads constructor(
     context: Context,
@@ -41,6 +45,8 @@ class VouchersDetailsView @JvmOverloads constructor(
     private lateinit var mailImageView: ImageView
     private lateinit var mailTextView: TextView
     lateinit var openLocationLayout: LinearLayoutCompat
+    private var displayVoucherButtonVisible: Boolean = false
+    private var statusTextViewVisible: Boolean = false
 
     override fun onFinishInflate() {
         super.onFinishInflate()
@@ -115,11 +121,13 @@ class VouchersDetailsView @JvmOverloads constructor(
             retrievalTextView.setTextColor(context.getColorCompat(vouchersDetailsViewAdapter.retrievalModeTextColorRes))
             retrievalTextView.text = vouchersDetailsViewAdapter.retrievalMode
         }
+
+        displayVoucherButtonVisible = !vouchersDetailsViewAdapter.openVoucherActionNotAvailable
+        statusTextViewVisible = vouchersDetailsViewAdapter.voucherStatusAvailable
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val viewWidth = MeasureSpec.getSize(widthMeasureSpec)
-        var viewHeight = MeasureSpec.getSize(heightMeasureSpec)
 
         titleFillableTextWidget.measure(
             MeasureSpec.makeMeasureSpec(viewWidth * 9 / 10, MeasureSpec.EXACTLY),
@@ -230,32 +238,36 @@ class VouchersDetailsView @JvmOverloads constructor(
             MeasureSpec.makeMeasureSpec(locationBackgroundViewHeight, MeasureSpec.EXACTLY)
         )
 
-        val contentHeight = titleFillableTextWidget.measuredHeight + createdFillableTextWidget.measuredHeight +
-                separatorView.measuredHeight +
-                if (sponsorTextView.isVisible) {
-                    sponsorBackgroundView.measuredHeight + convertDpToPx(15)
-                } else {
-                    0
-                } +
-                if (descriptionTextView.isVisible) {
-                    descriptionTextView.measuredHeight + convertDpToPx(15)
-                } else {
-                    0
-                } +
-                if (moreTextView.isVisible) {
-                    moreTextView.measuredHeight + convertDpToPx(10)
-                } else {
-                    0
-                } +
-                goToTextView.measuredHeight + locationBackgroundView.measuredHeight +
-                openLocationLayout.measuredHeight / 2 + convertDpToPx(130)
+        val contentMeasuredHeight = titleFillableTextWidget.measuredHeight + createdFillableTextWidget.measuredHeight +
+                    separatorView.measuredHeight +
+                    if (sponsorTextView.isVisible) {
+                        sponsorBackgroundView.measuredHeight + convertDpToPx(15)
+                    } else {
+                        0
+                    } +
+                    if (descriptionTextView.isVisible) {
+                        descriptionTextView.measuredHeight + convertDpToPx(15)
+                    } else {
+                        0
+                    } +
+                    if (moreTextView.isVisible) {
+                        moreTextView.measuredHeight + convertDpToPx(10)
+                    } else {
+                        0
+                    } +
+                    goToTextView.measuredHeight + locationBackgroundView.measuredHeight +
+                    openLocationLayout.measuredHeight / 2 + convertDpToPx(55)
 
 
-        viewHeight = Integer.max(contentHeight, viewHeight)
+        val finalViewHeight = when {
+            displayVoucherButtonVisible -> contentMeasuredHeight + convertDpToPx(70)
+            statusTextViewVisible -> contentMeasuredHeight + convertDpToPx(55)
+            else -> contentMeasuredHeight
+        }
 
         setMeasuredDimension(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(viewHeight, MeasureSpec.EXACTLY)
+            MeasureSpec.makeMeasureSpec(finalViewHeight, MeasureSpec.EXACTLY)
         )
     }
 

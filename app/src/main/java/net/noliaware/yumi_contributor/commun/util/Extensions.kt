@@ -38,7 +38,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
-import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
@@ -70,6 +70,8 @@ import net.noliaware.yumi_contributor.commun.data.remote.dto.ErrorDTO
 import net.noliaware.yumi_contributor.commun.data.remote.dto.SessionDTO
 import net.noliaware.yumi_contributor.commun.domain.model.AppMessageType
 import net.noliaware.yumi_contributor.commun.domain.model.SessionData
+import net.noliaware.yumi_contributor.commun.util.ErrorUI.*
+import net.noliaware.yumi_contributor.commun.util.ServiceError.*
 import retrofit2.HttpException
 import java.io.IOException
 import java.math.BigInteger
@@ -147,44 +149,41 @@ suspend fun <T> FlowCollector<Resource<T>>.handleSessionWithNoFailure(
     appMessage: AppMessageDTO?,
     error: ErrorDTO?
 ): Boolean {
-    val errorType = session?.let { sessionDTO ->
+    val serviceError = session?.let {
         sessionData.apply {
-            sessionId = sessionDTO.sessionId
-            sessionTokens[tokenKey] = sessionDTO.sessionToken
+            sessionId = it.sessionId
+            sessionTokens[tokenKey] = it.sessionToken
         }
-        ErrorType.RECOVERABLE_ERROR
-    } ?: run {
-        ErrorType.SYSTEM_ERROR
-    }
+        ErrNone
+    } ?: ErrSystem()
     error?.let { errorDTO ->
         emit(
             Resource.Error(
-                errorType = errorType,
-                errorMessage = errorDTO.errorMessage,
+                serviceError = when (serviceError) {
+                    is ErrSystem -> serviceError.copy(errorMessage = errorDTO.errorMessage)
+                    else -> serviceError
+                },
                 appMessage = appMessage?.toAppMessage()
             )
         )
         return false
-    } ?: run {
-        return true
     }
+    return true
 }
 
 fun resolvePaginatedListErrorIfAny(
     session: SessionDTO?,
     sessionData: SessionData,
     tokenKey: String
-): ErrorType {
-    val errorType = session?.let { sessionDTO ->
+): ServiceError {
+    val serviceError = session?.let { sessionDTO ->
         sessionData.apply {
             sessionId = sessionDTO.sessionId
             sessionTokens[tokenKey] = sessionDTO.sessionToken
         }
-        ErrorType.RECOVERABLE_ERROR
-    } ?: run {
-        ErrorType.SYSTEM_ERROR
-    }
-    return errorType
+        ErrNone
+    } ?: ErrSystem()
+    return serviceError
 }
 
 inline fun <reified T : Any, reified K : Any> handlePagingSourceError(
@@ -193,15 +192,13 @@ inline fun <reified T : Any, reified K : Any> handlePagingSourceError(
     ex1.recordNonFatal()
     try {
         when (ex1) {
-            is HttpException -> ErrorType.SYSTEM_ERROR
-            is IOException -> ErrorType.NETWORK_ERROR
+            is HttpException -> ErrSystem()
+            is IOException -> ErrNetwork
             else -> null
         }?.let { errorType ->
             throw PaginationException(errorType)
-        } ?: run {
-            return PagingSource.LoadResult.Error(ex1)
-        }
-    } catch (ex2: Exception) {
+        } ?: return PagingSource.LoadResult.Error(ex1)
+    } catch (ex2: PaginationException) {
         return PagingSource.LoadResult.Error(ex2)
     }
 }
@@ -211,11 +208,11 @@ suspend inline fun <reified T : Any> FlowCollector<Resource<T>>.handleRemoteCall
 ) {
     ex.recordNonFatal()
     when (ex) {
-        is HttpException -> ErrorType.SYSTEM_ERROR
-        is IOException -> ErrorType.NETWORK_ERROR
+        is HttpException -> ErrSystem()
+        is IOException -> ErrNetwork
         else -> null
     }?.let {
-        emit(Resource.Error(errorType = it))
+        emit(Resource.Error(serviceError = it))
     }
 }
 
@@ -278,7 +275,15 @@ fun Fragment.handleSharedEvent(sharedEvent: UIEvent) = context?.let {
             }
         }
         is UIEvent.ShowError -> {
-            context.toast(sharedEvent.errorStrRes)
+            when (val errorUI = sharedEvent.errorUI) {
+                is ErrUINetwork -> context.toast(errorUI.errorStrRes)
+                is ErrUISystem -> errorUI.errorMessage?.let { errorMessage ->
+                    context.toast(errorMessage)
+                } ?: errorUI.errorStrRes?.let { errorStrRes ->
+                    context.toast(errorStrRes)
+                }
+                else -> Unit
+            }
         }
     }
 }
@@ -286,38 +291,32 @@ fun Fragment.handleSharedEvent(sharedEvent: UIEvent) = context?.let {
 fun Fragment.redirectToLoginScreenFromSharedEvent(
     sharedEvent: UIEvent
 ) {
-    if (sharedEvent is UIEvent.ShowError) {
-        if (sharedEvent.errorType == ErrorType.SYSTEM_ERROR) {
-            redirectToLoginScreenInternal()
-        }
+    if (sharedEvent is UIEvent.ShowError && sharedEvent.errorUI is ErrUISystem) {
+        redirectToLoginScreenInternal()
     }
 }
 
-fun Fragment.handlePaginationError(
-    loadState: CombinedLoadStates
-): Boolean {
-    when {
-        loadState.prepend is LoadState.Error -> loadState.prepend as LoadState.Error
-        loadState.append is LoadState.Error -> loadState.append as LoadState.Error
-        loadState.refresh is LoadState.Error -> loadState.refresh as LoadState.Error
-        else -> null
-    }?.let {
-        if (it.error is PaginationException) {
-            if ((it.error as PaginationException).errorType == ErrorType.SYSTEM_ERROR) {
-                redirectToLoginScreenInternal()
-                return true
-            } else if ((it.error as PaginationException).errorType == ErrorType.NETWORK_ERROR) {
-                handleSharedEvent(
-                    UIEvent.ShowError(
-                        errorType = ErrorType.NETWORK_ERROR,
-                        errorStrRes = R.string.error_no_network
-                    )
-                )
-                return true
-            }
+fun Fragment.handlePaginationError(combinedLoadStates: CombinedLoadStates): Boolean {
+    val loadState = listOf(
+        combinedLoadStates.prepend,
+        combinedLoadStates.append,
+        combinedLoadStates.refresh
+    ).filterIsInstance<LoadState.Error>().firstOrNull() ?: return false
+    return when (val serviceError = (loadState.error as? PaginationException)?.serviceError) {
+        is ErrNetwork -> {
+            handleSharedEvent(UIEvent.ShowError(ErrUINetwork(R.string.error_no_network)))
+            true
         }
+        is ErrSystem -> {
+            val errorUI = serviceError.errorMessage?.let { errorMessage ->
+                ErrUISystem(errorMessage = errorMessage)
+            } ?: ErrUISystem(errorStrRes = R.string.error_contact_support)
+            handleSharedEvent(UIEvent.ShowError(errorUI))
+            redirectToLoginScreenInternal()
+            true
+        }
+        else -> false
     }
-    return false
 }
 
 fun <T> Flow<T>.collectLifecycleAware(
@@ -332,9 +331,7 @@ fun <T> Flow<T>.collectLifecycleAware(
 }
 
 private fun Fragment.redirectToLoginScreenInternal() {
-    (activity?.supportFragmentManager?.findFragmentById(
-        R.id.app_nav_host_fragment
-    ) as? NavHostFragment)?.findNavController()?.setGraph(R.navigation.app_nav_graph)
+    activity?.findNavController(R.id.app_nav_host_fragment)?.navigateUp()
 }
 
 fun NavController.safeNavigate(

@@ -9,8 +9,8 @@ import net.noliaware.yumi_contributor.commun.ApiParameters.LIST_PAGE_SIZE
 import net.noliaware.yumi_contributor.commun.ApiParameters.OFFSET
 import net.noliaware.yumi_contributor.commun.data.remote.RemoteApi
 import net.noliaware.yumi_contributor.commun.domain.model.SessionData
-import net.noliaware.yumi_contributor.commun.util.ErrorType
 import net.noliaware.yumi_contributor.commun.util.PaginationException
+import net.noliaware.yumi_contributor.commun.util.ServiceError.ErrNone
 import net.noliaware.yumi_contributor.commun.util.currentTimeInMillis
 import net.noliaware.yumi_contributor.commun.util.generateToken
 import net.noliaware.yumi_contributor.commun.util.getCommonWSParams
@@ -51,14 +51,14 @@ class UsedVoucherPagingSource(
                 params = generateWSParams(categoryId, nextPage, GET_USED_VOUCHER_LIST_BY_CATEGORY)
             )
 
-            val errorType = resolvePaginatedListErrorIfAny(
+            val serviceError = resolvePaginatedListErrorIfAny(
                 session = remoteData.session,
                 sessionData = sessionData,
                 tokenKey = GET_USED_VOUCHER_LIST_BY_CATEGORY
             )
 
-            if (errorType != ErrorType.RECOVERABLE_ERROR) {
-                throw PaginationException(errorType)
+            if (serviceError !is ErrNone) {
+                throw PaginationException(serviceError)
             }
 
             val voucherRank = remoteData.data?.voucherDTOList?.lastOrNull()?.voucherRank ?: nextPage
