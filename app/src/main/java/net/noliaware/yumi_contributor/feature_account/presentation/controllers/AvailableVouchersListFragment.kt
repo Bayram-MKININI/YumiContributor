@@ -23,7 +23,8 @@ import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.FragmentKeys.AVAILABLE_VOUCHERS_LIST_REQUEST_KEY
 import net.noliaware.yumi_contributor.commun.FragmentKeys.VOUCHER_DETAILS_REQUEST_KEY
 import net.noliaware.yumi_contributor.commun.presentation.adapters.ListLoadStateAdapter
-import net.noliaware.yumi_contributor.commun.util.decorateText
+import net.noliaware.yumi_contributor.commun.util.DecoratedText
+import net.noliaware.yumi_contributor.commun.util.decorateWords
 import net.noliaware.yumi_contributor.commun.util.getColorCompat
 import net.noliaware.yumi_contributor.commun.util.handlePaginationError
 import net.noliaware.yumi_contributor.commun.util.navDismiss
@@ -31,8 +32,7 @@ import net.noliaware.yumi_contributor.commun.util.safeNavigate
 import net.noliaware.yumi_contributor.feature_account.presentation.adapters.VoucherAdapter
 import net.noliaware.yumi_contributor.feature_account.presentation.mappers.AvailableVoucherMapper
 import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersListView
-import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersListView.VouchersListViewAdapter
-import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersListView.VouchersListViewCallback
+import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersListView.*
 
 @AndroidEntryPoint
 class AvailableVouchersListFragment : AppCompatDialogFragment() {
@@ -47,25 +47,30 @@ class AvailableVouchersListFragment : AppCompatDialogFragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.vouchers_list_layout, container, false).apply {
-            vouchersListView = this as VouchersListView
-            vouchersListView?.callback = readMailViewCallback
-            vouchersListView?.voucherAdapter = VoucherAdapter(
-                color = args.selectedCategory.categoryColor,
-                voucherMapper = AvailableVoucherMapper()
-            ) { voucher ->
-                findNavController().safeNavigate(
-                    AvailableVouchersListFragmentDirections.actionAvailableVouchersListFragmentToVoucherDetailsFragment(
-                        categoryUI = CategoryUI(
-                            categoryColor = args.selectedCategory.categoryColor,
-                            categoryIcon = args.selectedCategory.categoryIcon,
-                            categoryLabel = args.selectedCategory.categoryLabel
-                        ), voucherId = voucher.voucherId
-                    )
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? = inflater.inflate(
+        R.layout.vouchers_list_layout,
+        container,
+        false
+    ).apply {
+        vouchersListView = this as VouchersListView
+        vouchersListView?.callback = readMailViewCallback
+        vouchersListView?.voucherAdapter = VoucherAdapter(
+            color = args.selectedCategory.categoryColor,
+            voucherMapper = AvailableVoucherMapper()
+        ) { voucher ->
+            findNavController().safeNavigate(
+                AvailableVouchersListFragmentDirections.actionAvailableVouchersListFragmentToVoucherDetailsFragment(
+                    categoryUI = CategoryUI(
+                        categoryColor = args.selectedCategory.categoryColor,
+                        categoryIcon = args.selectedCategory.categoryIcon
+                    ),
+                    voucherId = voucher.voucherId,
+                    requestTypes = args.requestTypes
                 )
-            }
+            )
         }
     }
 
@@ -93,14 +98,21 @@ class AvailableVouchersListFragment : AppCompatDialogFragment() {
         )
         vouchersListView?.fillViewWithData(
             VouchersListViewAdapter(
-                title = title.decorateText(
-                    coloredText1 = getString(R.string.available).lowercase(),
-                    color1 = context?.getColorCompat(R.color.colorPrimary) ?: Color.TRANSPARENT,
-                    coloredText2 = args.selectedCategory.categoryLabel,
-                    color2 = args.selectedCategory.categoryColor
-                ),
                 color = args.selectedCategory.categoryColor,
-                iconName = args.selectedCategory.categoryIcon
+                iconName = args.selectedCategory.categoryIcon,
+                title = title.decorateWords(
+                    wordsToDecorate = listOf(
+                        DecoratedText(
+                            textToDecorate = getString(R.string.available).lowercase(),
+                            color = context?.getColorCompat(R.color.colorPrimary)
+                                ?: Color.TRANSPARENT
+                        ),
+                        DecoratedText(
+                            textToDecorate = args.selectedCategory.categoryLabel,
+                            color = args.selectedCategory.categoryColor
+                        )
+                    )
+                )
             )
         )
     }

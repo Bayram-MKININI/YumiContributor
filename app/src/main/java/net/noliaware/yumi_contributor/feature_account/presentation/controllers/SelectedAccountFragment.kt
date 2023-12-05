@@ -37,15 +37,18 @@ class SelectedAccountFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.selected_account_layout, container, false).apply {
-            selectedAccountParentView = this as SelectedAccountParentView
-            selectedAccountParentView?.callback = selectedAccountViewCallback
-        }
+    ): View? = inflater.inflate(
+        R.layout.selected_account_layout,
+        container,
+        false
+    ).apply {
+        selectedAccountParentView = this as SelectedAccountParentView
+        selectedAccountParentView?.callback = selectedAccountViewCallback
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setUpFragmentListener()
+        selectedAccountViewModel.accountData = managedAccountsViewModel.accountData
         collectFlows()
     }
 
@@ -68,13 +71,17 @@ class SelectedAccountFragment : Fragment() {
                 else -> Unit
             }
         }
-        managedAccountsViewModel.selectAccountEventsHelper.eventFlow.collectLifecycleAware(viewLifecycleOwner) { sharedEvent ->
+        managedAccountsViewModel.selectAccountEventsHelper.eventFlow.collectLifecycleAware(
+            viewLifecycleOwner
+        ) { sharedEvent ->
             selectedAccountParentView?.activateLoading(false)
             managedAccountsViewModel.selectAccountEventsHelper.resetStateData()
             handleSharedEvent(sharedEvent)
             redirectToLoginScreenFromSharedEvent(sharedEvent)
         }
-        managedAccountsViewModel.selectAccountEventsHelper.stateFlow.collectLifecycleAware(viewLifecycleOwner) { viewState ->
+        managedAccountsViewModel.selectAccountEventsHelper.stateFlow.collectLifecycleAware(
+            viewLifecycleOwner
+        ) { viewState ->
             when (viewState) {
                 is LoadingState -> selectedAccountParentView?.activateLoading(true)
                 is DataState -> viewState.data?.let {
@@ -92,7 +99,10 @@ class SelectedAccountFragment : Fragment() {
                 "${managedAccount.title} ${managedAccount.firstName} ${managedAccount.lastName}"
             )
         }
-        SelectedAccountFragmentStateAdapter(childFragmentManager, viewLifecycleOwner.lifecycle).apply {
+        SelectedAccountFragmentStateAdapter(
+            childFragmentManager,
+            viewLifecycleOwner.lifecycle
+        ).apply {
             selectedAccountParentView?.getViewPager?.adapter = this
         }
     }

@@ -36,19 +36,22 @@
     <string name="available_vouchers_list">Liste des coupons disponibles de la catégorie %s</string>
     <string name="used_vouchers_list">Liste des coupons utilisés de la catégorie %s</string>
     <string name="cancelled_vouchers_list">Liste des coupons annulés de la catégorie %s</string>
-    <string name="expiry_date">Valable jusqu\'au</string>
+    <string name="usable_start_date">Utilisable à partir du %s</string>
+    <string name="usage_date">Utilisé le %s</string>
+    <string name="cancellation_date">Annulé le %s</string>
+    <string name="usable_end_date">Utilisable jusqu\'au %s</string>
     <string name="to_retrieve">À retirer chez :</string>
     <string name="retrieved">Retiré chez :</string>
     <string name="retailer">Fournisseur :</string>
 
     //Vouchers
-    <string name="created_in_hyphen">Crée le %s -</string>
-    <string name="created_in">Crée le %s</string>
-    <string name="usage_date">Utilisé le</string>
-    <string name="usage_date_value">Utilisé le %s à %s</string>
-    <string name="cancellation_date">Annulé le</string>
-    <string name="cancellation_date_value">Annulé le %s à %s</string>
-    <string name="expiry_date_value">Valable jusqu\'au %s</string>
+    <string name="voucher_number">Numéro: %s</string>
+    <string name="comment">Commentaire</string>
+    <string name="send">Envoyer</string>
+    <string name="requests_in_progress">Demandes en cours</string>
+    <string name="in_progress_highlighted_text">en cours</string>
+    <string name="creation">Création:</string>
+    <string name="date_time">%s à %s</string>
     <string name="information">i</string>
     <string name="more">Voir plus</string>
     <string name="go_to_retailer">Rendez-vous chez :</string>
@@ -61,9 +64,11 @@
     <string name="use_voucher">Utiliser ce coupon</string>
     <string name="application_not_found">Application cartographique introuvable</string>
     <string name="use_voucher_message">CLIQUEZ SUR \"UTILISER CE COUPON\" POUR L\'ACTIVER</string>
-    <string name="voucher_inexistent">Coupon inexistant</string>
-    <string name="voucher_canceled">Coupon annulé</string>
-    <string name="voucher_consumed">Coupon consommé</string>
+    <string name="voucher_non_available">NON DISPONIBLE</string>
+    <string name="voucher_non_retrievable">NON RÉCUPÉRABLE</string>
+    <string name="voucher_used">UTILISÉ</string>
+    <string name="voucher_canceled">ANNULÉ</string>
+    <string name="voucher_inexistent">INEXISTANT</string>
 
     //Profile
     <string name="my_profile">Mon Profil</string>

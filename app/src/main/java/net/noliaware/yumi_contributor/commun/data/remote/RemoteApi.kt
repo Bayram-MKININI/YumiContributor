@@ -20,10 +20,12 @@ import net.noliaware.yumi_contributor.commun.ApiConstants.GET_SINGLE_MANAGED_ACC
 import net.noliaware.yumi_contributor.commun.ApiConstants.GET_USED_DATA_PER_CATEGORY
 import net.noliaware.yumi_contributor.commun.ApiConstants.GET_USED_VOUCHER_LIST_BY_CATEGORY
 import net.noliaware.yumi_contributor.commun.ApiConstants.GET_VOUCHER
+import net.noliaware.yumi_contributor.commun.ApiConstants.GET_VOUCHER_REQUEST_LIST
 import net.noliaware.yumi_contributor.commun.ApiConstants.GET_VOUCHER_STATUS
 import net.noliaware.yumi_contributor.commun.ApiConstants.INIT
 import net.noliaware.yumi_contributor.commun.ApiConstants.SELECT_USER
 import net.noliaware.yumi_contributor.commun.ApiConstants.SEND_MESSAGE
+import net.noliaware.yumi_contributor.commun.ApiConstants.SEND_VOUCHER_REQUEST
 import net.noliaware.yumi_contributor.commun.ApiConstants.SET_PRIVACY_POLICY_READ_STATUS
 import net.noliaware.yumi_contributor.commun.ApiConstants.USE_VOUCHER
 import net.noliaware.yumi_contributor.commun.ApiParameters.SALT_STRING
@@ -37,12 +39,14 @@ import net.noliaware.yumi_contributor.feature_account.data.remote.dto.GetVoucher
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.GetVoucherStateDataDTO
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.ManagedAccountsDTO
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.SelectUserDTO
+import net.noliaware.yumi_contributor.feature_account.data.remote.dto.SendVoucherRequestDTO
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.SingleManagedAccountDTO
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.UpdatePrivacyPolicyResponseDTO
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.UseVoucherResponseDTO
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.UsedVouchersDTO
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.VoucherAvailableCategoriesDTO
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.VoucherCancelledCategoriesDTO
+import net.noliaware.yumi_contributor.feature_account.data.remote.dto.VoucherRequestsDTO
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.VoucherUsedCategoriesDTO
 import net.noliaware.yumi_contributor.feature_alerts.data.remote.dto.AlertsDTO
 import net.noliaware.yumi_contributor.feature_login.data.remote.dto.AccountDataDTO
@@ -188,6 +192,24 @@ interface RemoteApi {
         @Path(TOKEN) token: String,
         @FieldMap params: Map<String, String>
     ): ResponseDTO<GetVoucherDTO>
+
+    @FormUrlEncoded
+    @POST("${SEND_VOUCHER_REQUEST}/{$TIMESTAMP}/{$SALT_STRING}/{$TOKEN}")
+    suspend fun sendVoucherRequestWithId(
+        @Path(TIMESTAMP) timestamp: String,
+        @Path(SALT_STRING) saltString: String,
+        @Path(TOKEN) token: String,
+        @FieldMap params: Map<String, String>
+    ): ResponseDTO<SendVoucherRequestDTO>
+
+    @FormUrlEncoded
+    @POST("$GET_VOUCHER_REQUEST_LIST/{$TIMESTAMP}/{$SALT_STRING}/{$TOKEN}")
+    suspend fun fetchVoucherRequestListForId(
+        @Path(TIMESTAMP) timestamp: String,
+        @Path(SALT_STRING) saltString: String,
+        @Path(TOKEN) token: String,
+        @FieldMap params: Map<String, String>
+    ): ResponseDTO<VoucherRequestsDTO>
 
     @FormUrlEncoded
     @POST("$GET_VOUCHER_STATUS/{$TIMESTAMP}/{$SALT_STRING}/{$TOKEN}")

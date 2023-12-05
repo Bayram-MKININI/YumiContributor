@@ -6,6 +6,7 @@ import net.noliaware.yumi_contributor.commun.util.Resource
 import net.noliaware.yumi_contributor.feature_account.domain.model.Category
 import net.noliaware.yumi_contributor.feature_account.domain.model.ManagedAccount
 import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherRequest
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStateData
 
 interface ManagedAccountRepository {
@@ -33,6 +34,14 @@ interface ManagedAccountRepository {
     fun getCancelledVoucherList(categoryId: String): Flow<PagingData<Voucher>>
 
     fun getVoucherById(voucherId: String): Flow<Resource<Voucher>>
+
+    fun sendVoucherRequestWithId(
+        voucherId: String,
+        voucherRequestTypeId: Int,
+        voucherRequestComment: String
+    ): Flow<Resource<Boolean>>
+
+    fun getVoucherRequestListById(voucherId: String): Flow<Resource<List<VoucherRequest>>>
 
     fun getVoucherStateDataById(voucherId: String): Flow<Resource<VoucherStateData>>
 

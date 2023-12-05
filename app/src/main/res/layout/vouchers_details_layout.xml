@@ -69,27 +69,54 @@
                         android:visibility="gone"
                         tools:visibility="visible" />
 
+                    <androidx.appcompat.widget.AppCompatSpinner
+                        android:id="@+id/request_spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/spinner_background"
+                        android:spinnerMode="dropdown"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+
                     <net.noliaware.yumi_contributor.commun.presentation.views.FillableTextWidget
-                        android:id="@+id/created_fillable_text_view"
+                        android:id="@+id/voucher_number_fillable_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/created_text_view"
+                    <net.noliaware.yumi_contributor.commun.presentation.views.FillableTextWidget
+                        android:id="@+id/date_fillable_text_view"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/omnes_light"
-                        android:textColor="@color/grey_2"
-                        android:textSize="13sp"
-                        tools:text="Crée le 11 mai 2023" />
+                        android:layout_height="wrap_content" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/expiry_text_view"
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:id="@+id/ongoing_requests_action_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/omnes_semibold_regular"
-                        android:textColor="@color/grey_2"
-                        android:textSize="13sp" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/requests_image_view"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:adjustViewBounds="true"
+                            android:background="@drawable/circle_primary"
+                            android:clickable="true"
+                            android:padding="5dp"
+                            android:src="@drawable/ic_progress" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/requests_text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:fontFamily="@font/omnes_semibold_regular"
+                            android:text="@string/requests_in_progress"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="14sp" />
+                    </androidx.appcompat.widget.LinearLayoutCompat>
 
                     <View
                         android:id="@+id/separator_view"
@@ -198,47 +225,65 @@
                         tools:text="Coupon également récupérable par le bénéficiaire"
                         tools:visibility="visible" />
 
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/phone_image_view"
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:id="@+id/phone_action_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"
-                        android:background="@drawable/circle_primary"
-                        android:clickable="true"
-                        android:padding="7dp"
-                        android:src="@drawable/ic_phone" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/phone_text_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/omnes_semibold_regular"
-                        android:text="@string/call"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="14sp" />
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/phone_image_view"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:adjustViewBounds="true"
+                            android:background="@drawable/circle_primary"
+                            android:clickable="true"
+                            android:padding="7dp"
+                            android:src="@drawable/ic_phone" />
 
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/mail_image_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"
-                        android:background="@drawable/circle_primary"
-                        android:clickable="true"
-                        android:padding="7dp"
-                        android:src="@drawable/ic_mail_on"
-                        android:visibility="gone"
-                        tools:visibility="visible" />
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/phone_text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:fontFamily="@font/omnes_semibold_regular"
+                            android:text="@string/call"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="14sp" />
+                    </androidx.appcompat.widget.LinearLayoutCompat>
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/mail_text_view"
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:id="@+id/mail_action_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/omnes_semibold_regular"
-                        android:text="@string/write_email"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="14sp"
-                        android:visibility="gone"
-                        tools:visibility="visible" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/mail_image_view"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:adjustViewBounds="true"
+                            android:background="@drawable/circle_primary"
+                            android:clickable="true"
+                            android:padding="7dp"
+                            android:src="@drawable/ic_mail_on"
+                            android:visibility="gone"
+                            tools:visibility="visible" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/mail_text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:fontFamily="@font/omnes_semibold_regular"
+                            android:text="@string/write_email"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="14sp"
+                            android:visibility="gone"
+                            tools:visibility="visible" />
+                    </androidx.appcompat.widget.LinearLayoutCompat>
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:id="@+id/open_location_layout"
@@ -304,12 +349,16 @@
             android:id="@+id/voucher_status_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/button_rounded_primary"
+            android:backgroundTint="@android:color/white"
             android:fontFamily="@font/omnes_semibold_regular"
             android:gravity="center"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="10dp"
             android:textColor="@color/color_bittersweet"
             android:textSize="18sp"
             android:visibility="gone"
-            tools:text="Coupon consommé"
+            tools:text="@string/voucher_used"
             tools:visibility="visible" />
 
     </net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView>

@@ -17,6 +17,8 @@ data class AccountDataDTO(
     val userName: String?,
     @Json(name = "userCount")
     val accountCount: Int?,
+    @Json(name = "voucherRequestTypes")
+    val voucherRequestTypeDTOs: List<VoucherRequestTypeDTO> = listOf(),
     @Json(name = "encryptionVector")
     val encryptionVector: String?,
     @Json(name = "messageSubjects")
@@ -34,6 +36,7 @@ data class AccountDataDTO(
         helloMessage = helloMessage ?: "",
         userName = userName ?: "",
         accountCount = accountCount ?: 0,
+        voucherRequestTypes = voucherRequestTypeDTOs.map { it.toVoucherRequestType() },
         messageSubjects = messageSubjectDTOs.map { it.toMessageSubject() },
         newAlertCount = newAlertCount ?: 0,
         newMessageCount = newMessageCount ?: 0,

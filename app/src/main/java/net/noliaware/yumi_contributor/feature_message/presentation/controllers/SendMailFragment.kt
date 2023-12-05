@@ -45,11 +45,13 @@ class SendMailFragment : AppCompatDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.send_mail_layout, container, false).apply {
-            sendMailView = this as SendMailView
-            sendMailView?.callback = sendMailViewCallback
-        }
+    ): View? = inflater.inflate(
+        R.layout.send_mail_layout,
+        container,
+        false
+    ).apply {
+        sendMailView = this as SendMailView
+        sendMailView?.callback = sendMailViewCallback
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -61,22 +63,15 @@ class SendMailFragment : AppCompatDialogFragment() {
     }
 
     private fun setUpSubjectDropdownView() {
-        args.subjects?.map { messageSubject ->
-            messageSubject.subjectLabel
-        }.also { subjects ->
-            sendMailView?.subjectSpinner?.adapter = MessageSubjectsAdapter(
-                requireContext(),
-                mutableListOf<String>().apply {
-                    subjects?.let {
-                        addAll(it)
-                    }
-                    add(getString(R.string.select_subject))
-                }.toMutableList()
-            )
-            sendMailView?.subjectSpinner?.setSelection(
-                sendMailView?.subjectSpinner?.adapter?.count ?: 0
-            )
-        }
+        sendMailView?.subjectSpinner?.adapter = MessageSubjectsAdapter(
+            requireContext(),
+            (args.subjects?.map {
+                it.subjectLabel
+            } ?: emptyList()) + getString(R.string.select_subject)
+        )
+        sendMailView?.subjectSpinner?.setSelection(
+            sendMailView?.subjectSpinner?.adapter?.count ?: 0
+        )
     }
 
     private fun setUpPriorityDropdownView() {

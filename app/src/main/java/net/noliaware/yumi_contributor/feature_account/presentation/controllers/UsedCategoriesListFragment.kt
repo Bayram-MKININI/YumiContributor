@@ -34,11 +34,13 @@ class UsedCategoriesListFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.categories_list_layout, container, false).apply {
-            categoriesListView = this as CategoriesListView
-            categoriesListView?.callback = categoriesListViewCallback
-        }
+    ): View? = inflater.inflate(
+        R.layout.categories_list_layout,
+        container,
+        false
+    ).apply {
+        categoriesListView = this as CategoriesListView
+        categoriesListView?.callback = categoriesListViewCallback
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -87,7 +89,9 @@ class UsedCategoriesListFragment : Fragment() {
             viewModel.usedCategoriesEventsHelper.stateData?.let { categories ->
                 categories[index].apply {
                     findNavController().safeNavigate(
-                        ManagedAccountsFragmentDirections.actionCategoriesFragmentToUsedVouchersListFragment(this)
+                        ManagedAccountsFragmentDirections.actionCategoriesFragmentToUsedVouchersListFragment(
+                            this
+                        )
                     )
                 }
             }

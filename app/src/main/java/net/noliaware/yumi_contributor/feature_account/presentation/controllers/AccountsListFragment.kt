@@ -40,16 +40,18 @@ class AccountsListFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.accounts_list_layout, container, false).apply {
-            accountsListView = this as AccountsListView
-            accountsListView?.callback = accountsListViewCallback
-            accountsListView?.paginatedManagedAccountsAdapter = PaginatedManagedAccountsAdapter(
-                accountMapper = ManagedAccountMapper(),
-                onItemClicked = onAccountClickedAction,
-                onPhoneButtonClicked = onPhoneButtonClickedAction
-            )
-        }
+    ): View? = inflater.inflate(
+        R.layout.accounts_list_layout,
+        container,
+        false
+    ).apply {
+        accountsListView = this as AccountsListView
+        accountsListView?.callback = accountsListViewCallback
+        accountsListView?.paginatedManagedAccountsAdapter = PaginatedManagedAccountsAdapter(
+            accountMapper = ManagedAccountMapper(),
+            onItemClicked = onAccountClickedAction,
+            onPhoneButtonClicked = onPhoneButtonClickedAction
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

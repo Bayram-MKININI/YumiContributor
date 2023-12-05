@@ -142,7 +142,7 @@ class HomeMenuView @JvmOverloads constructor(
             Animation.RELATIVE_TO_SELF,
             1f
         ).apply {
-            duration = 500
+            duration = 600
             interpolator = OvershootInterpolator(3f)
             fillAfter = true
             setAnimationListener(object : Animation.AnimationListener {

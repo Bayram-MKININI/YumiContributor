@@ -13,9 +13,6 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.ForegroundColorSpan
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -28,10 +25,12 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.net.toUri
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
@@ -385,6 +384,10 @@ fun Context?.toast(
     Toast.makeText(it, textId, duration).show()
 }
 
+fun Context.getFontFromResources(
+    fontRes: Int
+) = ResourcesCompat.getFont(this, fontRes)
+
 fun View.layoutToTopLeft(
     left: Int,
     top: Int
@@ -419,6 +422,14 @@ fun View.layoutToBottomRight(
     val left = right - measuredWidth
     val top = bottom - measuredHeight
     layout(left, top, right, bottom)
+}
+
+fun View.sizeForVisible(
+    visibleSize: () -> Int
+) = if (isVisible) {
+    visibleSize.invoke()
+} else {
+    0
 }
 
 fun View.convertDpToPx(
@@ -541,32 +552,6 @@ fun Drawable.tint(
 }
 
 fun Number.formatNumber(): String = NumberFormat.getNumberInstance(Locale.getDefault()).format(this)
-
-fun String.decorateText(
-    coloredText1: String,
-    color1: Int,
-    coloredText2: String,
-    color2: Int
-) = SpannableString(this).apply {
-    val colorSpan1 = ForegroundColorSpan(color1)
-    val startIndex1 = indexOf(coloredText1)
-    val endIndex1 = startIndex1 + coloredText1.length
-    setSpan(
-        colorSpan1,
-        startIndex1,
-        endIndex1,
-        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-    )
-    val colorSpan2 = ForegroundColorSpan(color2)
-    val startIndex2 = indexOf(coloredText2)
-    val endIndex2 = startIndex2 + coloredText2.length
-    setSpan(
-        colorSpan2,
-        startIndex2,
-        endIndex2,
-        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-    )
-}
 
 fun Context?.openMap(
     latitude: String?,

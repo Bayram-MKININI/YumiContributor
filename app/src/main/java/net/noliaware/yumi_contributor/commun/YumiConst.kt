@@ -19,6 +19,8 @@ object ApiConstants {
     const val GET_CANCELLED_VOUCHER_LIST_BY_CATEGORY = "getUserCanceledVoucherListByCategory"
     const val GET_VOUCHER = "getUserVoucher"
     const val GET_VOUCHER_STATUS = "getUserVoucherStatus"
+    const val SEND_VOUCHER_REQUEST = "sendVoucherRequest"
+    const val GET_VOUCHER_REQUEST_LIST = "getUserVoucherRequestList"
     const val USE_VOUCHER = "useUserVoucher"
     const val GET_ACCOUNT = "getAccount"
     const val GET_BACK_OFFICE_SIGN_IN_CODE = "getBackOfficeSignInCode"
@@ -51,6 +53,8 @@ object ApiParameters {
     const val SELECTED_USER = "selectedUser"
     const val CATEGORY_ID = "categoryId"
     const val VOUCHER_ID = "voucherId"
+    const val VOUCHER_REQUEST_TYPE_ID = "voucherRequestTypeId"
+    const val VOUCHER_REQUEST_COMMENT = "voucherRequestComment"
     const val VOUCHER_CODE_DATA = "voucherCodeData"
     const val LIMIT = "limit"
     const val LIST_PAGE_SIZE = 20
@@ -69,6 +73,7 @@ object ActionTypes {
 
 object Args {
     const val MANAGED_ACCOUNT = "managedAccount"
+    const val ACCOUNT_DATA = "accountData"
     const val SELECTED_CATEGORY = "selectedCategory"
     const val DATA_SHOULD_REFRESH = "dataShouldRefresh"
 }

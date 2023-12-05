@@ -1,13 +1,14 @@
 package net.noliaware.yumi_contributor.feature_account.presentation.views
 
 import android.content.Context
+import android.text.SpannableString
 import android.util.AttributeSet
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.ColorRes
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -40,11 +41,15 @@ class VouchersDetailsContainerView @JvmOverloads constructor(
     private lateinit var displayVoucherLayout: LinearLayoutCompat
     private lateinit var voucherStatusTextView: TextView
     var callback: VouchersDetailsViewCallback? by weak()
+    val getRequestSpinner get() = vouchersDetailsView.requestSpinner
 
     data class VouchersDetailsViewAdapter(
         val title: String = "",
-        val startDate: String = "",
-        val endDate: String = "",
+        val titleCrossed: Boolean = false,
+        val requestsAvailable: Boolean = false,
+        val voucherNumber: SpannableString?,
+        val date: SpannableString?,
+        val ongoingRequestsAvailable: Boolean,
         val partnerAvailable: Boolean,
         val partnerLabel: String? = null,
         val voucherDescription: String? = null,
@@ -52,14 +57,14 @@ class VouchersDetailsContainerView @JvmOverloads constructor(
         val retailerLabel: String = "",
         val retailerAddress: String = "",
         val retrievalMode: String? = null,
-        @ColorRes val retrievalModeTextColorRes: Int,
-        val openVoucherActionNotAvailable: Boolean = false,
         val voucherStatusAvailable: Boolean = false,
         val voucherStatus: String = ""
     )
 
     interface VouchersDetailsViewCallback {
         fun onBackButtonClicked()
+        fun onRequestSelectedAtIndex(index: Int)
+        fun onOngoingRequestsClicked()
         fun onPartnerInfoClicked()
         fun onMoreButtonClicked()
         fun onPhoneButtonClicked()
@@ -82,10 +87,19 @@ class VouchersDetailsContainerView @JvmOverloads constructor(
         parentContentView = findViewById(R.id.parent_content_layout)
         shimmerView = findViewById(R.id.shimmer_view)
         vouchersDetailsView = shimmerView.findViewById(R.id.content_layout)
+        post {
+            vouchersDetailsView.requestSpinner.setSelection(
+                vouchersDetailsView.requestSpinner.adapter.count,
+                false
+            )
+            vouchersDetailsView.requestSpinner.onItemSelectedListener =
+                onSpinnerItemSelectedListener
+        }
+        vouchersDetailsView.ongoingRequestsButton.setOnClickListener(onButtonClickListener)
         vouchersDetailsView.informationTextView.setOnClickListener(onButtonClickListener)
         vouchersDetailsView.moreTextView.setOnClickListener(onButtonClickListener)
         vouchersDetailsView.openLocationLayout.setOnClickListener(onButtonClickListener)
-        vouchersDetailsView.phoneImageView.setOnClickListener(onButtonClickListener)
+        vouchersDetailsView.phoneButton.setOnClickListener(onButtonClickListener)
 
         displayVoucherLayout = parentContentView.findViewById(R.id.display_voucher_layout)
         displayVoucherLayout.setOnClickListener(onButtonClickListener)
@@ -97,12 +111,32 @@ class VouchersDetailsContainerView @JvmOverloads constructor(
         OnClickListener {
             when (it.id) {
                 R.id.back_view -> callback?.onBackButtonClicked()
+                R.id.ongoing_requests_action_layout -> callback?.onOngoingRequestsClicked()
                 R.id.information_text_view -> callback?.onPartnerInfoClicked()
                 R.id.more_text_view -> callback?.onMoreButtonClicked()
-                R.id.phone_image_view -> callback?.onPhoneButtonClicked()
+                R.id.phone_action_layout -> callback?.onPhoneButtonClicked()
                 R.id.open_location_layout -> callback?.onLocationClicked()
                 R.id.display_voucher_layout -> callback?.onDisplayVoucherButtonClicked()
             }
+        }
+    }
+
+    private val onSpinnerItemSelectedListener: AdapterView.OnItemSelectedListener by lazy {
+        object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                val lastPosition = parent?.count ?: 0
+                if (position < lastPosition) {
+                    callback?.onRequestSelectedAtIndex(position)
+                    vouchersDetailsView.requestSpinner.setSelection(lastPosition, false)
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) = Unit
         }
     }
 
@@ -125,18 +159,18 @@ class VouchersDetailsContainerView @JvmOverloads constructor(
     fun fillViewWithData(vouchersDetailsViewAdapter: VouchersDetailsViewAdapter) {
         vouchersDetailsView.fillViewWithData(vouchersDetailsViewAdapter)
 
-        if (vouchersDetailsViewAdapter.openVoucherActionNotAvailable) {
-            displayVoucherLayout.isGone = true
-        } else {
-            displayVoucherLayout.isVisible = true
-        }
-
         if (vouchersDetailsViewAdapter.voucherStatusAvailable) {
+            displayVoucherLayout.isGone = true
             voucherStatusTextView.isVisible = true
             voucherStatusTextView.text = vouchersDetailsViewAdapter.voucherStatus
         } else {
+            displayVoucherLayout.isVisible = true
             voucherStatusTextView.isGone = true
         }
+    }
+
+    fun displayOngoingRequestsButton() {
+        vouchersDetailsView.ongoingRequestsButton.isVisible = true
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

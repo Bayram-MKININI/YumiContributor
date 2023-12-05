@@ -44,11 +44,13 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.home_layout, container, false)?.apply {
-            homeView = this as HomeView
-            homeView?.homeMenuView?.callback = homeMenuViewCallback
-        }
+    ): View? = inflater.inflate(
+        R.layout.home_layout,
+        container,
+        false
+    )?.apply {
+        homeView = this as HomeView
+        homeView?.homeMenuView?.callback = homeMenuViewCallback
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

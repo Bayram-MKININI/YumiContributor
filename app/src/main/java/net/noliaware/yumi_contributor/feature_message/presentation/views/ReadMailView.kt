@@ -4,14 +4,12 @@ import android.content.Context
 import android.text.Spanned
 import android.text.SpannedString
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
@@ -21,6 +19,7 @@ import net.noliaware.yumi_contributor.commun.presentation.views.FillableTextWidg
 import net.noliaware.yumi_contributor.commun.util.activateShimmer
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.getColorCompat
+import net.noliaware.yumi_contributor.commun.util.getFontFromResources
 import net.noliaware.yumi_contributor.commun.util.getStatusBarHeight
 import net.noliaware.yumi_contributor.commun.util.layoutToBottomLeft
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
@@ -89,17 +88,17 @@ class ReadMailView @JvmOverloads constructor(
 
         titleFillableTextWidget = shimmerView.findViewById(R.id.title_fillable_text_view)
         titleFillableTextWidget.textView.apply {
-            typeface = ResourcesCompat.getFont(context, R.font.omnes_semibold_regular)
+            typeface = context.getFontFromResources(R.font.omnes_semibold_regular)
             setTextColor(context.getColorCompat(R.color.grey_2))
-            setTextSize(TypedValue.COMPLEX_UNIT_SP, 19f)
+            textSize = 19f
         }
         titleFillableTextWidget.setFixedWidth(true)
 
         timeFillableTextWidget = shimmerView.findViewById(R.id.time_fillable_text_view)
         timeFillableTextWidget.textView.apply {
-            typeface = ResourcesCompat.getFont(context, R.font.omnes_regular)
+            typeface = context.getFontFromResources(R.font.omnes_regular)
             setTextColor(context.getColorCompat(R.color.grey_2))
-            setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
+            textSize = 14f
         }
 
         messageParentView = shimmerView.findViewById(R.id.message_parent_view)

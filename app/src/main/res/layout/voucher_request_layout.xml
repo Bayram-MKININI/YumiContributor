@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherRequestView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/title_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/omnes_semibold_regular"
+        android:textColor="@color/grey_2"
+        android:textSize="19sp"
+        tools:text="Demande Annulation (Bénéficiaire)" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/comment_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rectangle_rounded_grey1"
+        android:fontFamily="@font/omnes_regular"
+        android:gravity="top"
+        android:hint="@string/comment"
+        android:imeOptions="actionUnspecified|flagNoExtractUi"
+        android:inputType="textMultiLine"
+        android:maxLength="500"
+        android:padding="10dp"
+        android:textColor="@color/grey_4"
+        android:textCursorDrawable="@null"
+        android:textSize="16sp" />
+</net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherRequestView>

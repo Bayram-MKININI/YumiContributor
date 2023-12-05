@@ -21,6 +21,7 @@ class VoucherDetailsFragmentViewModel @Inject constructor(
 ) : ViewModel() {
 
     val getVoucherEventsHelper = EventsHelper<Voucher>()
+    val requestSentEventsHelper = EventsHelper<Boolean>()
     val getVoucherStateDataEventsHelper = EventsHelper<VoucherStateData>()
 
     init {
@@ -33,6 +34,22 @@ class VoucherDetailsFragmentViewModel @Inject constructor(
         viewModelScope.launch {
             repository.getVoucherById(voucherId).onEach { result ->
                 getVoucherEventsHelper.handleResponse(result)
+            }.launchIn(this)
+        }
+    }
+
+    fun callSendVoucherRequestWithId(
+        voucherId: String,
+        voucherRequestTypeId: Int,
+        voucherRequestComment: String
+    ) {
+        viewModelScope.launch {
+            repository.sendVoucherRequestWithId(
+                voucherId,
+                voucherRequestTypeId,
+                voucherRequestComment
+            ).onEach { result ->
+                requestSentEventsHelper.handleResponse(result)
             }.launchIn(this)
         }
     }

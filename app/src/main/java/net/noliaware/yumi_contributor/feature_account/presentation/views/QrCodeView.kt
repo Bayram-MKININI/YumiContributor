@@ -35,8 +35,7 @@ class QrCodeView @JvmOverloads constructor(
     private lateinit var categoryImageView: ImageView
     private lateinit var contentView: View
     private lateinit var titleTextView: TextView
-    private lateinit var createdTextView: TextView
-    private lateinit var expiryTextView: TextView
+    private lateinit var dateTextView: TextView
     private lateinit var qrCodeBackgroundView: View
 
     private lateinit var qrCodeImageView: ImageView
@@ -49,8 +48,7 @@ class QrCodeView @JvmOverloads constructor(
         val color: Int,
         val iconName: String?,
         val title: String,
-        val creationDate: String,
-        val expiryDate: String
+        val date: String
     )
 
     interface QrCodeViewCallback {
@@ -72,8 +70,7 @@ class QrCodeView @JvmOverloads constructor(
         contentView = findViewById(R.id.content_layout)
 
         titleTextView = contentView.findViewById(R.id.title_text_view)
-        createdTextView = contentView.findViewById(R.id.created_text_view)
-        expiryTextView = contentView.findViewById(R.id.expiry_date_text_view)
+        dateTextView = contentView.findViewById(R.id.date_text_view)
         qrCodeBackgroundView = contentView.findViewById(R.id.qr_code_background)
         qrCodeImageView = contentView.findViewById(R.id.qr_code_image_view)
         layerView = contentView.findViewById(R.id.layer_view)
@@ -94,8 +91,7 @@ class QrCodeView @JvmOverloads constructor(
         headerView.setBackgroundColor(qrCodeViewAdapter.color)
         categoryImageView.setImageResource(context.drawableIdByName(qrCodeViewAdapter.iconName))
         titleTextView.text = qrCodeViewAdapter.title
-        createdTextView.text = qrCodeViewAdapter.creationDate
-        expiryTextView.text = qrCodeViewAdapter.expiryDate
+        dateTextView.text = qrCodeViewAdapter.date
     }
 
     fun setQrCode(bitmap: Bitmap) {
@@ -134,7 +130,7 @@ class QrCodeView @JvmOverloads constructor(
         )
 
         val parentContentViewHeight = viewHeight - (headerView.measuredHeight + categoryImageView.measuredHeight / 2 +
-                convertDpToPx(25))
+                    convertDpToPx(25))
 
         contentView.measure(
             MeasureSpec.makeMeasureSpec(viewWidth * 95 / 100, MeasureSpec.EXACTLY),
@@ -142,12 +138,11 @@ class QrCodeView @JvmOverloads constructor(
         )
 
         titleTextView.measureWrapContent()
-        createdTextView.measureWrapContent()
-        expiryTextView.measureWrapContent()
+        dateTextView.measureWrapContent()
         useVoucherLayout.measureWrapContent()
 
-        val availableViewHeight = contentView.measuredHeight - (titleTextView.measuredHeight + createdTextView.measuredHeight +
-                expiryTextView.measuredHeight + useVoucherLayout.measuredHeight + convertDpToPx(95))
+        val availableViewHeight = contentView.measuredHeight - (titleTextView.measuredHeight + dateTextView.measuredHeight +
+                useVoucherLayout.measuredHeight + convertDpToPx(90))
 
         val qrCodeBackgroundViewWidth = min(availableViewHeight, contentView.measuredWidth * 9 / 10)
         qrCodeBackgroundView.measure(
@@ -200,14 +195,9 @@ class QrCodeView @JvmOverloads constructor(
             convertDpToPx(20)
         )
 
-        createdTextView.layoutToTopLeft(
+        dateTextView.layoutToTopLeft(
             titleTextView.left,
             titleTextView.bottom + convertDpToPx(5)
-        )
-
-        expiryTextView.layoutToTopLeft(
-            titleTextView.left,
-            createdTextView.bottom + convertDpToPx(5)
         )
 
         qrCodeBackgroundView.layoutToTopLeft(

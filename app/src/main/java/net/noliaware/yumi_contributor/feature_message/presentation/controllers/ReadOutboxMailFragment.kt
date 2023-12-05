@@ -45,11 +45,13 @@ class ReadOutboxMailFragment : AppCompatDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.read_mail_layout, container, false).apply {
-            readMailView = this as ReadMailView
-            readMailView?.callback = readMailViewCallback
-        }
+    ): View? = inflater.inflate(
+        R.layout.read_mail_layout,
+        container,
+        false
+    ).apply {
+        readMailView = this as ReadMailView
+        readMailView?.callback = readMailViewCallback
     }
 
     private val readMailViewCallback: ReadMailViewCallback by lazy {

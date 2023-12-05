@@ -1,5 +1,6 @@
 package net.noliaware.yumi_contributor.feature_account.presentation.controllers
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
@@ -11,19 +12,23 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import net.noliaware.yumi_contributor.commun.Args.ACCOUNT_DATA
 import net.noliaware.yumi_contributor.commun.presentation.EventsHelper
 import net.noliaware.yumi_contributor.feature_account.domain.model.ManagedAccount
 import net.noliaware.yumi_contributor.feature_account.domain.model.SelectableData
 import net.noliaware.yumi_contributor.feature_account.domain.model.SelectableData.AssignedData
 import net.noliaware.yumi_contributor.feature_account.domain.model.SelectableData.SelectedData
 import net.noliaware.yumi_contributor.feature_account.domain.repository.ManagedAccountRepository
+import net.noliaware.yumi_contributor.feature_login.domain.model.AccountData
 import javax.inject.Inject
 
 @HiltViewModel
 class ManagedAccountsFragmentViewModel @Inject constructor(
-    private val repository: ManagedAccountRepository
+    private val repository: ManagedAccountRepository,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
+    val accountData get() = savedStateHandle.get<AccountData>(ACCOUNT_DATA)
     val getFilteredAccountEventsHelper = EventsHelper<ManagedAccount>()
     val getUsersAutocompleteListEventsHelper = EventsHelper<List<ManagedAccount>>()
     val selectAccountEventsHelper = EventsHelper<String>()

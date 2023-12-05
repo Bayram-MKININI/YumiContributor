@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherOngoingRequestItemPlaceHolderView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rectangle_rounded_grey1">
+
+    <View
+        android:id="@+id/title_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/grey_9" />
+
+    <View
+        android:id="@+id/date_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/grey_9" />
+
+    <View
+        android:id="@+id/body_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/grey_9" />
+</net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherOngoingRequestItemPlaceHolderView>

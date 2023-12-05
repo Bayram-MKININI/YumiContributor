@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherOngoingRequestListView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/background_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha=".15"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_view_background" />
+
+    <View
+        android:id="@+id/header_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:background="@color/orange_1" />
+
+    <include layout="@layout/back_layout" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/category_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:background="@drawable/circle_white"
+        android:padding="12dp"
+        tools:src="@drawable/ic_food" />
+
+    <net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView
+        android:id="@+id/content_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/omnes_semibold_regular"
+            android:textColor="@color/grey_2"
+            android:textSize="19sp"
+            tools:text="Liste des demandes en cours" />
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmer_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:shimmer_auto_start="false"
+            app:shimmer_base_alpha="1"
+            tools:visibility="gone">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/shimmer_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:visibility="gone"
+            tools:layoutManager="LinearLayoutManager"
+            tools:listitem="@layout/voucher_ongoing_request_item_layout"
+            tools:visibility="visible" />
+    </net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView>
+</net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherOngoingRequestListView>

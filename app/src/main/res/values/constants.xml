@@ -12,6 +12,7 @@
     <string name="used_vouchers_list_fragment_screen_label" translatable="false">Used Vouchers</string>
     <string name="cancelled_vouchers_list_fragment_screen_label" translatable="false">Cancelled Vouchers</string>
     <string name="voucher_details_fragment_screen_label" translatable="false">Voucher Details</string>
+    <string name="voucher_ongoing_requests_fragment_screen_label" translatable="false">Voucher Ongoing Requests</string>
     <string name="qr_code_fragment_screen_label" translatable="false">Qr Code</string>
     <string name="user_profile_fragment_screen_label" translatable="false">User Profile</string>
     <string name="bo_sign_in_fragment_screen_label" translatable="false">BO Sign In</string>

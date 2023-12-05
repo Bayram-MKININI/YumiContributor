@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/subject_text_view"
     android:layout_width="match_parent"
-    android:layout_height="37dp"
+    android:layout_height="38dp"
     android:fontFamily="@font/omnes_regular"
     android:gravity="center_vertical"
     android:paddingHorizontal="15dp"

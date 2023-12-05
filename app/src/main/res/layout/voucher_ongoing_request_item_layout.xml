@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherOngoingRequestItemView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rectangle_rounded_grey1">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/title_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/omnes_semibold_regular"
+        android:textColor="@color/grey_2"
+        android:textSize="17sp"
+        tools:text="Demande Nouvelle Disponibilité" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/date_label_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/omnes_regular"
+        android:text="@string/creation"
+        android:textColor="@color/grey_2"
+        android:textSize="15sp" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/date_value_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/omnes_semibold_regular"
+        android:textColor="@color/grey_2"
+        android:textSize="15sp"
+        tools:text="07 nov. 2022" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/body_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/omnes_regular"
+        android:textColor="@color/grey_2"
+        android:textSize="15sp"
+        android:visibility="gone"
+        tools:text="Test nouvelle disponibilité"
+        tools:visibility="visible" />
+</net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherOngoingRequestItemView>

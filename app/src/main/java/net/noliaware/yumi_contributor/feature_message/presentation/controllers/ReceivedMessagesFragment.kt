@@ -34,16 +34,18 @@ class ReceivedMessagesFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.messages_list_layout, container, false).apply {
-            messagesListView = this as MessagesListView
-            messagesListView?.messageAdapter = MessageAdapter { message ->
-                findNavController().safeNavigate(
-                    MessagingFragmentDirections.actionMessagingFragmentToReadInboxMailFragment(
-                        message.messageId
-                    )
+    ): View? = inflater.inflate(
+        R.layout.messages_list_layout,
+        container,
+        false
+    ).apply {
+        messagesListView = this as MessagesListView
+        messagesListView?.messageAdapter = MessageAdapter { message ->
+            findNavController().safeNavigate(
+                MessagingFragmentDirections.actionMessagingFragmentToReadInboxMailFragment(
+                    message.messageId
                 )
-            }
+            )
         }
     }
 
@@ -67,6 +69,7 @@ class ReceivedMessagesFragment : Fragment() {
                         messagesListView?.setEmptyMessageText(getString(R.string.no_received_message))
                         messagesListView?.setEmptyMessageVisible(noMessagesLoaded)
                     }
+
                     else -> Unit
                 }
             }

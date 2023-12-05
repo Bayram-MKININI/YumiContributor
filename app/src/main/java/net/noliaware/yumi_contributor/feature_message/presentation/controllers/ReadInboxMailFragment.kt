@@ -47,11 +47,13 @@ class ReadInboxMailFragment : AppCompatDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.read_mail_layout, container, false).apply {
-            readMailView = this as ReadMailView
-            readMailView?.callback = readMailViewCallback
-        }
+    ): View? = inflater.inflate(
+        R.layout.read_mail_layout,
+        container,
+        false
+    ).apply {
+        readMailView = this as ReadMailView
+        readMailView?.callback = readMailViewCallback
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

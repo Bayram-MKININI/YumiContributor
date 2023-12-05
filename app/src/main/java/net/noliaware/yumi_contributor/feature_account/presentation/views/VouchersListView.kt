@@ -51,9 +51,9 @@ class VouchersListView @JvmOverloads constructor(
     }
 
     data class VouchersListViewAdapter(
-        val title: SpannableString,
         val color: Int,
-        val iconName: String?
+        val iconName: String?,
+        val title: SpannableString
     )
 
     override fun onFinishInflate() {
@@ -93,9 +93,9 @@ class VouchersListView @JvmOverloads constructor(
     }
 
     fun fillViewWithData(vouchersListViewAdapter: VouchersListViewAdapter) {
-        titleTextView.text = vouchersListViewAdapter.title
         headerView.setBackgroundColor(vouchersListViewAdapter.color)
         categoryImageView.setImageResource(context.drawableIdByName(vouchersListViewAdapter.iconName))
+        titleTextView.text = vouchersListViewAdapter.title
     }
 
     fun setLoadingVisible(visible: Boolean) {

@@ -27,11 +27,13 @@ class AlertsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.alerts_layout, container, false).apply {
-            alertsView = this as AlertsView
-            alertsView?.alertAdapter = AlertAdapter()
-        }
+    ): View? = inflater.inflate(
+        R.layout.alerts_layout,
+        container,
+        false
+    ).apply {
+        alertsView = this as AlertsView
+        alertsView?.alertAdapter = AlertAdapter()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

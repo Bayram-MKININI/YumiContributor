@@ -10,14 +10,18 @@ import net.noliaware.yumi_contributor.commun.ApiConstants.GET_FILTER_USERS_LIST
 import net.noliaware.yumi_contributor.commun.ApiConstants.GET_SINGLE_MANAGED_ACCOUNT
 import net.noliaware.yumi_contributor.commun.ApiConstants.GET_USED_DATA_PER_CATEGORY
 import net.noliaware.yumi_contributor.commun.ApiConstants.GET_VOUCHER
+import net.noliaware.yumi_contributor.commun.ApiConstants.GET_VOUCHER_REQUEST_LIST
 import net.noliaware.yumi_contributor.commun.ApiConstants.GET_VOUCHER_STATUS
 import net.noliaware.yumi_contributor.commun.ApiConstants.SELECT_USER
+import net.noliaware.yumi_contributor.commun.ApiConstants.SEND_VOUCHER_REQUEST
 import net.noliaware.yumi_contributor.commun.ApiConstants.SET_PRIVACY_POLICY_READ_STATUS
 import net.noliaware.yumi_contributor.commun.ApiConstants.USE_VOUCHER
 import net.noliaware.yumi_contributor.commun.ApiParameters.LIST_PAGE_SIZE
 import net.noliaware.yumi_contributor.commun.ApiParameters.SELECTED_USER
 import net.noliaware.yumi_contributor.commun.ApiParameters.USER_ID
 import net.noliaware.yumi_contributor.commun.ApiParameters.VOUCHER_ID
+import net.noliaware.yumi_contributor.commun.ApiParameters.VOUCHER_REQUEST_COMMENT
+import net.noliaware.yumi_contributor.commun.ApiParameters.VOUCHER_REQUEST_TYPE_ID
 import net.noliaware.yumi_contributor.commun.data.remote.RemoteApi
 import net.noliaware.yumi_contributor.commun.domain.model.SessionData
 import net.noliaware.yumi_contributor.commun.util.Resource
@@ -30,6 +34,7 @@ import net.noliaware.yumi_contributor.commun.util.randomString
 import net.noliaware.yumi_contributor.feature_account.domain.model.Category
 import net.noliaware.yumi_contributor.feature_account.domain.model.ManagedAccount
 import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherRequest
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStateData
 import net.noliaware.yumi_contributor.feature_account.domain.repository.ManagedAccountRepository
 import javax.inject.Inject
@@ -396,7 +401,7 @@ class ManagedAccountRepositoryImpl @Inject constructor(
                     methodName = GET_VOUCHER,
                     randomString = randomString
                 ),
-                params = generateVoucherByIdParams(voucherId, GET_VOUCHER)
+                params = generateVoucherIdParams(voucherId, GET_VOUCHER)
             )
 
             val sessionNoFailure = handleSessionWithNoFailure(
@@ -423,6 +428,112 @@ class ManagedAccountRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun sendVoucherRequestWithId(
+        voucherId: String,
+        voucherRequestTypeId: Int,
+        voucherRequestComment: String
+    ): Flow<Resource<Boolean>> = flow {
+
+        emit(Resource.Loading())
+
+        try {
+            val timestamp = currentTimeInMillis()
+            val randomString = randomString()
+
+            val remoteData = api.sendVoucherRequestWithId(
+                timestamp = timestamp,
+                saltString = randomString,
+                token = generateToken(
+                    timestamp = timestamp,
+                    methodName = SEND_VOUCHER_REQUEST,
+                    randomString = randomString
+                ),
+                params = generateVoucherRequestParams(
+                    voucherId,
+                    voucherRequestTypeId,
+                    voucherRequestComment,
+                    SEND_VOUCHER_REQUEST
+                )
+            )
+
+            val sessionNoFailure = handleSessionWithNoFailure(
+                session = remoteData.session,
+                sessionData = sessionData,
+                tokenKey = SEND_VOUCHER_REQUEST,
+                appMessage = remoteData.message,
+                error = remoteData.error
+            )
+
+            if (sessionNoFailure) {
+                emit(
+                    Resource.Success(
+                        data = remoteData.data != null,
+                        appMessage = remoteData.message?.toAppMessage()
+                    )
+                )
+            }
+
+        } catch (ex: Exception) {
+            handleRemoteCallError(ex)
+        }
+    }
+
+    private fun generateVoucherRequestParams(
+        voucherId: String,
+        voucherRequestTypeId: Int,
+        voucherRequestComment: String,
+        tokenKey: String
+    ) = mutableMapOf(
+        VOUCHER_ID to voucherId,
+        VOUCHER_REQUEST_TYPE_ID to voucherRequestTypeId.toString(),
+        VOUCHER_REQUEST_COMMENT to voucherRequestComment
+    ).also { it += getCommonWSParams(sessionData, tokenKey) }
+
+    override fun getVoucherRequestListById(
+        voucherId: String
+    ): Flow<Resource<List<VoucherRequest>>> = flow {
+
+            emit(Resource.Loading())
+
+            try {
+                val timestamp = currentTimeInMillis()
+                val randomString = randomString()
+
+                val remoteData = api.fetchVoucherRequestListForId(
+                    timestamp = timestamp,
+                    saltString = randomString,
+                    token = generateToken(
+                        timestamp = timestamp,
+                        methodName = GET_VOUCHER_REQUEST_LIST,
+                        randomString = randomString
+                    ),
+                    params = generateVoucherIdParams(voucherId, GET_VOUCHER_REQUEST_LIST)
+                )
+
+                val sessionNoFailure = handleSessionWithNoFailure(
+                    session = remoteData.session,
+                    sessionData = sessionData,
+                    tokenKey = GET_VOUCHER_REQUEST_LIST,
+                    appMessage = remoteData.message,
+                    error = remoteData.error
+                )
+
+                if (sessionNoFailure) {
+                    remoteData.data?.let { voucherRequestsDTO ->
+                        emit(
+                            Resource.Success(
+                                data = voucherRequestsDTO.requestDTOList.map { it.toVoucherRequest() },
+                                appMessage = remoteData.message?.toAppMessage()
+                            )
+                        )
+                    }
+                }
+
+            } catch (ex: Exception) {
+                handleRemoteCallError(ex)
+            }
+        }
+
     override fun getVoucherStateDataById(
         voucherId: String
     ): Flow<Resource<VoucherStateData>> = flow {
@@ -441,7 +552,7 @@ class ManagedAccountRepositoryImpl @Inject constructor(
                     methodName = GET_VOUCHER_STATUS,
                     randomString = randomString
                 ),
-                params = generateVoucherByIdParams(voucherId, GET_VOUCHER_STATUS)
+                params = generateVoucherIdParams(voucherId, GET_VOUCHER_STATUS)
             )
 
             val sessionNoFailure = handleSessionWithNoFailure(
@@ -484,7 +595,7 @@ class ManagedAccountRepositoryImpl @Inject constructor(
                     USE_VOUCHER,
                     randomString
                 ),
-                params = generateVoucherByIdParams(voucherId, USE_VOUCHER)
+                params = generateVoucherIdParams(voucherId, USE_VOUCHER)
             )
 
             val sessionNoFailure = handleSessionWithNoFailure(
@@ -509,7 +620,7 @@ class ManagedAccountRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun generateVoucherByIdParams(voucherId: String, tokenKey: String) = mutableMapOf(
+    private fun generateVoucherIdParams(voucherId: String, tokenKey: String) = mutableMapOf(
         VOUCHER_ID to voucherId
     ).also { it.plusAssign(getCommonWSParams(sessionData, tokenKey)) }
 }

@@ -2,21 +2,21 @@ package net.noliaware.yumi_contributor.feature_account.presentation.views
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.presentation.views.FillableTextWidget
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.getColorCompat
+import net.noliaware.yumi_contributor.commun.util.getFontFromResources
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.layoutToTopRight
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
+import net.noliaware.yumi_contributor.commun.util.sizeForVisible
 import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView.VouchersDetailsViewAdapter
 
 class VouchersDetailsView @JvmOverloads constructor(
@@ -27,8 +27,13 @@ class VouchersDetailsView @JvmOverloads constructor(
 
     private lateinit var titleFillableTextWidget: FillableTextWidget
     private lateinit var crossOutView: View
-    private lateinit var createdFillableTextWidget: FillableTextWidget
-    private lateinit var expiryTextView: TextView
+
+    lateinit var requestSpinner: Spinner
+        private set
+
+    private lateinit var dateFillableTextWidget: FillableTextWidget
+    private lateinit var voucherNumberFillableTextWidget: FillableTextWidget
+    lateinit var ongoingRequestsButton: View
     private lateinit var separatorView: View
     private lateinit var sponsorBackgroundView: View
     private lateinit var sponsorTextView: TextView
@@ -40,10 +45,8 @@ class VouchersDetailsView @JvmOverloads constructor(
     private lateinit var retailerTextView: TextView
     private lateinit var addressTextView: TextView
     private lateinit var retrievalTextView: TextView
-    lateinit var phoneImageView: ImageView
-    private lateinit var phoneTextView: TextView
-    private lateinit var mailImageView: ImageView
-    private lateinit var mailTextView: TextView
+    lateinit var phoneButton: View
+    private lateinit var mailButton: View
     lateinit var openLocationLayout: LinearLayoutCompat
     private var displayVoucherButtonVisible: Boolean = false
     private var statusTextViewVisible: Boolean = false
@@ -56,22 +59,31 @@ class VouchersDetailsView @JvmOverloads constructor(
     private fun initView() {
         titleFillableTextWidget = findViewById(R.id.title_fillable_text_view)
         titleFillableTextWidget.textView.apply {
-            typeface = ResourcesCompat.getFont(context, R.font.omnes_semibold_regular)
+            typeface = context.getFontFromResources(R.font.omnes_semibold_regular)
             setTextColor(context.getColorCompat(R.color.grey_2))
-            setTextSize(TypedValue.COMPLEX_UNIT_SP, 19f)
+            textSize = 19f
         }
         titleFillableTextWidget.setFixedWidth(true)
 
         crossOutView = findViewById(R.id.cross_out_view)
 
-        createdFillableTextWidget = findViewById(R.id.created_fillable_text_view)
-        createdFillableTextWidget.textView.apply {
-            typeface = ResourcesCompat.getFont(context, R.font.omnes_light)
+        requestSpinner = findViewById(R.id.request_spinner)
+
+        voucherNumberFillableTextWidget = findViewById(R.id.voucher_number_fillable_text_view)
+        voucherNumberFillableTextWidget.textView.apply {
+            typeface = context.getFontFromResources(R.font.omnes_light)
             setTextColor(context.getColorCompat(R.color.grey_2))
-            setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
+            textSize = 13f
         }
 
-        expiryTextView = findViewById(R.id.expiry_text_view)
+        dateFillableTextWidget = findViewById(R.id.date_fillable_text_view)
+        dateFillableTextWidget.textView.apply {
+            typeface = context.getFontFromResources(R.font.omnes_light)
+            setTextColor(context.getColorCompat(R.color.grey_2))
+            textSize = 13f
+        }
+
+        ongoingRequestsButton = findViewById(R.id.ongoing_requests_action_layout)
         separatorView = findViewById(R.id.separator_view)
         sponsorBackgroundView = findViewById(R.id.sponsor_background)
         sponsorTextView = findViewById(R.id.sponsor_text_view)
@@ -83,19 +95,19 @@ class VouchersDetailsView @JvmOverloads constructor(
         retailerTextView = findViewById(R.id.retailer_text_view)
         addressTextView = findViewById(R.id.address_text_view)
         retrievalTextView = findViewById(R.id.retrieval_text_view)
-        phoneImageView = findViewById(R.id.phone_image_view)
-        phoneTextView = findViewById(R.id.phone_text_view)
-        mailImageView = findViewById(R.id.mail_image_view)
-        mailTextView = findViewById(R.id.mail_text_view)
+        phoneButton = findViewById(R.id.phone_action_layout)
+        mailButton = findViewById(R.id.mail_action_layout)
         openLocationLayout = findViewById(R.id.open_location_layout)
     }
 
     fun fillViewWithData(vouchersDetailsViewAdapter: VouchersDetailsViewAdapter) {
 
         titleFillableTextWidget.setText(vouchersDetailsViewAdapter.title)
-        crossOutView.isVisible = vouchersDetailsViewAdapter.voucherStatusAvailable
-        createdFillableTextWidget.setText(vouchersDetailsViewAdapter.startDate)
-        expiryTextView.text = vouchersDetailsViewAdapter.endDate
+        crossOutView.isVisible = vouchersDetailsViewAdapter.titleCrossed
+        requestSpinner.isVisible = vouchersDetailsViewAdapter.requestsAvailable
+        voucherNumberFillableTextWidget.setText(vouchersDetailsViewAdapter.voucherNumber)
+        dateFillableTextWidget.setText(vouchersDetailsViewAdapter.date)
+        ongoingRequestsButton.isVisible = vouchersDetailsViewAdapter.ongoingRequestsAvailable
 
         if (vouchersDetailsViewAdapter.partnerAvailable) {
             sponsorBackgroundView.isVisible = true
@@ -118,19 +130,28 @@ class VouchersDetailsView @JvmOverloads constructor(
 
         vouchersDetailsViewAdapter.retrievalMode?.let {
             retrievalTextView.isVisible = true
-            retrievalTextView.setTextColor(context.getColorCompat(vouchersDetailsViewAdapter.retrievalModeTextColorRes))
             retrievalTextView.text = vouchersDetailsViewAdapter.retrievalMode
         }
 
-        displayVoucherButtonVisible = !vouchersDetailsViewAdapter.openVoucherActionNotAvailable
+        displayVoucherButtonVisible = !vouchersDetailsViewAdapter.voucherStatusAvailable
         statusTextViewVisible = vouchersDetailsViewAdapter.voucherStatusAvailable
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val viewWidth = MeasureSpec.getSize(widthMeasureSpec)
 
+        if (requestSpinner.isVisible) {
+            requestSpinner.measure(
+                MeasureSpec.makeMeasureSpec(convertDpToPx(30), MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(convertDpToPx(40), MeasureSpec.EXACTLY)
+            )
+        }
+
+        val titleWidth = viewWidth - convertDpToPx(40) -
+                requestSpinner.sizeForVisible { requestSpinner.measuredWidth }
+
         titleFillableTextWidget.measure(
-            MeasureSpec.makeMeasureSpec(viewWidth * 9 / 10, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(titleWidth, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(convertDpToPx(22), MeasureSpec.EXACTLY)
         )
 
@@ -144,11 +165,19 @@ class VouchersDetailsView @JvmOverloads constructor(
             )
         }
 
-        createdFillableTextWidget.measure(
+        voucherNumberFillableTextWidget.measure(
+            MeasureSpec.makeMeasureSpec(viewWidth * 7 / 10, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(convertDpToPx(15), MeasureSpec.EXACTLY)
+        )
+
+        dateFillableTextWidget.measure(
             MeasureSpec.makeMeasureSpec(viewWidth * 5 / 10, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(convertDpToPx(15), MeasureSpec.EXACTLY)
         )
-        expiryTextView.measureWrapContent()
+
+        if (ongoingRequestsButton.isVisible) {
+            ongoingRequestsButton.measureWrapContent()
+        }
 
         separatorView.measure(
             MeasureSpec.makeMeasureSpec(viewWidth * 4 / 10, MeasureSpec.EXACTLY),
@@ -207,61 +236,45 @@ class VouchersDetailsView @JvmOverloads constructor(
             )
         }
 
-        phoneImageView.measure(
-            MeasureSpec.makeMeasureSpec(convertDpToPx(30), MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(convertDpToPx(30), MeasureSpec.EXACTLY)
-        )
+        phoneButton.measureWrapContent()
 
-        phoneTextView.measureWrapContent()
-
-        if (mailImageView.isVisible) {
-            mailImageView.measure(
-                MeasureSpec.makeMeasureSpec(convertDpToPx(30), MeasureSpec.EXACTLY),
-                MeasureSpec.makeMeasureSpec(convertDpToPx(30), MeasureSpec.EXACTLY)
-            )
-
-            mailTextView.measureWrapContent()
+        if (mailButton.isVisible) {
+            mailButton.measureWrapContent()
         }
 
         openLocationLayout.measureWrapContent()
 
         val locationBackgroundViewHeight = retailerTextView.measuredHeight + addressTextView.measuredHeight +
-                if (retrievalTextView.isVisible) {
-                    retrievalTextView.measuredHeight + convertDpToPx(10)
-                } else {
-                    0
-                } + phoneImageView.measuredHeight + openLocationLayout.measuredHeight / 2 +
-                convertDpToPx(50)
+                    retrievalTextView.sizeForVisible {
+                        retrievalTextView.measuredHeight + convertDpToPx(10)
+                    } +
+                    phoneButton.measuredHeight + openLocationLayout.measuredHeight / 2 + convertDpToPx(50)
 
         locationBackgroundView.measure(
             MeasureSpec.makeMeasureSpec(viewWidth * 9 / 10, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(locationBackgroundViewHeight, MeasureSpec.EXACTLY)
         )
 
-        val contentMeasuredHeight = titleFillableTextWidget.measuredHeight + createdFillableTextWidget.measuredHeight +
-                    separatorView.measuredHeight +
-                    if (sponsorTextView.isVisible) {
+        val contentMeasuredHeight = titleFillableTextWidget.measuredHeight + dateFillableTextWidget.measuredHeight +
+                    voucherNumberFillableTextWidget.measuredHeight +
+                    ongoingRequestsButton.sizeForVisible {
+                    ongoingRequestsButton.measuredHeight + convertDpToPx(10)
+                    } + separatorView.measuredHeight +
+                    sponsorBackgroundView.sizeForVisible {
                         sponsorBackgroundView.measuredHeight + convertDpToPx(15)
-                    } else {
-                        0
                     } +
-                    if (descriptionTextView.isVisible) {
+                    descriptionTextView.sizeForVisible {
                         descriptionTextView.measuredHeight + convertDpToPx(15)
-                    } else {
-                        0
                     } +
-                    if (moreTextView.isVisible) {
+                    moreTextView.sizeForVisible {
                         moreTextView.measuredHeight + convertDpToPx(10)
-                    } else {
-                        0
                     } +
                     goToTextView.measuredHeight + locationBackgroundView.measuredHeight +
-                    openLocationLayout.measuredHeight / 2 + convertDpToPx(55)
-
+                    openLocationLayout.measuredHeight / 2 + convertDpToPx(65)
 
         val finalViewHeight = when {
             displayVoucherButtonVisible -> contentMeasuredHeight + convertDpToPx(70)
-            statusTextViewVisible -> contentMeasuredHeight + convertDpToPx(55)
+            statusTextViewVisible -> contentMeasuredHeight + convertDpToPx(60)
             else -> contentMeasuredHeight
         }
 
@@ -288,19 +301,36 @@ class VouchersDetailsView @JvmOverloads constructor(
             )
         }
 
-        createdFillableTextWidget.layoutToTopLeft(
+        if (requestSpinner.isVisible) {
+            requestSpinner.layoutToTopRight(
+                viewWidth - convertDpToPx(20),
+                titleFillableTextWidget.top + (titleFillableTextWidget.measuredHeight - requestSpinner.measuredHeight) / 2
+            )
+        }
+
+        voucherNumberFillableTextWidget.layoutToTopLeft(
             titleFillableTextWidget.left,
             titleFillableTextWidget.bottom + convertDpToPx(10)
         )
 
-        expiryTextView.layoutToTopLeft(
-            createdFillableTextWidget.right + convertDpToPx(2),
-            createdFillableTextWidget.top
+        dateFillableTextWidget.layoutToTopLeft(
+            titleFillableTextWidget.left,
+            voucherNumberFillableTextWidget.bottom + convertDpToPx(10)
         )
+
+        val separatorCeil = if (ongoingRequestsButton.isVisible) {
+            ongoingRequestsButton.layoutToTopLeft(
+                titleFillableTextWidget.left,
+                dateFillableTextWidget.bottom + convertDpToPx(10)
+            )
+            ongoingRequestsButton.bottom
+        } else {
+            dateFillableTextWidget.bottom
+        }
 
         separatorView.layoutToTopLeft(
             (viewWidth - separatorView.measuredWidth) / 2,
-            expiryTextView.bottom + convertDpToPx(15)
+            separatorCeil + convertDpToPx(15)
         )
 
         val sponsorViewBottom = if (sponsorTextView.isVisible) {
@@ -372,25 +402,15 @@ class VouchersDetailsView @JvmOverloads constructor(
             addressTextView.bottom
         }
 
-        phoneImageView.layoutToTopLeft(
+        phoneButton.layoutToTopLeft(
             retailerTextView.left,
             retrievalTextViewBottom + convertDpToPx(15)
         )
 
-        phoneTextView.layoutToTopLeft(
-            phoneImageView.right + convertDpToPx(5),
-            phoneImageView.top + (phoneImageView.measuredHeight - phoneTextView.measuredHeight) / 2
-        )
-
-        if (mailImageView.isVisible) {
-            mailImageView.layoutToTopLeft(
-                phoneTextView.right + convertDpToPx(10),
-                phoneImageView.top
-            )
-
-            mailTextView.layoutToTopLeft(
-                mailImageView.right + convertDpToPx(5),
-                mailImageView.top + (mailImageView.measuredHeight - mailTextView.measuredHeight) / 2
+        if (mailButton.isVisible) {
+            mailButton.layoutToTopLeft(
+                phoneButton.right + convertDpToPx(10),
+                phoneButton.top
             )
         }
 

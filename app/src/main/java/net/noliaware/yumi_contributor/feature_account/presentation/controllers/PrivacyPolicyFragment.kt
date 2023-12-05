@@ -37,11 +37,13 @@ class PrivacyPolicyFragment : AppCompatDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.privacy_policy_layout, container, false).apply {
-            privacyPolicyView = this as PrivacyPolicyView
-            privacyPolicyView?.callback = privacyPolicyViewCallback
-        }
+    ): View? = inflater.inflate(
+        R.layout.privacy_policy_layout,
+        container,
+        false
+    ).apply {
+        privacyPolicyView = this as PrivacyPolicyView
+        privacyPolicyView?.callback = privacyPolicyViewCallback
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

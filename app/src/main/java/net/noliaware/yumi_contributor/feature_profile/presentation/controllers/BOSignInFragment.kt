@@ -34,11 +34,13 @@ class BOSignInFragment : AppCompatDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.bo_sign_in_layout, container, false).apply {
-            boSignInView = this as BOSignInParentView
-            boSignInView?.callback = boSignInViewCallback
-        }
+    ): View? = inflater.inflate(
+        R.layout.bo_sign_in_layout,
+        container,
+        false
+    ).apply {
+        boSignInView = this as BOSignInParentView
+        boSignInView?.callback = boSignInViewCallback
     }
 
     private val boSignInViewCallback: BOSignInViewCallback by lazy {

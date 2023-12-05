@@ -35,11 +35,13 @@ class CancelledCategoriesListFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.categories_list_layout, container, false).apply {
-            categoriesListView = this as CategoriesListView
-            categoriesListView?.callback = categoriesListViewCallback
-        }
+    ): View? = inflater.inflate(
+        R.layout.categories_list_layout,
+        container,
+        false
+    ).apply {
+        categoriesListView = this as CategoriesListView
+        categoriesListView?.callback = categoriesListViewCallback
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -85,7 +87,9 @@ class CancelledCategoriesListFragment : Fragment() {
             viewModel.cancelledCategoriesEventsHelper.stateData?.let { categories ->
                 categories[index].apply {
                     findNavController().safeNavigate(
-                        ManagedAccountsFragmentDirections.actionCategoriesFragmentToCancelledVouchersListFragment(this)
+                        ManagedAccountsFragmentDirections.actionCategoriesFragmentToCancelledVouchersListFragment(
+                            this
+                        )
                     )
                 }
             }

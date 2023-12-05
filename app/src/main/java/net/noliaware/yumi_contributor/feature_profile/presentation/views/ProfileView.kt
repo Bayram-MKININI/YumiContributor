@@ -8,15 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.presentation.views.FillableTextWidget
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.getColorCompat
+import net.noliaware.yumi_contributor.commun.util.getFontFromResources
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.layoutToTopRight
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
+import net.noliaware.yumi_contributor.commun.util.sizeForVisible
 import net.noliaware.yumi_contributor.commun.util.weak
 import kotlin.math.max
 
@@ -107,9 +108,9 @@ class ProfileView @JvmOverloads constructor(
 
     private fun FillableTextWidget.setUpValueTextView() {
         textView.apply {
-            typeface = ResourcesCompat.getFont(context, R.font.omnes_semibold_regular)
+            typeface = context.getFontFromResources(R.font.omnes_semibold_regular)
             setTextColor(context.getColorCompat(R.color.grey_2))
-            setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
+            textSize = 15f
         }
     }
 
@@ -175,12 +176,9 @@ class ProfileView @JvmOverloads constructor(
                 max(addressTitleTextView.measuredHeight, addressValueFillableTextWidget.measuredHeight) +
                 separatorView.measuredHeight + boAccessTextView.measuredHeight +
                 boAccessDescriptionFillableTextWidget.measuredHeight +
-                if (accessButtonLayout.isVisible) {
+                accessButtonLayout.sizeForVisible {
                     accessButtonLayout.measuredHeight + convertDpToPx(15)
-                } else {
-                    0
-                } +
-                privacyPolicyLinkTextView.measuredHeight + convertDpToPx(125)
+                } + privacyPolicyLinkTextView.measuredHeight + convertDpToPx(125)
 
         setMeasuredDimension(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),

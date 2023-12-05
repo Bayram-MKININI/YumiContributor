@@ -33,7 +33,7 @@ class MessageSubjectsAdapter(
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
         val subjectTextView = (convertView ?: parent.inflate(
-            R.layout.message_subject_dropdown_item_layout
+            R.layout.label_dropdown_item_layout
         )) as TextView
 
         subjectTextView.text = getItem(position)

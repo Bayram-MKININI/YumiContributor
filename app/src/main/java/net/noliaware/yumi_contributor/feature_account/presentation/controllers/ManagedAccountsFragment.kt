@@ -30,10 +30,12 @@ class ManagedAccountsFragment : Fragment(), OnBackPressedHandler {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.managed_accounts_layout, container, false)?.apply {
-            managedAccountsParentView = this as ManagedAccountsParentView
-        }
+    ): View? = inflater.inflate(
+        R.layout.managed_accounts_layout,
+        container,
+        false
+    )?.apply {
+        managedAccountsParentView = this as ManagedAccountsParentView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

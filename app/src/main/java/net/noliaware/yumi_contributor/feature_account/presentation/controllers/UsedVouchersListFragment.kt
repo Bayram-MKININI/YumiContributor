@@ -17,7 +17,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.presentation.adapters.ListLoadStateAdapter
-import net.noliaware.yumi_contributor.commun.util.decorateText
+import net.noliaware.yumi_contributor.commun.util.DecoratedText
+import net.noliaware.yumi_contributor.commun.util.decorateWords
 import net.noliaware.yumi_contributor.commun.util.getColorCompat
 import net.noliaware.yumi_contributor.commun.util.handlePaginationError
 import net.noliaware.yumi_contributor.commun.util.navDismiss
@@ -25,8 +26,7 @@ import net.noliaware.yumi_contributor.commun.util.safeNavigate
 import net.noliaware.yumi_contributor.feature_account.presentation.adapters.VoucherAdapter
 import net.noliaware.yumi_contributor.feature_account.presentation.mappers.UsedVoucherMapper
 import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersListView
-import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersListView.VouchersListViewAdapter
-import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersListView.VouchersListViewCallback
+import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersListView.*
 
 @AndroidEntryPoint
 class UsedVouchersListFragment : AppCompatDialogFragment() {
@@ -44,24 +44,25 @@ class UsedVouchersListFragment : AppCompatDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.vouchers_list_layout, container, false).apply {
-            vouchersListView = this as VouchersListView
-            vouchersListView?.callback = vouchersListViewCallback
-            vouchersListView?.voucherAdapter = VoucherAdapter(
-                color = args.selectedCategory.categoryColor,
-                voucherMapper = UsedVoucherMapper()
-            ) { voucher ->
-                findNavController().safeNavigate(
-                    UsedVouchersListFragmentDirections.actionUsedVouchersListFragmentToVoucherDetailsFragment(
-                        categoryUI = CategoryUI(
-                            categoryColor = args.selectedCategory.categoryColor,
-                            categoryIcon = args.selectedCategory.categoryIcon,
-                            categoryLabel = args.selectedCategory.categoryLabel
-                        ), voucherId = voucher.voucherId
-                    )
+    ): View? = inflater.inflate(
+        R.layout.vouchers_list_layout,
+        container,
+        false
+    ).apply {
+        vouchersListView = this as VouchersListView
+        vouchersListView?.callback = vouchersListViewCallback
+        vouchersListView?.voucherAdapter = VoucherAdapter(
+            color = args.selectedCategory.categoryColor,
+            voucherMapper = UsedVoucherMapper()
+        ) { voucher ->
+            findNavController().safeNavigate(
+                UsedVouchersListFragmentDirections.actionUsedVouchersListFragmentToVoucherDetailsFragment(
+                    categoryUI = CategoryUI(
+                        categoryColor = args.selectedCategory.categoryColor,
+                        categoryIcon = args.selectedCategory.categoryIcon
+                    ), voucherId = voucher.voucherId
                 )
-            }
+            )
         }
     }
 
@@ -79,14 +80,21 @@ class UsedVouchersListFragment : AppCompatDialogFragment() {
         )
         vouchersListView?.fillViewWithData(
             VouchersListViewAdapter(
-                title = title.decorateText(
-                    coloredText1 = getString(R.string.used).lowercase(),
-                    color1 = context?.getColorCompat(R.color.colorPrimary) ?: Color.TRANSPARENT,
-                    coloredText2 = args.selectedCategory.categoryLabel,
-                    color2 = args.selectedCategory.categoryColor
-                ),
                 color = args.selectedCategory.categoryColor,
-                iconName = args.selectedCategory.categoryIcon
+                iconName = args.selectedCategory.categoryIcon,
+                title = title.decorateWords(
+                    wordsToDecorate = listOf(
+                        DecoratedText(
+                            textToDecorate = getString(R.string.used).lowercase(),
+                            color = context?.getColorCompat(R.color.colorPrimary)
+                                ?: Color.TRANSPARENT
+                        ),
+                        DecoratedText(
+                            textToDecorate = args.selectedCategory.categoryLabel,
+                            color = args.selectedCategory.categoryColor
+                        )
+                    )
+                )
             )
         )
     }

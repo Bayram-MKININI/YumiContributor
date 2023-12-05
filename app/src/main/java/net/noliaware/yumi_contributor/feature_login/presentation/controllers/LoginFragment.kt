@@ -58,12 +58,14 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.login_layout, container, false).apply {
-            loginLayout = this as LoginLayout
-            loginLayout?.getLoginView?.callback = loginViewCallback
-            loginLayout?.getPasswordView?.callback = passwordViewCallback
-        }
+    ): View? = inflater.inflate(
+        R.layout.login_layout,
+        container,
+        false
+    ).apply {
+        loginLayout = this as LoginLayout
+        loginLayout?.getLoginView?.callback = loginViewCallback
+        loginLayout?.getPasswordView?.callback = passwordViewCallback
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

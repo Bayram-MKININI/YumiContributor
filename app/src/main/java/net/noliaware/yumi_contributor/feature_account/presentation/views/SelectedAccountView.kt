@@ -2,10 +2,8 @@ package net.noliaware.yumi_contributor.feature_account.presentation.views
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import net.noliaware.yumi_contributor.R
@@ -13,6 +11,7 @@ import net.noliaware.yumi_contributor.commun.presentation.views.ClipartTabView
 import net.noliaware.yumi_contributor.commun.presentation.views.FillableTextWidget
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.getColorCompat
+import net.noliaware.yumi_contributor.commun.util.getFontFromResources
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import net.noliaware.yumi_contributor.commun.util.removeOverScroll
@@ -40,9 +39,9 @@ class SelectedAccountView @JvmOverloads constructor(
     private fun initView() {
         titleFillableTextWidget = findViewById(R.id.title_fillable_text_view)
         titleFillableTextWidget.textView.apply {
-            typeface = ResourcesCompat.getFont(context, R.font.omnes_semibold_regular)
+            typeface = context.getFontFromResources(R.font.omnes_semibold_regular)
             setTextColor(context.getColorCompat(R.color.grey_4))
-            setTextSize(TypedValue.COMPLEX_UNIT_SP, 22f)
+            textSize = 22f
         }
 
         availableTabView = findViewById(R.id.available_tab_layout)

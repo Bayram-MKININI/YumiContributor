@@ -37,6 +37,9 @@
         <argument
             android:name="selectedCategory"
             app:argType="net.noliaware.yumi_contributor.feature_account.domain.model.Category" />
+        <argument
+            android:name="requestTypes"
+            app:argType="net.noliaware.yumi_contributor.feature_login.domain.model.VoucherRequestType[]" />
         <action
             android:id="@+id/action_AvailableVouchersListFragment_to_VoucherDetailsFragment"
             app:destination="@id/voucher_detail_fragment" />
@@ -79,9 +82,31 @@
         <argument
             android:name="voucherId"
             app:argType="string" />
+        <argument
+            android:name="requestTypes"
+            android:defaultValue="@null"
+            app:argType="net.noliaware.yumi_contributor.feature_login.domain.model.VoucherRequestType[]"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_VoucherDetailsFragment_to_VoucherOngoingRequestListFragment"
+            app:destination="@id/voucher_ongoing_requests_fragment" />
+
         <action
             android:id="@+id/action_VoucherDetailsFragment_to_QrCodeFragment"
             app:destination="@id/qr_code_fragment" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/voucher_ongoing_requests_fragment"
+        android:name="net.noliaware.yumi_contributor.feature_account.presentation.controllers.VoucherOngoingRequestListFragment"
+        android:label="@string/voucher_ongoing_requests_fragment_screen_label"
+        tools:layout="@layout/voucher_ongoing_request_list_layout">
+        <argument
+            android:name="categoryUI"
+            app:argType="net.noliaware.yumi_contributor.feature_account.presentation.controllers.CategoryUI" />
+        <argument
+            android:name="voucherId"
+            app:argType="string" />
     </dialog>
 
     <dialog

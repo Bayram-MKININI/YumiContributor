@@ -2,6 +2,7 @@ package net.noliaware.yumi_contributor.feature_account.presentation.controllers
 
 import android.content.DialogInterface
 import android.os.Bundle
+import android.text.SpannableString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,16 +14,20 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.DateTime.HOURS_TIME_FORMAT
+import net.noliaware.yumi_contributor.commun.DateTime.LONG_DATE_WITH_DAY_FORMAT
 import net.noliaware.yumi_contributor.commun.DateTime.SHORT_DATE_FORMAT
 import net.noliaware.yumi_contributor.commun.FragmentKeys.QR_CODE_REQUEST_KEY
 import net.noliaware.yumi_contributor.commun.FragmentKeys.VOUCHER_DETAILS_REQUEST_KEY
 import net.noliaware.yumi_contributor.commun.FragmentKeys.VOUCHER_ID_RESULT_KEY
-import net.noliaware.yumi_contributor.commun.util.ViewState.DataState
-import net.noliaware.yumi_contributor.commun.util.ViewState.LoadingState
+import net.noliaware.yumi_contributor.commun.util.DecoratedText
+import net.noliaware.yumi_contributor.commun.util.ViewState.*
 import net.noliaware.yumi_contributor.commun.util.collectLifecycleAware
+import net.noliaware.yumi_contributor.commun.util.decorateWords
+import net.noliaware.yumi_contributor.commun.util.getFontFromResources
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.makeCall
 import net.noliaware.yumi_contributor.commun.util.navDismiss
@@ -34,18 +39,17 @@ import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromShare
 import net.noliaware.yumi_contributor.commun.util.safeNavigate
 import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherCodeData
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherDeliveryStatus
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherRetrievalMode
-import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherRetrievalMode.BENEFICIARY
-import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherRetrievalMode.BOTH
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherRetrievalMode.*
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStateData
-import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus
-import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus.CANCELLED
-import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus.CONSUMED
-import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus.INEXISTENT
-import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus.USABLE
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus.*
+import net.noliaware.yumi_contributor.feature_account.presentation.adapters.VoucherRequestsAdapter
+import net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherRequestView
+import net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherRequestView.*
 import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView
-import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView.VouchersDetailsViewAdapter
-import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView.VouchersDetailsViewCallback
+import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView.*
+import net.noliaware.yumi_contributor.feature_login.domain.model.VoucherRequestType
 
 @AndroidEntryPoint
 class VoucherDetailsFragment : AppCompatDialogFragment() {
@@ -63,17 +67,20 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.vouchers_details_layout, container, false).apply {
-            vouchersDetailsContainerView = this as VouchersDetailsContainerView
-            vouchersDetailsContainerView?.callback = vouchersDetailsViewCallback
-        }
+    ): View? = inflater.inflate(
+        R.layout.vouchers_details_layout,
+        container,
+        false
+    ).apply {
+        vouchersDetailsContainerView = this as VouchersDetailsContainerView
+        vouchersDetailsContainerView?.callback = vouchersDetailsViewCallback
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpFragmentListener()
         collectFlows()
+        setUpRequestsDropdownView()
         vouchersDetailsContainerView?.activateLoading(true)
         vouchersDetailsContainerView?.setUpViewLook(
             color = args.categoryUI.categoryColor,
@@ -106,6 +113,22 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
                 }
             }
         }
+
+        viewModel.requestSentEventsHelper.eventFlow.collectLifecycleAware(viewLifecycleOwner) { sharedEvent ->
+            handleSharedEvent(sharedEvent)
+            redirectToLoginScreenFromSharedEvent(sharedEvent)
+        }
+        viewModel.requestSentEventsHelper.stateFlow.collectLifecycleAware(viewLifecycleOwner) { viewState ->
+            when (viewState) {
+                is LoadingState -> Unit
+                is DataState -> viewState.data?.let { requestSent ->
+                    if (requestSent) {
+                        vouchersDetailsContainerView?.displayOngoingRequestsButton()
+                    }
+                }
+            }
+        }
+
         viewModel.getVoucherStateDataEventsHelper.eventFlow.collectLifecycleAware(viewLifecycleOwner) { sharedEvent ->
             redirectToLoginScreenFromSharedEvent(sharedEvent)
         }
@@ -136,11 +159,11 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
         vouchersDetailsContainerView?.fillViewWithData(
             VouchersDetailsViewAdapter(
                 title = voucher.productLabel.orEmpty(),
-                startDate = getString(
-                    R.string.created_in_hyphen,
-                    voucher.voucherDate?.parseDateToFormat(SHORT_DATE_FORMAT)
-                ),
-                endDate = mapVoucherEndDate(voucher),
+                titleCrossed = voucher.voucherStatus != USABLE,
+                requestsAvailable = args.requestTypes?.isNotEmpty() == true,
+                voucherNumber = mapVoucherNumber(voucher.voucherNumber),
+                date = mapVoucherDate(voucher),
+                ongoingRequestsAvailable = voucher.voucherOngoingRequestCount > 0,
                 partnerAvailable = voucher.partnerInfoText?.isNotEmpty() == true,
                 partnerLabel = voucher.partnerInfoText,
                 voucherDescription = voucher.productDescription,
@@ -148,33 +171,79 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
                 retailerLabel = voucher.retailerLabel.orEmpty(),
                 retailerAddress = retailerAddress,
                 retrievalMode = mapRetrievalMode(voucher.voucherRetrievalMode),
-                retrievalModeTextColorRes = mapRetrievalModeTextColor(voucher),
-                openVoucherActionNotAvailable = mapOpenVoucherActionNotAvailable(voucher),
-                voucherStatusAvailable = voucher.voucherStatus != USABLE,
-                voucherStatus = mapVoucherStatus(voucher.voucherStatus)
+                voucherStatusAvailable = voucher.voucherDeliveryStatus != VoucherDeliveryStatus.AVAILABLE,
+                voucherStatus = mapVoucherStatus(voucher)
             )
         )
     }
 
-    private fun mapVoucherEndDate(
+    private fun mapVoucherNumber(
+        voucherNumber: String
+    ) = decorateTextWithFont(
+        getString(R.string.voucher_number, voucherNumber),
+        listOf(voucherNumber)
+    )
+
+    private fun mapVoucherDate(
         voucher: Voucher
     ) = when (voucher.voucherStatus) {
-        USABLE -> getString(
-            R.string.expiry_date_value,
-            voucher.voucherExpiryDate?.parseDateToFormat(SHORT_DATE_FORMAT)
-        )
-        CONSUMED -> getString(
-            R.string.usage_date_value,
-            voucher.voucherUseDate?.parseDateToFormat(SHORT_DATE_FORMAT),
-            voucher.voucherUseTime?.parseTimeToFormat(HOURS_TIME_FORMAT)
-        )
-        CANCELLED -> getString(
-            R.string.cancellation_date_value,
-            voucher.voucherUseDate?.parseDateToFormat(SHORT_DATE_FORMAT),
-            voucher.voucherUseTime?.parseTimeToFormat(HOURS_TIME_FORMAT)
-        )
-        else -> ""
+        USABLE -> {
+            if (voucher.voucherExpiryDate != null) {
+                val expiryDate = voucher.voucherExpiryDate.parseDateToFormat(SHORT_DATE_FORMAT)
+                decorateTextWithFont(
+                    getString(R.string.usable_end_date, expiryDate),
+                    listOf(expiryDate)
+                )
+            } else {
+                val startDate =
+                    voucher.voucherStartDate?.parseDateToFormat(SHORT_DATE_FORMAT).orEmpty()
+                decorateTextWithFont(
+                    getString(R.string.usable_start_date, startDate),
+                    listOf(startDate)
+                )
+            }
+        }
+
+        USED -> {
+            val usageDate = voucher.voucherUseDate?.parseDateToFormat(SHORT_DATE_FORMAT).orEmpty()
+            val usageTime = voucher.voucherUseTime?.parseTimeToFormat(HOURS_TIME_FORMAT).orEmpty()
+            decorateTextWithFont(
+                getString(
+                    R.string.usage_date,
+                    getString(R.string.date_time, usageDate, usageTime)
+                ),
+                listOf(usageDate, usageTime)
+            )
+        }
+
+        CANCELLED -> {
+            val cancellationDate =
+                voucher.voucherUseDate?.parseDateToFormat(SHORT_DATE_FORMAT).orEmpty()
+            val cancellationTime =
+                voucher.voucherUseTime?.parseTimeToFormat(HOURS_TIME_FORMAT).orEmpty()
+            decorateTextWithFont(
+                getString(
+                    R.string.cancellation_date,
+                    getString(R.string.date_time, cancellationDate, cancellationTime)
+                ),
+                listOf(cancellationDate, cancellationTime)
+            )
+        }
+
+        else -> SpannableString("")
     }
+
+    private fun decorateTextWithFont(
+        originalText: String,
+        wordsToStyle: List<String>
+    ) = originalText.decorateWords(
+        wordsToDecorate = wordsToStyle.map {
+            DecoratedText(
+                textToDecorate = it,
+                typeface = context?.getFontFromResources(R.font.omnes_semibold_regular)
+            )
+        }
+    )
 
     private fun mapRetrievalMode(
         retrievalMode: VoucherRetrievalMode?
@@ -184,25 +253,21 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
         else -> null
     }
 
-    private fun mapRetrievalModeTextColor(
-        voucher: Voucher
-    ) = when {
-        voucher.voucherStatus != USABLE -> R.color.grey_2
-        voucher.voucherRetrievalMode == BENEFICIARY -> R.color.color_bittersweet
-        else -> R.color.grey_2
-    }
-
-    private fun mapOpenVoucherActionNotAvailable(
-        voucher: Voucher
-    ) = voucher.voucherStatus != USABLE || voucher.voucherRetrievalMode == BENEFICIARY
-
     private fun mapVoucherStatus(
-        voucherStatus: VoucherStatus?
-    ) = when (voucherStatus) {
-        CONSUMED -> getString(R.string.voucher_consumed)
+        voucher: Voucher
+    ) = when (voucher.voucherStatus) {
+        USABLE -> {
+            when (voucher.voucherDeliveryStatus) {
+                VoucherDeliveryStatus.NON_AVAILABLE -> getString(R.string.voucher_non_available)
+                VoucherDeliveryStatus.NON_RETRIEVABLE -> getString(R.string.voucher_non_retrievable)
+                else -> ""
+            }
+        }
+
+        USED -> getString(R.string.voucher_used)
         CANCELLED -> getString(R.string.voucher_canceled)
         INEXISTENT -> getString(R.string.voucher_inexistent)
-        else -> ""
+        null -> ""
     }
 
     private fun handleVoucherStateDataUpdated(
@@ -216,10 +281,34 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
         updatedVoucher?.let { bindViewToData(it) }
     }
 
+    private fun setUpRequestsDropdownView() {
+        vouchersDetailsContainerView?.getRequestSpinner?.adapter = VoucherRequestsAdapter(
+            requireContext(),
+            (args.requestTypes?.map { voucherRequestType ->
+                voucherRequestType.requestTypeLabel
+            } ?: emptyList()) + ""
+        )
+    }
+
     private val vouchersDetailsViewCallback: VouchersDetailsViewCallback by lazy {
         object : VouchersDetailsViewCallback {
             override fun onBackButtonClicked() {
                 navDismiss()
+            }
+
+            override fun onRequestSelectedAtIndex(index: Int) {
+                args.requestTypes?.get(index)?.let {
+                    displayDialogForRequestType(it)
+                }
+            }
+
+            override fun onOngoingRequestsClicked() {
+                findNavController().safeNavigate(
+                    VoucherDetailsFragmentDirections.actionVoucherDetailsFragmentToVoucherOngoingRequestListFragment(
+                        categoryUI = args.categoryUI,
+                        voucherId = args.voucherId
+                    )
+                )
             }
 
             override fun onPartnerInfoClicked() {
@@ -264,8 +353,7 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
                             VoucherCodeData(
                                 voucherId = voucher.voucherId,
                                 productLabel = voucher.productLabel,
-                                voucherDate = voucher.voucherDate,
-                                voucherExpiryDate = voucher.voucherExpiryDate,
+                                voucherDate = mapVoucherCodeDate(voucher),
                                 voucherCode = voucher.voucherCode,
                                 voucherCodeSize = resources.displayMetrics.widthPixels
                             )
@@ -276,15 +364,56 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
         }
     }
 
+    private fun mapVoucherCodeDate(
+        voucher: Voucher
+    ) = if (voucher.voucherExpiryDate != null) {
+        getString(
+            R.string.usable_end_date,
+            voucher.voucherExpiryDate.parseDateToFormat(LONG_DATE_WITH_DAY_FORMAT)
+        )
+    } else {
+        getString(
+            R.string.usable_start_date,
+            voucher.voucherStartDate?.parseDateToFormat(SHORT_DATE_FORMAT).orEmpty()
+        )
+    }
+
+    private fun displayDialogForRequestType(selectedRequestType: VoucherRequestType) {
+        MaterialAlertDialogBuilder(
+            requireContext(),
+            R.style.MaterialAlertDialog_rounded
+        ).apply {
+            val voucherRequestView = layoutInflater.inflate(
+                R.layout.voucher_request_layout,
+                null
+            ) as VoucherRequestView
+            voucherRequestView.fillViewWithData(
+                VoucherRequestViewAdapter(
+                    title = selectedRequestType.requestTypeLabel
+                )
+            )
+            setView(voucherRequestView)
+            setPositiveButton(R.string.send) { dialog, _ ->
+                viewModel.callSendVoucherRequestWithId(
+                    voucherId = args.voucherId,
+                    voucherRequestTypeId = selectedRequestType.requestTypeId,
+                    voucherRequestComment = voucherRequestView.getUserComment()
+                )
+                dialog.dismiss()
+            }
+            setNegativeButton(R.string.cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+        }.create().show()
+    }
+
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        viewModel.getVoucherStateDataEventsHelper.stateData?.let { voucherStateData ->
-            if (voucherStateData.voucherStatus == CONSUMED) {
-                setFragmentResult(
-                    VOUCHER_DETAILS_REQUEST_KEY,
-                    bundleOf()
-                )
-            }
+        if (viewModel.getVoucherStateDataEventsHelper.stateData?.voucherStatus == USED || viewModel.requestSentEventsHelper.stateData == true) {
+            setFragmentResult(
+                VOUCHER_DETAILS_REQUEST_KEY,
+                bundleOf()
+            )
         }
     }
 

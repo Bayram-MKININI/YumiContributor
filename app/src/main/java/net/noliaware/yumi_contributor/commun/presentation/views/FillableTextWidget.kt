@@ -1,6 +1,7 @@
 package net.noliaware.yumi_contributor.commun.presentation.views
 
 import android.content.Context
+import android.text.SpannableString
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +35,12 @@ class FillableTextWidget @JvmOverloads constructor(
     }
 
     fun setText(title: String) {
+        textView.text = title
+        placeholderView.isGone = true
+        textView.isVisible = true
+    }
+
+    fun setText(title: SpannableString?) {
         textView.text = title
         placeholderView.isGone = true
         textView.isVisible = true

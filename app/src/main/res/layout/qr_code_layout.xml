@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <net.noliaware.yumi_contributor.feature_account.presentation.views.QrCodeView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:keepScreenOn="true">
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -46,22 +46,13 @@
             tools:text="Basiques légumes" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/created_text_view"
+            android:id="@+id/date_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/omnes_light"
             android:textColor="@color/grey_2"
             android:textSize="13sp"
-            tools:text="Crée le 13 mai 2023" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/expiry_date_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/omnes_light"
-            android:textColor="@color/grey_2"
-            android:textSize="13sp"
-            tools:text="Valable jusqu'au mardi 07 novembre 2023" />
+            tools:text="Utilisable jusqu'au 13 mai 2023" />
 
         <View
             android:id="@+id/qr_code_background"

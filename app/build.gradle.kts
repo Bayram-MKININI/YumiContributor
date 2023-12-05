@@ -75,7 +75,7 @@ dependencies {
 
     implementation("androidx.core:core-splashscreen:1.0.1")
 
-    implementation(platform("com.google.firebase:firebase-bom:32.5.0"))
+    implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
     implementation("com.google.firebase:firebase-messaging-ktx")
     implementation("com.google.firebase:firebase-config-ktx")
     implementation("com.google.firebase:firebase-crashlytics-ktx")
@@ -104,18 +104,18 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // DI
-    implementation("com.google.dagger:hilt-android:2.48.1")
-    ksp("com.google.dagger:hilt-compiler:2.48.1")
+    implementation("com.google.dagger:hilt-android:2.49")
+    ksp("com.google.dagger:hilt-compiler:2.49")
 
     // UI
     implementation("com.google.android.material:material:1.10.0")
-    implementation("androidx.activity:activity-ktx:1.8.0")
+    implementation("androidx.activity:activity-ktx:1.8.1")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.paging:paging-runtime-ktx:3.2.1")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
-    implementation("androidx.browser:browser:1.6.0")
-    implementation("androidx.webkit:webkit:1.8.0")
+    implementation("androidx.browser:browser:1.7.0")
+    implementation("androidx.webkit:webkit:1.9.0")
     implementation("com.facebook.shimmer:shimmer:0.5.0")
 
     // Navigation
