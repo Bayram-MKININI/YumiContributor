@@ -54,28 +54,39 @@
             android:textColor="@color/colorPrimary"
             android:textSize="19sp" />
 
+        <net.noliaware.yumi_contributor.feature_message.presentation.views.MailRecipientView
+            android:id="@+id/mail_recipient_list_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
         <View
             android:id="@+id/message_background"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/rectangle_rounded_grey1" />
 
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/subject_spinner"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/subject_edit_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/spinner_background"
-            android:minHeight="20dp"
-            android:spinnerMode="dropdown" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/fixed_subject_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:background="@null"
             android:fontFamily="@font/omnes_medium"
-            android:textColor="@color/grey_4"
-            android:textSize="16sp"
-            android:visibility="gone" />
+            android:hint="@string/mail_subject"
+            android:imeOptions="actionNext|flagNoExtractUi"
+            android:inputType="textEmailSubject"
+            android:maxLines="2"
+            android:textColor="@color/grey_2"
+            android:textCursorDrawable="@null"
+            android:textSize="16sp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/clear_subject_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_close" />
 
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/priority_spinner"

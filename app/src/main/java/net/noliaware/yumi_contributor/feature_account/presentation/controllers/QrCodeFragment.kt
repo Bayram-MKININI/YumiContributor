@@ -2,6 +2,7 @@ package net.noliaware.yumi_contributor.feature_account.presentation.controllers
 
 import android.content.DialogInterface
 import android.os.Bundle
+import android.text.SpannableString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,13 +14,18 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import net.noliaware.yumi_contributor.R
+import net.noliaware.yumi_contributor.commun.DateTime
 import net.noliaware.yumi_contributor.commun.FragmentKeys.QR_CODE_REQUEST_KEY
 import net.noliaware.yumi_contributor.commun.FragmentKeys.VOUCHER_ID_RESULT_KEY
+import net.noliaware.yumi_contributor.commun.util.DecoratedText
 import net.noliaware.yumi_contributor.commun.util.ViewState.DataState
 import net.noliaware.yumi_contributor.commun.util.ViewState.LoadingState
 import net.noliaware.yumi_contributor.commun.util.collectLifecycleAware
+import net.noliaware.yumi_contributor.commun.util.decorateWords
+import net.noliaware.yumi_contributor.commun.util.getFontFromResources
 import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.navDismiss
+import net.noliaware.yumi_contributor.commun.util.parseDateToFormat
 import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromSharedEvent
 import net.noliaware.yumi_contributor.feature_account.presentation.views.QrCodeView
 import net.noliaware.yumi_contributor.feature_account.presentation.views.QrCodeView.QrCodeViewAdapter
@@ -86,10 +92,25 @@ class QrCodeFragment : AppCompatDialogFragment() {
                     color = args.categoryUI.categoryColor,
                     iconName = args.categoryUI.categoryIcon,
                     title = voucherCodeData.productLabel.orEmpty(),
-                    date = voucherCodeData.voucherDate
+                    date = mapCodeDate(voucherCodeData.voucherDate)
                 )
             )
         }
+    }
+
+    private fun mapCodeDate(dateStr: String): SpannableString {
+        val expiryDate = dateStr.parseDateToFormat(DateTime.SHORT_DATE_FORMAT)
+        return getString(
+            R.string.usable_end_date,
+            expiryDate
+        ).decorateWords(
+            wordsToDecorate = listOf(
+                DecoratedText(
+                    textToDecorate = expiryDate,
+                    typeface = context?.getFontFromResources(R.font.omnes_semibold_regular)
+                )
+            )
+        )
     }
 
     private val qrCodeViewCallback: QrCodeViewCallback by lazy {

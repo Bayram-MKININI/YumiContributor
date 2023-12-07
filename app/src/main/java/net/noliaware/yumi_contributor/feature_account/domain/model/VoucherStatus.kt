@@ -6,7 +6,7 @@ enum class VoucherStatus(val value: Int) {
     CANCELLED(-1),
     INEXISTENT(3);
     companion object {
-        fun fromValue(value: Int?) = VoucherStatus.values().firstOrNull { it.value == value }
+        fun fromValue(value: Int?) = entries.firstOrNull { it.value == value }
     }
 }
 
@@ -16,6 +16,6 @@ enum class VoucherDeliveryStatus(val value: Int) {
     NON_RETRIEVABLE(3),
     NONE(0);
     companion object {
-        fun fromValue(value: Int?) = VoucherDeliveryStatus.values().firstOrNull { it.value == value }
+        fun fromValue(value: Int?) = entries.firstOrNull { it.value == value }
     }
 }

@@ -4,10 +4,11 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
+import kotlinx.coroutines.yield
 
 object QRCodeGenerator {
 
-    fun encodeAsBitmap(content: String, size: Int): Bitmap? {
+    suspend fun encodeAsBitmap(content: String, size: Int): Bitmap? {
 
         val qrCodeWriter = QRCodeWriter()
         try {
@@ -16,13 +17,14 @@ object QRCodeGenerator {
             for (x in 0 until size) {
                 for (y in 0 until size) {
                     bitmap.setPixel(x, y, if (bitMatrix[x, y]) Color.BLACK else Color.WHITE)
+                    yield()
                 }
             }
 
             return bitmap
 
         } catch (e: Exception) {
-            e.printStackTrace()
+            e.recordNonFatal()
         }
 
         return null

@@ -60,8 +60,9 @@ object ApiParameters {
     const val LIST_PAGE_SIZE = 20
     const val OFFSET = "offset"
     const val MESSAGE_ID = "messageId"
+    const val MESSAGE_TO = "messageTo"
     const val MESSAGE_PRIORITY = "messagePriority"
-    const val MESSAGE_SUBJECT_ID = "messageSubjectId"
+    const val MESSAGE_SUBJECT = "messageSubject"
     const val MESSAGE_BODY = "messageBody"
     const val TIMESTAMP_OFFSET = "timestampOffset"
 }

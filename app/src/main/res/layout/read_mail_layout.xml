@@ -74,6 +74,11 @@
                 android:layout_height="wrap_content" />
 
             <net.noliaware.yumi_contributor.commun.presentation.views.FillableTextWidget
+                android:id="@+id/mail_fillable_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <net.noliaware.yumi_contributor.commun.presentation.views.FillableTextWidget
                 android:id="@+id/time_fillable_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />

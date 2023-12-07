@@ -11,6 +11,8 @@ data class Message(
     val messageId: String,
     val messageDate: String,
     val messageTime: String,
+    val messageSender: String?,
+    val messageRecipient: String?,
     val messageType: String?,
     val messagePriority: Priority?,
     val messageSubject: String,

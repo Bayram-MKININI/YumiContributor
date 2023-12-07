@@ -13,7 +13,8 @@ import net.noliaware.yumi_contributor.commun.ApiParameters.LIST_PAGE_SIZE
 import net.noliaware.yumi_contributor.commun.ApiParameters.MESSAGE_BODY
 import net.noliaware.yumi_contributor.commun.ApiParameters.MESSAGE_ID
 import net.noliaware.yumi_contributor.commun.ApiParameters.MESSAGE_PRIORITY
-import net.noliaware.yumi_contributor.commun.ApiParameters.MESSAGE_SUBJECT_ID
+import net.noliaware.yumi_contributor.commun.ApiParameters.MESSAGE_SUBJECT
+import net.noliaware.yumi_contributor.commun.ApiParameters.MESSAGE_TO
 import net.noliaware.yumi_contributor.commun.data.remote.RemoteApi
 import net.noliaware.yumi_contributor.commun.domain.model.SessionData
 import net.noliaware.yumi_contributor.commun.util.Resource
@@ -146,9 +147,10 @@ class MessageRepositoryImpl @Inject constructor(
     }
 
     override fun sendMessage(
+        recipients: List<String>?,
+        subject: String?,
         messagePriority: Int?,
         messageId: String?,
-        messageSubjectId: String?,
         messageBody: String
     ): Flow<Resource<Boolean>> = flow {
 
@@ -167,9 +169,10 @@ class MessageRepositoryImpl @Inject constructor(
                     randomString = randomString
                 ),
                 params = generateSendMessageParams(
+                    recipients = recipients,
+                    subject = subject,
                     messagePriority = messagePriority,
                     messageId = messageId,
-                    messageSubjectId = messageSubjectId,
                     messageBody = messageBody,
                     tokenKey = SEND_MESSAGE
                 )
@@ -198,16 +201,18 @@ class MessageRepositoryImpl @Inject constructor(
     }
 
     private fun generateSendMessageParams(
+        recipients: List<String>? = null,
+        subject: String? = null,
         messagePriority: Int?,
-        messageSubjectId: String? = null,
         messageId: String? = null,
         messageBody: String,
         tokenKey: String
     ) = mutableMapOf(
         MESSAGE_BODY to messageBody
     ).also { map ->
+        recipients?.let { map[MESSAGE_TO] = recipients.joinToString(";") }
+        subject?.let { map[MESSAGE_SUBJECT] = subject }
         messagePriority?.let { map[MESSAGE_PRIORITY] = messagePriority.toString() }
-        messageSubjectId?.let { map[MESSAGE_SUBJECT_ID] = messageSubjectId }
         messageId?.let { map[MESSAGE_ID] = messageId }
         map.plusAssign(getCommonWSParams(sessionData, tokenKey))
     }.toMap()

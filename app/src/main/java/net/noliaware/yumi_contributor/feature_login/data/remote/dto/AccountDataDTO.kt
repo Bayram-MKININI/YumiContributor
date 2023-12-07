@@ -18,15 +18,15 @@ data class AccountDataDTO(
     @Json(name = "userCount")
     val accountCount: Int?,
     @Json(name = "voucherRequestTypes")
-    val voucherRequestTypeDTOs: List<VoucherRequestTypeDTO> = listOf(),
+    val voucherRequestTypeDTOs: List<VoucherRequestTypeDTO>?,
     @Json(name = "encryptionVector")
     val encryptionVector: String?,
-    @Json(name = "messageSubjects")
-    val messageSubjectDTOs: List<MessageSubjectDTO> = listOf(),
     @Json(name = "newAlertCount")
     val newAlertCount: Int?,
     @Json(name = "newMessageCount")
     val newMessageCount: Int?,
+    @Json(name = "domainName")
+    val domainName: String?,
     @Json(name = "twoFactorAuthMode")
     val twoFactorAuthMode: Int = 0
 ) {
@@ -36,10 +36,10 @@ data class AccountDataDTO(
         helloMessage = helloMessage ?: "",
         userName = userName ?: "",
         accountCount = accountCount ?: 0,
-        voucherRequestTypes = voucherRequestTypeDTOs.map { it.toVoucherRequestType() },
-        messageSubjects = messageSubjectDTOs.map { it.toMessageSubject() },
+        voucherRequestTypes = voucherRequestTypeDTOs?.map { it.toVoucherRequestType() } ?: listOf(),
         newAlertCount = newAlertCount ?: 0,
         newMessageCount = newMessageCount ?: 0,
+        domainName = domainName,
         twoFactorAuthMode = TFAMode.fromInt(twoFactorAuthMode) ?: TFAMode.NONE
     )
 }

@@ -18,6 +18,7 @@ import net.noliaware.yumi_contributor.commun.util.collectLifecycleAware
 import net.noliaware.yumi_contributor.commun.util.handlePaginationError
 import net.noliaware.yumi_contributor.commun.util.safeNavigate
 import net.noliaware.yumi_contributor.feature_message.presentation.adapters.MessageAdapter
+import net.noliaware.yumi_contributor.feature_message.presentation.mappers.ReceivedMessageMapper
 import net.noliaware.yumi_contributor.feature_message.presentation.views.MessagesListView
 
 @AndroidEntryPoint
@@ -40,10 +41,11 @@ class ReceivedMessagesFragment : Fragment() {
         false
     ).apply {
         messagesListView = this as MessagesListView
-        messagesListView?.messageAdapter = MessageAdapter { message ->
+        messagesListView?.messageAdapter = MessageAdapter(ReceivedMessageMapper()) { message ->
             findNavController().safeNavigate(
                 MessagingFragmentDirections.actionMessagingFragmentToReadInboxMailFragment(
-                    message.messageId
+                    messageId = message.messageId,
+                    firstReadComplete = message.isMessageRead
                 )
             )
         }
@@ -69,7 +71,6 @@ class ReceivedMessagesFragment : Fragment() {
                         messagesListView?.setEmptyMessageText(getString(R.string.no_received_message))
                         messagesListView?.setEmptyMessageVisible(noMessagesLoaded)
                     }
-
                     else -> Unit
                 }
             }

@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name" translatable="false">Yumi Contributor</string>
     <string name="view_tag_key" translatable="false">view_tag</string>
+    <string name="view_coroutine_scope" translatable="false">view_coroutine_scope</string>
 
     //Navigation
     <string name="login_fragment_screen_label" translatable="false">Login</string>

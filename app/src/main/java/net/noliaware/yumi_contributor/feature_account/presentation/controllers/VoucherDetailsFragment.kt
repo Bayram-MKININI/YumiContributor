@@ -18,13 +18,13 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.DateTime.HOURS_TIME_FORMAT
-import net.noliaware.yumi_contributor.commun.DateTime.LONG_DATE_WITH_DAY_FORMAT
 import net.noliaware.yumi_contributor.commun.DateTime.SHORT_DATE_FORMAT
 import net.noliaware.yumi_contributor.commun.FragmentKeys.QR_CODE_REQUEST_KEY
 import net.noliaware.yumi_contributor.commun.FragmentKeys.VOUCHER_DETAILS_REQUEST_KEY
 import net.noliaware.yumi_contributor.commun.FragmentKeys.VOUCHER_ID_RESULT_KEY
 import net.noliaware.yumi_contributor.commun.util.DecoratedText
-import net.noliaware.yumi_contributor.commun.util.ViewState.*
+import net.noliaware.yumi_contributor.commun.util.ViewState.DataState
+import net.noliaware.yumi_contributor.commun.util.ViewState.LoadingState
 import net.noliaware.yumi_contributor.commun.util.collectLifecycleAware
 import net.noliaware.yumi_contributor.commun.util.decorateWords
 import net.noliaware.yumi_contributor.commun.util.getFontFromResources
@@ -41,14 +41,19 @@ import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherCodeData
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherDeliveryStatus
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherRetrievalMode
-import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherRetrievalMode.*
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherRetrievalMode.BENEFICIARY
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherRetrievalMode.BOTH
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStateData
-import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus.*
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus.CANCELLED
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus.INEXISTENT
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus.USABLE
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherStatus.USED
 import net.noliaware.yumi_contributor.feature_account.presentation.adapters.VoucherRequestsAdapter
 import net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherRequestView
-import net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherRequestView.*
+import net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherRequestView.VoucherRequestViewAdapter
 import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView
-import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView.*
+import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView.VouchersDetailsViewAdapter
+import net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView.VouchersDetailsViewCallback
 import net.noliaware.yumi_contributor.feature_login.domain.model.VoucherRequestType
 
 @AndroidEntryPoint
@@ -353,7 +358,7 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
                             VoucherCodeData(
                                 voucherId = voucher.voucherId,
                                 productLabel = voucher.productLabel,
-                                voucherDate = mapVoucherCodeDate(voucher),
+                                voucherDate = voucher.voucherExpiryDate.orEmpty(),
                                 voucherCode = voucher.voucherCode,
                                 voucherCodeSize = resources.displayMetrics.widthPixels
                             )
@@ -362,20 +367,6 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
                 }
             }
         }
-    }
-
-    private fun mapVoucherCodeDate(
-        voucher: Voucher
-    ) = if (voucher.voucherExpiryDate != null) {
-        getString(
-            R.string.usable_end_date,
-            voucher.voucherExpiryDate.parseDateToFormat(LONG_DATE_WITH_DAY_FORMAT)
-        )
-    } else {
-        getString(
-            R.string.usable_start_date,
-            voucher.voucherStartDate?.parseDateToFormat(SHORT_DATE_FORMAT).orEmpty()
-        )
     }
 
     private fun displayDialogForRequestType(selectedRequestType: VoucherRequestType) {

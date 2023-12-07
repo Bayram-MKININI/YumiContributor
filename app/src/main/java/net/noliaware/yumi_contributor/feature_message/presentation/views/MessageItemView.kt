@@ -23,6 +23,7 @@ class MessageItemView @JvmOverloads constructor(
     private lateinit var iconImageView: ImageView
     private lateinit var subjectTextView: TextView
     private lateinit var timeTextView: TextView
+    private lateinit var mailTextView: TextView
     private lateinit var bodyTextView: TextView
 
     private val openedTypeFace by lazy {
@@ -38,6 +39,7 @@ class MessageItemView @JvmOverloads constructor(
         val priorityIconRes: Int,
         val subject: String = "",
         val time: String = "",
+        val mail: String = "",
         val body: String = "",
         val opened: Boolean = false
     )
@@ -51,6 +53,7 @@ class MessageItemView @JvmOverloads constructor(
         iconImageView = findViewById(R.id.icon_image_view)
         subjectTextView = findViewById(R.id.subject_text_view)
         timeTextView = findViewById(R.id.time_text_view)
+        mailTextView = findViewById(R.id.mail_text_view)
         bodyTextView = findViewById(R.id.body_text_view)
     }
 
@@ -58,6 +61,7 @@ class MessageItemView @JvmOverloads constructor(
         iconImageView.setImageResource(messageItemViewAdapter.priorityIconRes)
         subjectTextView.text = messageItemViewAdapter.subject
         timeTextView.text = messageItemViewAdapter.time
+        mailTextView.text = messageItemViewAdapter.mail
         bodyTextView.text = messageItemViewAdapter.body
         if (messageItemViewAdapter.opened) {
             subjectTextView.typeface = openedTypeFace
@@ -80,16 +84,23 @@ class MessageItemView @JvmOverloads constructor(
             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         )
 
+        mailTextView.measureWrapContent()
+
         val bodyTextMaxWidth = viewWidth - (iconImageView.measuredWidth + convertDpToPx(22))
         bodyTextView.measure(
             MeasureSpec.makeMeasureSpec(bodyTextMaxWidth, MeasureSpec.AT_MOST),
             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         )
 
-        viewHeight = bodyTextView.measuredHeight + max(
+        bodyTextView.measure(
+            MeasureSpec.makeMeasureSpec(viewWidth * 9 / 10, MeasureSpec.AT_MOST),
+            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+        )
+
+        viewHeight = mailTextView.measuredHeight + bodyTextView.measuredHeight + max(
             subjectTextView.measuredHeight,
             timeTextView.measuredHeight
-        ) + convertDpToPx(35)
+        ) + convertDpToPx(40)
 
         setMeasuredDimension(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
@@ -116,9 +127,14 @@ class MessageItemView @JvmOverloads constructor(
             subjectTextView.top
         )
 
-        bodyTextView.layoutToTopLeft(
+        mailTextView.layoutToTopLeft(
             subjectTextView.left,
             max(subjectTextView.bottom, timeTextView.bottom) + convertDpToPx(5)
+        )
+
+        bodyTextView.layoutToTopLeft(
+            subjectTextView.left,
+            mailTextView.bottom + convertDpToPx(5)
         )
     }
 }

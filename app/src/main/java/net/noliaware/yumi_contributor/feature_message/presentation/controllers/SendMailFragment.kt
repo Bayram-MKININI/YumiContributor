@@ -24,7 +24,6 @@ import net.noliaware.yumi_contributor.commun.util.navDismiss
 import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromSharedEvent
 import net.noliaware.yumi_contributor.commun.util.toast
 import net.noliaware.yumi_contributor.feature_message.presentation.adapters.MessagePriorityAdapter
-import net.noliaware.yumi_contributor.feature_message.presentation.adapters.MessageSubjectsAdapter
 import net.noliaware.yumi_contributor.feature_message.presentation.views.PriorityUI
 import net.noliaware.yumi_contributor.feature_message.presentation.views.SendMailView
 import net.noliaware.yumi_contributor.feature_message.presentation.views.SendMailView.SendMailViewCallback
@@ -56,26 +55,13 @@ class SendMailFragment : AppCompatDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setUpSubjectDropdownView()
         setUpPriorityDropdownView()
         setUpDefaultValuesIfAny()
         collectFlows()
     }
 
-    private fun setUpSubjectDropdownView() {
-        sendMailView?.subjectSpinner?.adapter = MessageSubjectsAdapter(
-            requireContext(),
-            (args.subjects?.map {
-                it.subjectLabel
-            } ?: emptyList()) + getString(R.string.select_subject)
-        )
-        sendMailView?.subjectSpinner?.setSelection(
-            sendMailView?.subjectSpinner?.adapter?.count ?: 0
-        )
-    }
-
     private fun setUpPriorityDropdownView() {
-        Priority.values().map { priority ->
+        Priority.entries.map { priority ->
             val mapper = PriorityMapper()
             PriorityUI(
                 resIcon = mapper.mapPriorityIcon(priority),
@@ -91,8 +77,14 @@ class SendMailFragment : AppCompatDialogFragment() {
 
     private fun setUpDefaultValuesIfAny() {
         args.message?.let { selectedMessage ->
+            selectedMessage.messageSender?.let { messageSender ->
+                sendMailView?.setRecipientFixed(messageSender)
+            }
             sendMailView?.setSubjectFixed(selectedMessage.messageSubject)
             sendMailView?.setPriorityFixed(PriorityMapper().mapPriorityIcon(selectedMessage.messagePriority))
+        }
+        args.domainName?.let { domainName ->
+            sendMailView?.setMailDomain(domainName)
         }
     }
 
@@ -127,13 +119,18 @@ class SendMailFragment : AppCompatDialogFragment() {
                 sendMailView?.clearMail()
             }
 
-            override fun onSendMailClicked(text: String) {
-                args.message?.let {
+            override fun onSendMailClicked(
+                recipients: List<String>,
+                subject: String,
+                text: String
+            ) {
+                val selectedPriorityIndex = sendMailView?.getSelectedPriorityIndex() ?: 0
+                val priority = Priority.entries[selectedPriorityIndex].value
+
+                if (args.message != null) {
                     sendMailReply(text)
-                } ?: run {
-                    val selectedPriorityIndex = sendMailView?.getSelectedPriorityIndex() ?: 0
-                    val priority = Priority.values()[selectedPriorityIndex].value
-                    sendNewMail(priority, text)
+                } else {
+                    sendNewMail(recipients, subject, priority, text)
                 }
             }
         }
@@ -146,23 +143,27 @@ class SendMailFragment : AppCompatDialogFragment() {
         )
     }
 
-    private fun sendNewMail(priority: Int, text: String) {
-        val selectedSubjectIndex = sendMailView?.getSelectedSubjectIndex() ?: -1
+    private fun sendNewMail(
+        recipients: List<String>,
+        subject: String,
+        priority: Int,
+        text: String
+    ) {
         when {
-            selectedSubjectIndex == -1 -> R.string.empty_mail_subject_error
+            recipients.isEmpty() -> R.string.recipient_empty_error
+            subject.isEmpty() -> R.string.subject_empty_error
             text.isEmpty() -> R.string.empty_mail_body_error
             else -> null
         }?.let { messageRes ->
             context.toast(messageRes, Toast.LENGTH_SHORT)
             return
         }
-        args.subjects?.get(selectedSubjectIndex)?.let { messageSubject ->
-            viewModel.callSendMessage(
-                messagePriority = priority,
-                messageSubjectId = messageSubject.subjectId.toString(),
-                messageBody = text
-            )
-        }
+        viewModel.callSendMessage(
+            recipients = recipients,
+            subject = subject,
+            messagePriority = priority,
+            messageBody = text
+        )
     }
 
     override fun onResume() {

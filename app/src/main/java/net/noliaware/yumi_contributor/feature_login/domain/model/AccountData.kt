@@ -13,8 +13,8 @@ data class AccountData(
     val userName: String = "",
     val accountCount: Int = 0,
     val voucherRequestTypes: List<VoucherRequestType>,
-    val messageSubjects: List<MessageSubject>,
     val newAlertCount: Int = 0,
     val newMessageCount: Int = 0,
+    val domainName: String?,
     val twoFactorAuthMode: TFAMode
 ) : Parcelable

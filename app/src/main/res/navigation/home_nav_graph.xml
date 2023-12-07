@@ -163,8 +163,8 @@
         android:label="@string/messaging_fragment_screen_label"
         tools:layout="@layout/messaging_layout">
         <argument
-            android:name="subjects"
-            app:argType="net.noliaware.yumi_contributor.feature_login.domain.model.MessageSubject[]" />
+            android:name="domainName"
+            app:argType="string" />
         <action
             android:id="@+id/action_MessagingFragment_to_SendMailFragment"
             app:destination="@id/send_mail_fragment" />
@@ -182,9 +182,9 @@
         android:label="@string/send_mail_fragment_screen_label"
         tools:layout="@layout/send_mail_layout">
         <argument
-            android:name="subjects"
+            android:name="domainName"
             android:defaultValue="@null"
-            app:argType="net.noliaware.yumi_contributor.feature_login.domain.model.MessageSubject[]"
+            app:argType="string"
             app:nullable="true" />
         <argument
             android:name="message"
@@ -201,6 +201,9 @@
         <argument
             android:name="messageId"
             app:argType="string" />
+        <argument
+            android:name="firstReadComplete"
+            app:argType="boolean" />
         <action
             android:id="@+id/action_ReadInboxMailFragment_to_SendMailFragment"
             app:destination="@id/send_mail_fragment" />

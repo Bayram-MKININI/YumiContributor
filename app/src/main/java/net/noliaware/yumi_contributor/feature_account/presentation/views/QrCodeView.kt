@@ -2,6 +2,7 @@ package net.noliaware.yumi_contributor.feature_account.presentation.views
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.text.SpannableString
 import android.util.AttributeSet
 import android.view.View
 import android.view.View.OnClickListener
@@ -48,7 +49,7 @@ class QrCodeView @JvmOverloads constructor(
         val color: Int,
         val iconName: String?,
         val title: String,
-        val date: String
+        val date: SpannableString
     )
 
     interface QrCodeViewCallback {

@@ -13,6 +13,10 @@ data class MessageDTO(
     val messageDate: String,
     @Json(name = "messageTime")
     val messageTime: String,
+    @Json(name = "messageFrom")
+    val messageSender: String?,
+    @Json(name = "messageTo")
+    val messageRecipient: String?,
     @Json(name = "messageType")
     val messageType: String?,
     @Json(name = "messagePriority")
@@ -34,6 +38,8 @@ data class MessageDTO(
         messageId = messageId,
         messageDate = messageDate,
         messageTime = messageTime,
+        messageSender = messageSender,
+        messageRecipient = messageRecipient,
         messageType = messageType,
         messagePriority = Priority.fromValue(messagePriority),
         messageSubject = messageSubject,

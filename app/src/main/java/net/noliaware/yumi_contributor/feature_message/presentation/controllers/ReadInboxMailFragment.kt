@@ -1,5 +1,6 @@
 package net.noliaware.yumi_contributor.feature_message.presentation.controllers
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import net.noliaware.yumi_contributor.R
@@ -35,6 +37,7 @@ import net.noliaware.yumi_contributor.feature_message.presentation.views.ReadMai
 @AndroidEntryPoint
 class ReadInboxMailFragment : AppCompatDialogFragment() {
 
+    private val args by navArgs<ReadInboxMailFragmentArgs>()
     private var readMailView: ReadMailView? = null
     private val viewModel by viewModels<ReadInboxMailFragmentViewModel>()
 
@@ -82,10 +85,6 @@ class ReadInboxMailFragment : AppCompatDialogFragment() {
                 is LoadingState -> Unit
                 is DataState -> viewState.data?.let { result ->
                     if (result) {
-                        setFragmentResult(
-                            REFRESH_RECEIVED_MESSAGES_REQUEST_KEY,
-                            bundleOf()
-                        )
                         navDismiss()
                     }
                 }
@@ -101,6 +100,7 @@ class ReadInboxMailFragment : AppCompatDialogFragment() {
             } else {
                 "${message.messageType} ${message.messageSubject}"
             },
+            mail = "${getString(R.string.mail_from)} ${message.messageSender}",
             time = getString(
                 R.string.received_at,
                 message.messageDate.parseDateToFormat(LONG_DATE_WITH_DAY_FORMAT),
@@ -144,6 +144,16 @@ class ReadInboxMailFragment : AppCompatDialogFragment() {
                     )
                 )
             }
+        }
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        if (viewModel.deleteMessageEventsHelper.stateData == true || !args.firstReadComplete) {
+            setFragmentResult(
+                requestKey = REFRESH_RECEIVED_MESSAGES_REQUEST_KEY,
+                result = bundleOf()
+            )
         }
     }
 

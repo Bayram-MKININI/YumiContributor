@@ -131,7 +131,7 @@ class HomeFragment : Fragment() {
                 ).build()
                 homeNavController.navigate(
                     R.id.messaging_fragment,
-                    MessagingFragmentArgs(args.accountData.messageSubjects.toTypedArray()).toBundle(),
+                    MessagingFragmentArgs(args.accountData.domainName.orEmpty()).toBundle(),
                     navOption
                 )
             }

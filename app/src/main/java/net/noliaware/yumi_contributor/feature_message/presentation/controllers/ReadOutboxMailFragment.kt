@@ -124,6 +124,7 @@ class ReadOutboxMailFragment : AppCompatDialogFragment() {
             } else {
                 "${message.messageType} ${message.messageSubject}"
             },
+            mail = "${getString(R.string.mail_to)} ${message.messageRecipient}",
             time = getString(
                 R.string.sent_at,
                 message.messageDate.parseDateToFormat(LONG_DATE_WITH_DAY_FORMAT),

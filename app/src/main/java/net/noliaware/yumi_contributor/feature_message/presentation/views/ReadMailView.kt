@@ -43,6 +43,7 @@ class ReadMailView @JvmOverloads constructor(
     private lateinit var iconPlaceholderView: View
     private lateinit var priorityIconImageView: ImageView
     private lateinit var titleFillableTextWidget: FillableTextWidget
+    private lateinit var mailFillableTextWidget: FillableTextWidget
     private lateinit var timeFillableTextWidget: FillableTextWidget
     private lateinit var messageParentView: View
     private lateinit var messageTextView: TextView
@@ -60,6 +61,7 @@ class ReadMailView @JvmOverloads constructor(
         @DrawableRes
         val priorityIconRes: Int,
         val subject: String = "",
+        val mail: String = "",
         val time: String = "",
         val message: Spanned = SpannedString(""),
         val replyPossible: Boolean = false
@@ -94,18 +96,25 @@ class ReadMailView @JvmOverloads constructor(
         }
         titleFillableTextWidget.setFixedWidth(true)
 
+        mailFillableTextWidget = shimmerView.findViewById(R.id.mail_fillable_text_view)
+        mailFillableTextWidget.setUpValueTextView()
+
         timeFillableTextWidget = shimmerView.findViewById(R.id.time_fillable_text_view)
-        timeFillableTextWidget.textView.apply {
-            typeface = context.getFontFromResources(R.font.omnes_regular)
-            setTextColor(context.getColorCompat(R.color.grey_2))
-            textSize = 14f
-        }
+        timeFillableTextWidget.setUpValueTextView()
 
         messageParentView = shimmerView.findViewById(R.id.message_parent_view)
         messageTextView = messageParentView.findViewById(R.id.message_text_view)
 
         composeButton = findViewById(R.id.compose_layout)
         composeButton.setOnClickListener(onClickListener)
+    }
+
+    private fun FillableTextWidget.setUpValueTextView() {
+        textView.apply {
+            typeface = context.getFontFromResources(R.font.omnes_regular)
+            setTextColor(context.getColorCompat(R.color.grey_2))
+            textSize = 14f
+        }
     }
 
     private val onClickListener: OnClickListener by lazy {
@@ -125,6 +134,7 @@ class ReadMailView @JvmOverloads constructor(
             isVisible = true
         }
         titleFillableTextWidget.setText(readMailViewAdapter.subject)
+        mailFillableTextWidget.setText(readMailViewAdapter.mail)
         timeFillableTextWidget.setText(readMailViewAdapter.time)
         messageTextView.text = readMailViewAdapter.message
         composeButton.isVisible = readMailViewAdapter.replyPossible
@@ -190,13 +200,18 @@ class ReadMailView @JvmOverloads constructor(
             MeasureSpec.makeMeasureSpec(convertDpToPx(22), MeasureSpec.EXACTLY)
         )
 
+        mailFillableTextWidget.measure(
+            MeasureSpec.makeMeasureSpec(viewWidth * 4 / 10, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(convertDpToPx(15), MeasureSpec.EXACTLY)
+        )
+
         timeFillableTextWidget.measure(
             MeasureSpec.makeMeasureSpec(viewWidth * 5 / 10, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(convertDpToPx(15), MeasureSpec.EXACTLY)
         )
 
         val messageParentViewHeight = shimmerView.measuredHeight - (titleFillableTextWidget.measuredHeight +
-                timeFillableTextWidget.measuredHeight + convertDpToPx(45))
+                mailFillableTextWidget.measuredHeight + timeFillableTextWidget.measuredHeight + convertDpToPx(50))
 
         messageParentView.measure(
             MeasureSpec.makeMeasureSpec(contentViewWidth * 95 / 100, MeasureSpec.EXACTLY),
@@ -269,9 +284,14 @@ class ReadMailView @JvmOverloads constructor(
             convertDpToPx(20)
         )
 
-        timeFillableTextWidget.layoutToTopLeft(
+        mailFillableTextWidget.layoutToTopLeft(
             titleFillableTextWidget.left,
             titleFillableTextWidget.bottom + convertDpToPx(5)
+        )
+
+        timeFillableTextWidget.layoutToTopLeft(
+            titleFillableTextWidget.left,
+            mailFillableTextWidget.bottom + convertDpToPx(5)
         )
 
         messageParentView.layoutToTopLeft(

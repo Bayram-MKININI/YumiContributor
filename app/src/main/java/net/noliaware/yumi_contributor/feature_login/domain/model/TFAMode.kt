@@ -7,6 +7,6 @@ enum class TFAMode(val value: Int) {
 
     companion object {
         @JvmStatic
-        fun fromInt(value: Int) = values().find { response -> response.value == value }
+        fun fromInt(value: Int) = entries.find { response -> response.value == value }
     }
 }

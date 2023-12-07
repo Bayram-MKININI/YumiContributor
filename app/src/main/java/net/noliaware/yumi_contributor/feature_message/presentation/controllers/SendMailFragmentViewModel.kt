@@ -18,16 +18,22 @@ class SendMailFragmentViewModel @Inject constructor(
     val messageSentEventsHelper = EventsHelper<Boolean>()
 
     fun callSendMessage(
+        recipients: List<String>? = null,
+        subject: String? = null,
         messagePriority: Int? = null,
         messageId: String? = null,
-        messageSubjectId: String? = null,
         messageBody: String
     ) {
         viewModelScope.launch {
-            repository.sendMessage(messagePriority, messageId, messageSubjectId, messageBody)
-                .onEach { result ->
-                    messageSentEventsHelper.handleResponse(result)
-                }.launchIn(this)
+            repository.sendMessage(
+                recipients,
+                subject,
+                messagePriority,
+                messageId,
+                messageBody
+            ).onEach { result ->
+                messageSentEventsHelper.handleResponse(result)
+            }.launchIn(this)
         }
     }
 }

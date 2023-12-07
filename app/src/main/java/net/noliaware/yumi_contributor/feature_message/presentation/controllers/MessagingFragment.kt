@@ -63,7 +63,7 @@ class MessagingFragment : Fragment() {
     private val messagingViewCallback: MailViewCallback by lazy {
         MailViewCallback {
             findNavController().safeNavigate(
-                MessagingFragmentDirections.actionMessagingFragmentToSendMailFragment(args.subjects)
+                MessagingFragmentDirections.actionMessagingFragmentToSendMailFragment(args.domainName)
             )
         }
     }

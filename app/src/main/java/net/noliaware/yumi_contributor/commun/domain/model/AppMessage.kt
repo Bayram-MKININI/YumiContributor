@@ -14,7 +14,7 @@ enum class AppMessageType(val value: String) {
 
     companion object {
         @JvmStatic
-        fun fromString(value: String) = values().find { response -> response.value == value }
+        fun fromString(value: String) = entries.find { response -> response.value == value }
     }
 }
 
@@ -26,7 +26,7 @@ enum class AppMessageLevel(val value: Int) {
 
     companion object {
         @JvmStatic
-        fun fromInt(value: Int) = values().find { response -> response.value == value }
+        fun fromInt(value: Int) = entries.find { response -> response.value == value }
     }
 }
 
@@ -38,6 +38,6 @@ enum class Priority(val value: Int) {
 
     companion object {
         @JvmStatic
-        fun fromValue(value: Int?) = Priority.values().firstOrNull { it.value == value }
+        fun fromValue(value: Int?) = entries.firstOrNull { it.value == value }
     }
 }

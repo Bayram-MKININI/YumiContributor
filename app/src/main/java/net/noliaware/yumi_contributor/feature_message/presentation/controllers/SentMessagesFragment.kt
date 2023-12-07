@@ -18,6 +18,7 @@ import net.noliaware.yumi_contributor.commun.util.collectLifecycleAware
 import net.noliaware.yumi_contributor.commun.util.handlePaginationError
 import net.noliaware.yumi_contributor.commun.util.safeNavigate
 import net.noliaware.yumi_contributor.feature_message.presentation.adapters.MessageAdapter
+import net.noliaware.yumi_contributor.feature_message.presentation.mappers.SentMessageMapper
 import net.noliaware.yumi_contributor.feature_message.presentation.views.MessagesListView
 
 @AndroidEntryPoint
@@ -40,7 +41,7 @@ class SentMessagesFragment : Fragment() {
         false
     ).apply {
         messagesListView = this as MessagesListView
-        messagesListView?.messageAdapter = MessageAdapter { message ->
+        messagesListView?.messageAdapter = MessageAdapter(SentMessageMapper()) { message ->
             findNavController().safeNavigate(
                 MessagingFragmentDirections.actionMessagingFragmentToReadOutboxMailFragment(
                     message.messageId

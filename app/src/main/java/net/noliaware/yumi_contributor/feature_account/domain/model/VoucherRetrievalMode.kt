@@ -6,6 +6,6 @@ enum class VoucherRetrievalMode(val value: Int) {
     BOTH(3);
 
     companion object {
-        fun fromValue(value: Int?) = VoucherRetrievalMode.values().firstOrNull { it.value == value }
+        fun fromValue(value: Int?) = entries.firstOrNull { it.value == value }
     }
 }
