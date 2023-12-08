@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import net.noliaware.yumi_contributor.commun.ApiConstants.DELETE_VOUCHER_REQUEST
 import net.noliaware.yumi_contributor.commun.ApiConstants.GET_AVAILABLE_DATA_PER_CATEGORY
 import net.noliaware.yumi_contributor.commun.ApiConstants.GET_CANCELLED_DATA_PER_CATEGORY
 import net.noliaware.yumi_contributor.commun.ApiConstants.GET_FILTER_USERS_LIST
@@ -21,6 +22,7 @@ import net.noliaware.yumi_contributor.commun.ApiParameters.SELECTED_USER
 import net.noliaware.yumi_contributor.commun.ApiParameters.USER_ID
 import net.noliaware.yumi_contributor.commun.ApiParameters.VOUCHER_ID
 import net.noliaware.yumi_contributor.commun.ApiParameters.VOUCHER_REQUEST_COMMENT
+import net.noliaware.yumi_contributor.commun.ApiParameters.VOUCHER_REQUEST_ID
 import net.noliaware.yumi_contributor.commun.ApiParameters.VOUCHER_REQUEST_TYPE_ID
 import net.noliaware.yumi_contributor.commun.data.remote.RemoteApi
 import net.noliaware.yumi_contributor.commun.domain.model.SessionData
@@ -128,7 +130,9 @@ class ManagedAccountRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getManagedAccountForId(userId: String): Flow<Resource<ManagedAccount>> = flow {
+    override fun getManagedAccountForId(
+        userId: String
+    ): Flow<Resource<ManagedAccount>> = flow {
 
         emit(Resource.Loading())
 
@@ -167,7 +171,10 @@ class ManagedAccountRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun getManagedAccountParams(userId: String, tokenKey: String) = mutableMapOf(
+    private fun getManagedAccountParams(
+        userId: String,
+        tokenKey: String
+    ) = mutableMapOf(
         USER_ID to userId
     ).also { it.plusAssign(getCommonWSParams(sessionData, tokenKey)) }
 
@@ -180,7 +187,9 @@ class ManagedAccountRepositoryImpl @Inject constructor(
         ManagedAccountPagingSource(api, sessionData)
     }.flow
 
-    override fun selectManagedAccountForId(accountId: String): Flow<Resource<String>> = flow {
+    override fun selectManagedAccountForId(
+        accountId: String
+    ): Flow<Resource<String>> = flow {
 
         emit(Resource.Loading())
 
@@ -219,7 +228,10 @@ class ManagedAccountRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun generateSelectAccountParams(accountId: String, tokenKey: String) = mutableMapOf(
+    private fun generateSelectAccountParams(
+        accountId: String,
+        tokenKey: String
+    ) = mutableMapOf(
         SELECTED_USER to accountId
     ).also { it.plusAssign(getCommonWSParams(sessionData, tokenKey)) }
 
@@ -268,7 +280,9 @@ class ManagedAccountRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getAvailableVoucherList(categoryId: String) = Pager(
+    override fun getAvailableVoucherList(
+        categoryId: String
+    ) = Pager(
         PagingConfig(
             pageSize = LIST_PAGE_SIZE,
             enablePlaceholders = false
@@ -322,7 +336,9 @@ class ManagedAccountRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getUsedVoucherList(categoryId: String) = Pager(
+    override fun getUsedVoucherList(
+        categoryId: String
+    ) = Pager(
         PagingConfig(
             pageSize = LIST_PAGE_SIZE,
             enablePlaceholders = false
@@ -376,7 +392,9 @@ class ManagedAccountRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getCancelledVoucherList(categoryId: String) = Pager(
+    override fun getCancelledVoucherList(
+        categoryId: String
+    ) = Pager(
         PagingConfig(
             pageSize = LIST_PAGE_SIZE,
             enablePlaceholders = false
@@ -385,7 +403,9 @@ class ManagedAccountRepositoryImpl @Inject constructor(
         CancelledVoucherPagingSource(api, sessionData, categoryId)
     }.flow
 
-    override fun getVoucherById(voucherId: String): Flow<Resource<Voucher>> = flow {
+    override fun getVoucherById(
+        voucherId: String
+    ): Flow<Resource<Voucher>> = flow {
 
         emit(Resource.Loading())
 
@@ -522,7 +542,9 @@ class ManagedAccountRepositoryImpl @Inject constructor(
                     remoteData.data?.let { voucherRequestsDTO ->
                         emit(
                             Resource.Success(
-                                data = voucherRequestsDTO.requestDTOList.map { it.toVoucherRequest() },
+                                data = voucherRequestsDTO.requestDTOList?.map {
+                                    it.toVoucherRequest()
+                                } ?: listOf(),
                                 appMessage = remoteData.message?.toAppMessage()
                             )
                         )
@@ -533,6 +555,58 @@ class ManagedAccountRepositoryImpl @Inject constructor(
                 handleRemoteCallError(ex)
             }
         }
+
+    override fun removeVoucherRequestById(
+        requestId: String
+    ): Flow<Resource<Boolean>> = flow {
+
+        emit(Resource.Loading())
+
+        try {
+            val timestamp = currentTimeInMillis()
+            val randomString = randomString()
+
+            val remoteData = api.deleteVoucherRequestById(
+                timestamp = timestamp,
+                saltString = randomString,
+                token = generateToken(
+                    timestamp = timestamp,
+                    methodName = DELETE_VOUCHER_REQUEST,
+                    randomString = randomString
+                ),
+                params = generateVoucherRequestParams(requestId, DELETE_VOUCHER_REQUEST)
+            )
+
+            val sessionNoFailure = handleSessionWithNoFailure(
+                session = remoteData.session,
+                sessionData = sessionData,
+                tokenKey = DELETE_VOUCHER_REQUEST,
+                appMessage = remoteData.message,
+                error = remoteData.error
+            )
+
+            if (sessionNoFailure) {
+                emit(
+                    Resource.Success(
+                        data = remoteData.data != null,
+                        appMessage = remoteData.message?.toAppMessage()
+                    )
+                )
+            }
+
+        } catch (ex: Exception) {
+            handleRemoteCallError(ex)
+        }
+    }
+
+    private fun generateVoucherRequestParams(
+        requestId: String,
+        tokenKey: String
+    ) = mutableMapOf(
+        VOUCHER_REQUEST_ID to requestId
+    ).also {
+        it += getCommonWSParams(sessionData, tokenKey)
+    }
 
     override fun getVoucherStateDataById(
         voucherId: String
@@ -579,7 +653,9 @@ class ManagedAccountRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun useVoucherById(voucherId: String): Flow<Resource<Boolean>> = flow {
+    override fun useVoucherById(
+        voucherId: String
+    ): Flow<Resource<Boolean>> = flow {
 
         emit(Resource.Loading())
 
@@ -620,7 +696,10 @@ class ManagedAccountRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun generateVoucherIdParams(voucherId: String, tokenKey: String) = mutableMapOf(
+    private fun generateVoucherIdParams(
+        voucherId: String,
+        tokenKey: String
+    ) = mutableMapOf(
         VOUCHER_ID to voucherId
     ).also { it.plusAssign(getCommonWSParams(sessionData, tokenKey)) }
 }

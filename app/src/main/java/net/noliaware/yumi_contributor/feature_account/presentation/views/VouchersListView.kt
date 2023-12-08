@@ -84,6 +84,7 @@ class VouchersListView @JvmOverloads constructor(
             }
         }
         recyclerView = findViewById(R.id.recycler_view)
+        recyclerView.itemAnimator = null
         recyclerView.setUp()
     }
 

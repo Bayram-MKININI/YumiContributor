@@ -50,6 +50,8 @@
     <string name="send">Envoyer</string>
     <string name="requests_in_progress">Demandes en cours</string>
     <string name="in_progress_highlighted_text">en cours</string>
+    <string name="delete_voucher_request_confirmation">Voulez‑vous vraiment supprimer cette demande ?</string>
+    <string name="no_ongoing_request">Aucune demande en cours</string>
     <string name="creation">Création:</string>
     <string name="date_time">%s à %s</string>
     <string name="information">i</string>

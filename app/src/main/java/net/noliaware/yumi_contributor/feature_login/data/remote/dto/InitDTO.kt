@@ -9,7 +9,7 @@ class InitDTO(
     @Json(name = "deviceId")
     val deviceId: String = "",
     @Json(name = "keyboard")
-    val keyboard: List<Int> = listOf()
+    val keyboard: List<Int>
 ) {
     fun toInitData() = InitData(
         deviceId = deviceId,

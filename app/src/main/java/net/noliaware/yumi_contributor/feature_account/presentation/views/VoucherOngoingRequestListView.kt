@@ -23,7 +23,7 @@ import net.noliaware.yumi_contributor.commun.util.inflate
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import net.noliaware.yumi_contributor.commun.util.weak
-import net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherOngoingRequestItemView.VoucherOngoingRequestItemViewAdapter
+import net.noliaware.yumi_contributor.feature_account.presentation.adapters.VoucherOngoingRequestsAdapter
 
 class VoucherOngoingRequestListView @JvmOverloads constructor(
     context: Context,
@@ -40,7 +40,12 @@ class VoucherOngoingRequestListView @JvmOverloads constructor(
     private lateinit var shimmerView: ShimmerFrameLayout
     private lateinit var shimmerRecyclerView: RecyclerView
     private lateinit var recyclerView: RecyclerView
-    private lateinit var recyclerAdapter: BaseAdapter<VoucherOngoingRequestItemViewAdapter>
+    private lateinit var emptyView: TextView
+    var voucherOngoingRequestAdapter
+        get() = recyclerView.adapter as VoucherOngoingRequestsAdapter
+        set(adapter) {
+            recyclerView.adapter = adapter
+        }
 
     var callback: VoucherOngoingRequestListViewCallback? by weak()
 
@@ -78,28 +83,8 @@ class VoucherOngoingRequestListView @JvmOverloads constructor(
             }
         }
         recyclerView = contentView.findViewById(R.id.recycler_view)
-        recyclerView.also {
-            it.setUp()
-            recyclerAdapter = BaseAdapter<VoucherOngoingRequestItemViewAdapter>(
-                compareItems = { old, new ->
-                    old.title == new.title
-                },
-                compareContents = { old, new ->
-                    old == new
-                }
-            ).apply {
-                expressionViewHolderBinding = { eachItem, view ->
-                    (view as VoucherOngoingRequestItemView).fillViewWithData(eachItem)
-                }
-                expressionOnCreateViewHolder = { viewGroup ->
-                    viewGroup.inflate(R.layout.voucher_ongoing_request_item_layout)
-                }
-                onItemClicked = {
-
-                }
-                it.adapter = this
-            }
-        }
+        recyclerView.setUp()
+        emptyView = findViewById(R.id.empty_message_text_view)
     }
 
     private fun RecyclerView.setUp() {
@@ -121,20 +106,24 @@ class VoucherOngoingRequestListView @JvmOverloads constructor(
         shimmerView.activateShimmer(visible)
         if (visible) {
             shimmerView.isVisible = true
-            recyclerView.isGone = true
         } else {
             shimmerView.isGone = true
-            recyclerView.isVisible = true
         }
-    }
-
-    fun fillViewWithData(adapters: List<VoucherOngoingRequestItemViewAdapter>) {
-        recyclerAdapter.submitList(adapters)
     }
 
     fun stopLoading() {
         if (shimmerView.isVisible) {
             shimmerView.activateShimmer(false)
+        }
+    }
+
+    fun setEmptyMessageVisible(visible: Boolean) {
+        if (visible) {
+            emptyView.isVisible = true
+            recyclerView.isGone = true
+        } else {
+            emptyView.isGone = true
+            recyclerView.isVisible = true
         }
     }
 
@@ -192,6 +181,10 @@ class VoucherOngoingRequestListView @JvmOverloads constructor(
             )
         }
 
+        if (emptyView.isVisible) {
+            emptyView.measureWrapContent()
+        }
+
         setMeasuredDimension(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(viewHeight, MeasureSpec.EXACTLY)
@@ -235,6 +228,13 @@ class VoucherOngoingRequestListView @JvmOverloads constructor(
             recyclerView.layoutToTopLeft(
                 0,
                 titleTextView.bottom + convertDpToPx(5)
+            )
+        }
+
+        if (emptyView.isVisible) {
+            emptyView.layoutToTopLeft(
+                (contentView.measuredWidth - emptyView.measuredWidth) / 2,
+                (contentView.measuredHeight - emptyView.measuredHeight) / 2
             )
         }
     }

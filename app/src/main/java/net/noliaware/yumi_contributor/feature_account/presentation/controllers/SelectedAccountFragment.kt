@@ -12,7 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.FragmentKeys.AVAILABLE_VOUCHERS_LIST_REQUEST_KEY
+import net.noliaware.yumi_contributor.commun.FragmentKeys.REFRESH_VOUCHER_CATEGORY_LIST_REQUEST_KEY
 import net.noliaware.yumi_contributor.commun.util.ViewState.DataState
 import net.noliaware.yumi_contributor.commun.util.ViewState.LoadingState
 import net.noliaware.yumi_contributor.commun.util.collectLifecycleAware
@@ -54,7 +54,7 @@ class SelectedAccountFragment : Fragment() {
 
     private fun setUpFragmentListener() {
         setFragmentResultListener(
-            AVAILABLE_VOUCHERS_LIST_REQUEST_KEY
+            REFRESH_VOUCHER_CATEGORY_LIST_REQUEST_KEY
         ) { _, _ ->
             selectedAccountViewModel.sendCategoriesListsRefreshedEvent()
         }

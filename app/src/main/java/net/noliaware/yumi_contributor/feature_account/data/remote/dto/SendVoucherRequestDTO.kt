@@ -6,5 +6,5 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class SendVoucherRequestDTO(
     @Json(name = "sentRequestId")
-    val sentRequestId: String,
+    val sentRequestId: String
 )

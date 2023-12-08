@@ -17,7 +17,9 @@ data class VoucherRequestDTO(
     @Json(name = "voucherRequestLabel")
     val voucherRequestLabel: String?,
     @Json(name = "voucherRequestComment")
-    val voucherRequestComment: String?
+    val voucherRequestComment: String?,
+    @Json(name = "voucherRequestDeletableStatus")
+    val voucherRequestDeletableStatus: Int?
 ) {
     fun toVoucherRequest() = VoucherRequest(
         voucherRequestId = voucherRequestId,
@@ -25,6 +27,7 @@ data class VoucherRequestDTO(
         voucherRequestDate = voucherRequestDate,
         voucherRequestTime = voucherRequestTime,
         voucherRequestLabel = voucherRequestLabel,
-        voucherRequestComment = voucherRequestComment
+        voucherRequestComment = voucherRequestComment,
+        deletableVoucherRequest = voucherRequestDeletableStatus == 1
     )
 }

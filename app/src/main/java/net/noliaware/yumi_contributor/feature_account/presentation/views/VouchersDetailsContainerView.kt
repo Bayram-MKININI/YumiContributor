@@ -169,10 +169,6 @@ class VouchersDetailsContainerView @JvmOverloads constructor(
         }
     }
 
-    fun displayOngoingRequestsButton() {
-        vouchersDetailsView.ongoingRequestsButton.isVisible = true
-    }
-
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val viewWidth = MeasureSpec.getSize(widthMeasureSpec)
         val viewHeight = MeasureSpec.getSize(heightMeasureSpec)

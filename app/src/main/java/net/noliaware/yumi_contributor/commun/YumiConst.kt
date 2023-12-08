@@ -21,6 +21,7 @@ object ApiConstants {
     const val GET_VOUCHER_STATUS = "getUserVoucherStatus"
     const val SEND_VOUCHER_REQUEST = "sendVoucherRequest"
     const val GET_VOUCHER_REQUEST_LIST = "getUserVoucherRequestList"
+    const val DELETE_VOUCHER_REQUEST = "delVoucherRequest"
     const val USE_VOUCHER = "useUserVoucher"
     const val GET_ACCOUNT = "getAccount"
     const val GET_BACK_OFFICE_SIGN_IN_CODE = "getBackOfficeSignInCode"
@@ -54,6 +55,7 @@ object ApiParameters {
     const val CATEGORY_ID = "categoryId"
     const val VOUCHER_ID = "voucherId"
     const val VOUCHER_REQUEST_TYPE_ID = "voucherRequestTypeId"
+    const val VOUCHER_REQUEST_ID = "voucherRequestId"
     const val VOUCHER_REQUEST_COMMENT = "voucherRequestComment"
     const val VOUCHER_CODE_DATA = "voucherCodeData"
     const val LIMIT = "limit"
@@ -105,10 +107,10 @@ object RemoteConfig {
 }
 
 object FragmentKeys {
-    const val AVAILABLE_VOUCHERS_LIST_REQUEST_KEY = "available_vouchers_list_request_key"
-    const val VOUCHER_DETAILS_REQUEST_KEY = "voucher_details_request_key"
-    const val QR_CODE_REQUEST_KEY = "qr_code_request_key"
-    const val VOUCHER_ID_RESULT_KEY = "voucher_id_result_key"
+    const val REFRESH_VOUCHER_CATEGORY_LIST_REQUEST_KEY = "refresh_voucher_category_list_request_key"
+    const val REFRESH_VOUCHER_LIST_REQUEST_KEY = "refresh_voucher_list_request_key"
+    const val REFRESH_VOUCHER_STATUS_REQUEST_KEY = "refresh_voucher_status_request_key"
+    const val REFRESH_VOUCHER_DETAILS_REQUEST_KEY = "refresh_voucher_details_request_key"
     const val REFRESH_RECEIVED_MESSAGES_REQUEST_KEY = "refresh_received_message_request_key"
     const val REFRESH_SENT_MESSAGES_REQUEST_KEY = "refresh_sent_message_request_key"
 }

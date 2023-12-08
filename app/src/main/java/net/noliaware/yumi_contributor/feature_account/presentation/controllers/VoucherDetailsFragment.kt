@@ -19,9 +19,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.DateTime.HOURS_TIME_FORMAT
 import net.noliaware.yumi_contributor.commun.DateTime.SHORT_DATE_FORMAT
-import net.noliaware.yumi_contributor.commun.FragmentKeys.QR_CODE_REQUEST_KEY
-import net.noliaware.yumi_contributor.commun.FragmentKeys.VOUCHER_DETAILS_REQUEST_KEY
-import net.noliaware.yumi_contributor.commun.FragmentKeys.VOUCHER_ID_RESULT_KEY
+import net.noliaware.yumi_contributor.commun.FragmentKeys.REFRESH_VOUCHER_DETAILS_REQUEST_KEY
+import net.noliaware.yumi_contributor.commun.FragmentKeys.REFRESH_VOUCHER_LIST_REQUEST_KEY
+import net.noliaware.yumi_contributor.commun.FragmentKeys.REFRESH_VOUCHER_STATUS_REQUEST_KEY
 import net.noliaware.yumi_contributor.commun.util.DecoratedText
 import net.noliaware.yumi_contributor.commun.util.ViewState.DataState
 import net.noliaware.yumi_contributor.commun.util.ViewState.LoadingState
@@ -95,11 +95,15 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
 
     private fun setUpFragmentListener() {
         setFragmentResultListener(
-            QR_CODE_REQUEST_KEY
-        ) { _, bundle ->
-            bundle.getString(VOUCHER_ID_RESULT_KEY)?.let { voucherId ->
-                viewModel.callGetVoucherStatusById(voucherId)
-            }
+            REFRESH_VOUCHER_STATUS_REQUEST_KEY
+        ) { _, _ ->
+            viewModel.callGetVoucherStatusById()
+        }
+        setFragmentResultListener(
+            REFRESH_VOUCHER_DETAILS_REQUEST_KEY
+        ) { _, _ ->
+            viewModel.callGetVoucher()
+            viewModel.voucherListShouldRefresh = true
         }
     }
 
@@ -128,7 +132,8 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
                 is LoadingState -> Unit
                 is DataState -> viewState.data?.let { requestSent ->
                     if (requestSent) {
-                        vouchersDetailsContainerView?.displayOngoingRequestsButton()
+                        viewModel.callGetVoucher()
+                        viewModel.voucherListShouldRefresh = true
                     }
                 }
             }
@@ -200,15 +205,13 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
                     listOf(expiryDate)
                 )
             } else {
-                val startDate =
-                    voucher.voucherStartDate?.parseDateToFormat(SHORT_DATE_FORMAT).orEmpty()
+                val startDate = voucher.voucherStartDate?.parseDateToFormat(SHORT_DATE_FORMAT).orEmpty()
                 decorateTextWithFont(
                     getString(R.string.usable_start_date, startDate),
                     listOf(startDate)
                 )
             }
         }
-
         USED -> {
             val usageDate = voucher.voucherUseDate?.parseDateToFormat(SHORT_DATE_FORMAT).orEmpty()
             val usageTime = voucher.voucherUseTime?.parseTimeToFormat(HOURS_TIME_FORMAT).orEmpty()
@@ -220,12 +223,9 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
                 listOf(usageDate, usageTime)
             )
         }
-
         CANCELLED -> {
-            val cancellationDate =
-                voucher.voucherUseDate?.parseDateToFormat(SHORT_DATE_FORMAT).orEmpty()
-            val cancellationTime =
-                voucher.voucherUseTime?.parseTimeToFormat(HOURS_TIME_FORMAT).orEmpty()
+            val cancellationDate = voucher.voucherUseDate?.parseDateToFormat(SHORT_DATE_FORMAT).orEmpty()
+            val cancellationTime = voucher.voucherUseTime?.parseTimeToFormat(HOURS_TIME_FORMAT).orEmpty()
             decorateTextWithFont(
                 getString(
                     R.string.cancellation_date,
@@ -234,7 +234,6 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
                 listOf(cancellationDate, cancellationTime)
             )
         }
-
         else -> SpannableString("")
     }
 
@@ -268,7 +267,6 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
                 else -> ""
             }
         }
-
         USED -> getString(R.string.voucher_used)
         CANCELLED -> getString(R.string.voucher_canceled)
         INEXISTENT -> getString(R.string.voucher_inexistent)
@@ -385,8 +383,7 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
             )
             setView(voucherRequestView)
             setPositiveButton(R.string.send) { dialog, _ ->
-                viewModel.callSendVoucherRequestWithId(
-                    voucherId = args.voucherId,
+                viewModel.callSendVoucherRequestWithTypeId(
                     voucherRequestTypeId = selectedRequestType.requestTypeId,
                     voucherRequestComment = voucherRequestView.getUserComment()
                 )
@@ -400,9 +397,9 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        if (viewModel.getVoucherStateDataEventsHelper.stateData?.voucherStatus == USED || viewModel.requestSentEventsHelper.stateData == true) {
+        if (viewModel.getVoucherStateDataEventsHelper.stateData?.voucherStatus == USED || viewModel.voucherListShouldRefresh) {
             setFragmentResult(
-                VOUCHER_DETAILS_REQUEST_KEY,
+                REFRESH_VOUCHER_LIST_REQUEST_KEY,
                 bundleOf()
             )
         }

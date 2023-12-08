@@ -69,5 +69,16 @@
             tools:layoutManager="LinearLayoutManager"
             tools:listitem="@layout/voucher_ongoing_request_item_layout"
             tools:visibility="visible" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/empty_message_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/omnes_regular"
+            android:text="@string/no_ongoing_request"
+            android:textColor="@color/grey_2"
+            android:textSize="16sp"
+            android:visibility="gone"
+            tools:visibility="gone" />
     </net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView>
 </net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherOngoingRequestListView>

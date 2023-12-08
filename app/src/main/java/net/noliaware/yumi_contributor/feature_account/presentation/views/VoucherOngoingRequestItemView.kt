@@ -3,12 +3,14 @@ package net.noliaware.yumi_contributor.feature_account.presentation.views
 import android.content.Context
 import android.util.AttributeSet
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
+import net.noliaware.yumi_contributor.commun.util.layoutToTopRight
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import net.noliaware.yumi_contributor.commun.util.sizeForVisible
 
@@ -19,12 +21,19 @@ class VoucherOngoingRequestItemView @JvmOverloads constructor(
 ) : ViewGroup(context, attrs, defStyle) {
 
     private lateinit var titleTextView: TextView
+    private lateinit var deleteImageView: ImageView
     private lateinit var dateLabelTextView: TextView
     private lateinit var dateValueTextView: TextView
     private lateinit var bodyTextView: TextView
+    var callback: VoucherOngoingRequestItemViewCallback? = null
+
+    fun interface VoucherOngoingRequestItemViewCallback {
+        fun onDeleteButtonClicked()
+    }
 
     data class VoucherOngoingRequestItemViewAdapter(
         val title: String = "",
+        val isDeletable: Boolean = false,
         val date: String = "",
         val body: String = ""
     )
@@ -36,6 +45,10 @@ class VoucherOngoingRequestItemView @JvmOverloads constructor(
 
     private fun initView() {
         titleTextView = findViewById(R.id.title_text_view)
+        deleteImageView = findViewById(R.id.delete_image_view)
+        deleteImageView.setOnClickListener {
+            callback?.onDeleteButtonClicked()
+        }
         dateLabelTextView = findViewById(R.id.date_label_text_view)
         dateValueTextView = findViewById(R.id.date_value_text_view)
         bodyTextView = findViewById(R.id.body_text_view)
@@ -43,6 +56,11 @@ class VoucherOngoingRequestItemView @JvmOverloads constructor(
 
     fun fillViewWithData(adapter: VoucherOngoingRequestItemViewAdapter) {
         titleTextView.text = adapter.title
+        if (adapter.isDeletable) {
+            deleteImageView.isVisible = true
+        } else {
+            deleteImageView.isGone = true
+        }
         dateValueTextView.text = adapter.date
         if (adapter.body.isNotEmpty()) {
             bodyTextView.isVisible = true
@@ -55,8 +73,15 @@ class VoucherOngoingRequestItemView @JvmOverloads constructor(
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val viewWidth = MeasureSpec.getSize(widthMeasureSpec)
 
+        deleteImageView.measure(
+            MeasureSpec.makeMeasureSpec(convertDpToPx(30), MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+        )
+
+        val titleTextViewWidth = viewWidth - convertDpToPx(20) -
+                deleteImageView.sizeForVisible { deleteImageView.measuredWidth + convertDpToPx(10) }
         titleTextView.measure(
-            MeasureSpec.makeMeasureSpec(viewWidth * 9 / 10, MeasureSpec.AT_MOST),
+            MeasureSpec.makeMeasureSpec(titleTextViewWidth, MeasureSpec.AT_MOST),
             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         )
 
@@ -69,9 +94,9 @@ class VoucherOngoingRequestItemView @JvmOverloads constructor(
         )
 
         val contentMeasuredHeight = titleTextView.measuredHeight + dateLabelTextView.measuredHeight +
-                    bodyTextView.sizeForVisible {
-                        bodyTextView.measuredHeight + convertDpToPx(10)
-                    } + convertDpToPx(30)
+                bodyTextView.sizeForVisible {
+                    bodyTextView.measuredHeight + convertDpToPx(10)
+                } + convertDpToPx(30)
 
         setMeasuredDimension(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
@@ -84,8 +109,13 @@ class VoucherOngoingRequestItemView @JvmOverloads constructor(
         val viewHeight = bottom - top
 
         titleTextView.layoutToTopLeft(
-            viewWidth * 5 / 100,
+            convertDpToPx(10),
             convertDpToPx(10)
+        )
+
+        deleteImageView.layoutToTopRight(
+            viewWidth - convertDpToPx(10),
+            titleTextView.top
         )
 
         dateLabelTextView.layoutToTopLeft(

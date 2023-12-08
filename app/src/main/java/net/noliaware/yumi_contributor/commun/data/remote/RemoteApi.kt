@@ -3,6 +3,7 @@ package net.noliaware.yumi_contributor.commun.data.remote
 import net.noliaware.yumi_contributor.commun.ApiConstants.CONNECT
 import net.noliaware.yumi_contributor.commun.ApiConstants.DELETE_INBOX_MESSAGE
 import net.noliaware.yumi_contributor.commun.ApiConstants.DELETE_OUTBOX_MESSAGE
+import net.noliaware.yumi_contributor.commun.ApiConstants.DELETE_VOUCHER_REQUEST
 import net.noliaware.yumi_contributor.commun.ApiConstants.GET_ACCOUNT
 import net.noliaware.yumi_contributor.commun.ApiConstants.GET_ALERT_LIST
 import net.noliaware.yumi_contributor.commun.ApiConstants.GET_AVAILABLE_DATA_PER_CATEGORY
@@ -34,6 +35,7 @@ import net.noliaware.yumi_contributor.commun.ApiParameters.TOKEN
 import net.noliaware.yumi_contributor.commun.data.remote.dto.ResponseDTO
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.AvailableVouchersDTO
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.CancelledVouchersDTO
+import net.noliaware.yumi_contributor.feature_account.data.remote.dto.DeleteVoucherRequestDTO
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.FilterAccountsDTO
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.GetVoucherDTO
 import net.noliaware.yumi_contributor.feature_account.data.remote.dto.GetVoucherStateDataDTO
@@ -210,6 +212,15 @@ interface RemoteApi {
         @Path(TOKEN) token: String,
         @FieldMap params: Map<String, String>
     ): ResponseDTO<VoucherRequestsDTO>
+
+    @FormUrlEncoded
+    @POST("$DELETE_VOUCHER_REQUEST/{$TIMESTAMP}/{$SALT_STRING}/{$TOKEN}")
+    suspend fun deleteVoucherRequestById(
+        @Path(TIMESTAMP) timestamp: String,
+        @Path(SALT_STRING) saltString: String,
+        @Path(TOKEN) token: String,
+        @FieldMap params: Map<String, String>
+    ): ResponseDTO<DeleteVoucherRequestDTO>
 
     @FormUrlEncoded
     @POST("$GET_VOUCHER_STATUS/{$TIMESTAMP}/{$SALT_STRING}/{$TOKEN}")

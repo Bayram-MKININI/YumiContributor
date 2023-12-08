@@ -6,5 +6,6 @@ data class VoucherRequest(
     val voucherRequestDate: String?,
     val voucherRequestTime: String?,
     val voucherRequestLabel: String?,
-    val voucherRequestComment: String?
+    val voucherRequestComment: String?,
+    val deletableVoucherRequest: Boolean
 )
