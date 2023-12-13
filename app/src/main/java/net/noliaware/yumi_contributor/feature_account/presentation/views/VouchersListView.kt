@@ -22,7 +22,6 @@ import net.noliaware.yumi_contributor.commun.util.getStatusBarHeight
 import net.noliaware.yumi_contributor.commun.util.inflate
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
-import net.noliaware.yumi_contributor.commun.util.weak
 import net.noliaware.yumi_contributor.feature_account.presentation.adapters.VoucherAdapter
 
 class VouchersListView @JvmOverloads constructor(
@@ -39,12 +38,13 @@ class VouchersListView @JvmOverloads constructor(
     private lateinit var shimmerView: ShimmerFrameLayout
     private lateinit var shimmerRecyclerView: RecyclerView
     private lateinit var recyclerView: RecyclerView
+    var callback: VouchersListViewCallback? = null
+
     var voucherAdapter
         get() = recyclerView.adapter as VoucherAdapter
         set(adapter) {
             recyclerView.adapter = adapter
         }
-    var callback: VouchersListViewCallback? by weak()
 
     fun interface VouchersListViewCallback {
         fun onBackButtonClicked()

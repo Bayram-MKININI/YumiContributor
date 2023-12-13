@@ -25,7 +25,6 @@ import net.noliaware.yumi_contributor.commun.util.layoutToBottomLeft
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.layoutToTopRight
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
-import net.noliaware.yumi_contributor.commun.util.weak
 
 class ReadMailView @JvmOverloads constructor(
     context: Context,
@@ -48,8 +47,7 @@ class ReadMailView @JvmOverloads constructor(
     private lateinit var messageParentView: View
     private lateinit var messageTextView: TextView
     private lateinit var composeButton: View
-
-    var callback: ReadMailViewCallback? by weak()
+    var callback: ReadMailViewCallback? = null
 
     interface ReadMailViewCallback {
         fun onBackButtonClicked()

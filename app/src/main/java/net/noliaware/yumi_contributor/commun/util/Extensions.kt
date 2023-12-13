@@ -330,7 +330,9 @@ fun <T> Flow<T>.collectLifecycleAware(
 }
 
 private fun Fragment.redirectToLoginScreenInternal() {
-    activity?.findNavController(R.id.app_nav_host_fragment)?.navigateUp()
+    activity?.findNavController(
+        R.id.app_nav_host_fragment
+    )?.navigate(R.id.action_back_to_LoginFragment)
 }
 
 fun NavController.safeNavigate(

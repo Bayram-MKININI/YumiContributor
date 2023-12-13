@@ -98,17 +98,14 @@
                         tools:visibility="visible">
 
                         <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/requests_image_view"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:adjustViewBounds="true"
                             android:background="@drawable/circle_primary"
-                            android:clickable="true"
                             android:padding="5dp"
                             android:src="@drawable/ic_progress" />
 
                         <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/requests_text_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"
@@ -233,17 +230,14 @@
                         android:orientation="horizontal">
 
                         <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/phone_image_view"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:adjustViewBounds="true"
                             android:background="@drawable/circle_primary"
-                            android:clickable="true"
                             android:padding="7dp"
                             android:src="@drawable/ic_phone" />
 
                         <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/phone_text_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"
@@ -261,19 +255,16 @@
                         android:orientation="horizontal">
 
                         <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/mail_image_view"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:adjustViewBounds="true"
                             android:background="@drawable/circle_primary"
-                            android:clickable="true"
                             android:padding="7dp"
                             android:src="@drawable/ic_mail_on"
                             android:visibility="gone"
                             tools:visibility="visible" />
 
                         <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/mail_text_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"

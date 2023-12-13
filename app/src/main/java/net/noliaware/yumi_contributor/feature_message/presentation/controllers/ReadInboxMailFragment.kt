@@ -158,6 +158,7 @@ class ReadInboxMailFragment : AppCompatDialogFragment() {
     }
 
     override fun onDestroyView() {
+        readMailView?.callback = null
         readMailView = null
         super.onDestroyView()
     }

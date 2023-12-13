@@ -2,7 +2,6 @@ package net.noliaware.yumi_contributor.feature_profile.presentation.views
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +17,6 @@ import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.layoutToTopRight
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import net.noliaware.yumi_contributor.commun.util.sizeForVisible
-import net.noliaware.yumi_contributor.commun.util.weak
 import kotlin.math.max
 
 class ProfileView @JvmOverloads constructor(
@@ -44,7 +42,7 @@ class ProfileView @JvmOverloads constructor(
     private lateinit var boAccessDescriptionFillableTextWidget: FillableTextWidget
     private lateinit var accessButtonLayout: LinearLayoutCompat
     private lateinit var privacyPolicyLinkTextView: TextView
-    var callback: ProfileViewCallback? by weak()
+    var callback: ProfileViewCallback? = null
 
     data class ProfileViewAdapter(
         val login: String = "",

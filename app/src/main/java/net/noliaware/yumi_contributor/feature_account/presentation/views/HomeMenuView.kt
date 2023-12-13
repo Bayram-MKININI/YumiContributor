@@ -16,7 +16,6 @@ import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
-import net.noliaware.yumi_contributor.commun.util.weak
 
 class HomeMenuView @JvmOverloads constructor(
     context: Context,
@@ -30,8 +29,7 @@ class HomeMenuView @JvmOverloads constructor(
     private lateinit var mailBadgeTextView: TextView
     private lateinit var notificationImageView: ImageView
     private lateinit var notificationBadgeTextView: TextView
-
-    var callback: HomeMenuViewCallback? by weak()
+    var callback: HomeMenuViewCallback? = null
 
     interface HomeMenuViewCallback {
         fun onHomeButtonClicked()

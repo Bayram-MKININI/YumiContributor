@@ -2,8 +2,6 @@ package net.noliaware.yumi_contributor.feature_account.presentation.views
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
@@ -11,9 +9,6 @@ import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.UI.GOLDEN_RATIO
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
-import net.noliaware.yumi_contributor.commun.util.layoutToTopRight
-import net.noliaware.yumi_contributor.commun.util.measureWrapContent
-import net.noliaware.yumi_contributor.commun.util.weak
 import kotlin.math.roundToInt
 
 class VoucherRequestView @JvmOverloads constructor(

@@ -67,7 +67,10 @@ class ManagedAccountsFragment : Fragment(), OnBackPressedHandler {
     }
 
     private fun setUpViewPager() {
-        ManagedAccountsFragmentStateAdapter(childFragmentManager, viewLifecycleOwner.lifecycle).apply {
+        ManagedAccountsFragmentStateAdapter(
+            childFragmentManager,
+            viewLifecycleOwner.lifecycle
+        ).apply {
             managedAccountsParentView?.getViewPager?.adapter = this
         }
     }
@@ -107,17 +110,17 @@ class ManagedAccountsFragment : Fragment(), OnBackPressedHandler {
         managedAccountsParentView = null
         super.onDestroyView()
     }
+}
 
-    private class ManagedAccountsFragmentStateAdapter(
-        fragmentManager: FragmentManager,
-        lifecycle: Lifecycle
-    ) : FragmentStateAdapter(fragmentManager, lifecycle) {
-        override fun getItemCount() = 2
-        override fun createFragment(position: Int): Fragment {
-            return when (position) {
-                0 -> AccountsListFragment()
-                else -> SelectedAccountFragment()
-            }
-        }
+private class ManagedAccountsFragmentStateAdapter(
+    fragmentManager: FragmentManager,
+    lifecycle: Lifecycle
+) : FragmentStateAdapter(fragmentManager, lifecycle) {
+    override fun getItemCount() = 2
+    override fun createFragment(
+        position: Int
+    ) = when (position) {
+        0 -> AccountsListFragment()
+        else -> SelectedAccountFragment()
     }
 }

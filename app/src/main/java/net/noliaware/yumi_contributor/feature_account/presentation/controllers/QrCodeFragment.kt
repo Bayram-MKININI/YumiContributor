@@ -137,6 +137,7 @@ class QrCodeFragment : AppCompatDialogFragment() {
     }
 
     override fun onDestroyView() {
+        qrCodeView?.callback = null
         qrCodeView = null
         super.onDestroyView()
     }

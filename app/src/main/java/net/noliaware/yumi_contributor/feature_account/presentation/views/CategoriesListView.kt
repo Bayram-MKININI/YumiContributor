@@ -16,8 +16,7 @@ import net.noliaware.yumi_contributor.commun.util.activateShimmer
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.inflate
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
-import net.noliaware.yumi_contributor.commun.util.weak
-import net.noliaware.yumi_contributor.feature_account.presentation.views.CategoryItemView.*
+import net.noliaware.yumi_contributor.feature_account.presentation.views.CategoryItemView.CategoryItemViewAdapter
 
 class CategoriesListView @JvmOverloads constructor(
     context: Context,
@@ -29,7 +28,7 @@ class CategoriesListView @JvmOverloads constructor(
     private lateinit var shimmerRecyclerView: RecyclerView
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerAdapter: BaseAdapter<CategoryItemViewAdapter>
-    var callback: CategoriesListViewCallback? by weak()
+    var callback: CategoriesListViewCallback? = null
 
     fun interface CategoriesListViewCallback {
         fun onCategoryClickedAtIndex(index: Int)

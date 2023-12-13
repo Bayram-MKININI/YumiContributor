@@ -12,7 +12,6 @@ import net.noliaware.yumi_contributor.commun.util.layoutToBottomLeft
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.layoutToTopRight
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
-import net.noliaware.yumi_contributor.commun.util.weak
 import kotlin.math.max
 
 class AccountItemView @JvmOverloads constructor(
@@ -25,7 +24,7 @@ class AccountItemView @JvmOverloads constructor(
     private lateinit var countTextView: TextView
     private lateinit var phoneImageView: ImageView
     private lateinit var separatorView: View
-    var callback: AccountsListItemViewCallback? by weak()
+    var callback: AccountsListItemViewCallback? = null
 
     fun interface AccountsListItemViewCallback {
         fun onPhoneButtonClicked()

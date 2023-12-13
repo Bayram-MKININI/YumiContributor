@@ -15,7 +15,6 @@ import net.noliaware.yumi_contributor.commun.util.layoutToBottomLeft
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import net.noliaware.yumi_contributor.commun.util.removeOverScroll
-import net.noliaware.yumi_contributor.commun.util.weak
 
 class MessagingView @JvmOverloads constructor(
     context: Context,
@@ -31,8 +30,7 @@ class MessagingView @JvmOverloads constructor(
     private lateinit var contentView: View
     private lateinit var viewPager: ViewPager2
     private lateinit var composeButton: View
-
-    var callback: MailViewCallback? by weak()
+    var callback: MailViewCallback? = null
 
     val getViewPager get() = viewPager
 

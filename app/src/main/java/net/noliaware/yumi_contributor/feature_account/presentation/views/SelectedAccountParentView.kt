@@ -9,7 +9,6 @@ import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.util.activateShimmer
 import net.noliaware.yumi_contributor.commun.util.convertDpToPx
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
-import net.noliaware.yumi_contributor.commun.util.weak
 
 class SelectedAccountParentView @JvmOverloads constructor(
     context: Context,
@@ -20,10 +19,9 @@ class SelectedAccountParentView @JvmOverloads constructor(
     private lateinit var backLayout: View
     private lateinit var shimmerView: ShimmerFrameLayout
     private lateinit var selectedAccountView: SelectedAccountView
+    var callback: SelectedAccountViewCallback? = null
 
     val getViewPager get() = selectedAccountView.getViewPager
-
-    var callback: SelectedAccountViewCallback? by weak()
 
     fun interface SelectedAccountViewCallback {
         fun onBackButtonClicked()

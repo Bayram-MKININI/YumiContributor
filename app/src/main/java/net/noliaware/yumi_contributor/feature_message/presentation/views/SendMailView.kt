@@ -24,7 +24,6 @@ import net.noliaware.yumi_contributor.commun.util.layoutToTopRight
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import net.noliaware.yumi_contributor.commun.util.sizeForVisible
 import net.noliaware.yumi_contributor.commun.util.translateYByValue
-import net.noliaware.yumi_contributor.commun.util.weak
 import kotlin.math.max
 
 class SendMailView @JvmOverloads constructor(
@@ -55,7 +54,7 @@ class SendMailView @JvmOverloads constructor(
     private lateinit var mailEditText: EditText
     private lateinit var sendButton: View
     private val visibleBounds = Rect()
-    var callback: SendMailViewCallback? by weak()
+    var callback: SendMailViewCallback? = null
 
     interface SendMailViewCallback {
         fun onBackButtonClicked()

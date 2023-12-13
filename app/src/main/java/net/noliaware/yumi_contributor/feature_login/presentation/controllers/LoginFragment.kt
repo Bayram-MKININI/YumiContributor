@@ -202,6 +202,8 @@ class LoginFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        loginLayout?.getLoginView?.callback = null
+        loginLayout?.getPasswordView?.callback = null
         loginLayout = null
         super.onDestroyView()
     }

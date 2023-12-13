@@ -17,6 +17,12 @@
             app:popUpToInclusive="true" />
     </fragment>
 
+    <action
+        android:id="@+id/action_back_to_LoginFragment"
+        app:destination="@id/login_fragment"
+        app:popUpTo="@id/app_nav_graph"
+        app:popUpToInclusive="true" />
+
     <fragment
         android:id="@+id/home_fragment"
         android:name="net.noliaware.yumi_contributor.feature_account.presentation.controllers.HomeFragment"

@@ -137,6 +137,7 @@ class VoucherOngoingRequestListFragment : AppCompatDialogFragment() {
     }
 
     override fun onDestroyView() {
+        requestsListView?.callback = null
         requestsListView = null
         super.onDestroyView()
     }

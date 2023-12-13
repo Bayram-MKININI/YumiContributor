@@ -17,8 +17,8 @@ object QRCodeGenerator {
             for (x in 0 until size) {
                 for (y in 0 until size) {
                     bitmap.setPixel(x, y, if (bitMatrix[x, y]) Color.BLACK else Color.WHITE)
-                    yield()
                 }
+                yield()
             }
 
             return bitmap

@@ -69,20 +69,21 @@ class MessagingFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        messagingView?.callback = null
         messagingView = null
         super.onDestroyView()
     }
+}
 
-    private class MessageFragmentStateAdapter(
-        fragmentManager: FragmentManager,
-        lifecycle: Lifecycle
-    ) : FragmentStateAdapter(fragmentManager, lifecycle) {
-        override fun getItemCount() = 2
-        override fun createFragment(position: Int): Fragment {
-            return when (position) {
-                0 -> ReceivedMessagesFragment()
-                else -> SentMessagesFragment()
-            }
-        }
+private class MessageFragmentStateAdapter(
+    fragmentManager: FragmentManager,
+    lifecycle: Lifecycle
+) : FragmentStateAdapter(fragmentManager, lifecycle) {
+    override fun getItemCount() = 2
+    override fun createFragment(
+        position: Int
+    ) = when (position) {
+        0 -> ReceivedMessagesFragment()
+        else -> SentMessagesFragment()
     }
 }

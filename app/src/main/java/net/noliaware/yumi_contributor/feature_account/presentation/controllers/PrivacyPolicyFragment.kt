@@ -86,6 +86,7 @@ class PrivacyPolicyFragment : AppCompatDialogFragment() {
 
     override fun onDestroyView() {
         privacyPolicyView?.destroyWebPage()
+        privacyPolicyView?.callback = null
         privacyPolicyView = null
         super.onDestroyView()
     }

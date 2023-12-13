@@ -17,7 +17,6 @@ import net.noliaware.yumi_contributor.commun.util.hideKeyboard
 import net.noliaware.yumi_contributor.commun.util.isLoginNotValid
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
-import net.noliaware.yumi_contributor.commun.util.weak
 
 class LoginView @JvmOverloads constructor(
     context: Context,
@@ -31,8 +30,7 @@ class LoginView @JvmOverloads constructor(
     private lateinit var inputLogin: EditText
     private lateinit var confirmImageView: ImageView
     private lateinit var confirmTextView: TextView
-
-    var callback: LoginViewCallback? by weak()
+    var callback: LoginViewCallback? = null
 
     fun interface LoginViewCallback {
         fun onLoginEntered(login: String)

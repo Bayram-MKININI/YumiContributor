@@ -20,7 +20,6 @@ import net.noliaware.yumi_contributor.commun.util.getStatusBarHeight
 import net.noliaware.yumi_contributor.commun.util.layoutToBottomLeft
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
-import net.noliaware.yumi_contributor.commun.util.weak
 import kotlin.math.min
 import kotlin.math.roundToInt
 
@@ -42,8 +41,7 @@ class QrCodeView @JvmOverloads constructor(
     private lateinit var qrCodeImageView: ImageView
     private lateinit var layerView: View
     private lateinit var useVoucherLayout: LinearLayoutCompat
-
-    var callback: QrCodeViewCallback? by weak()
+    var callback: QrCodeViewCallback? = null
 
     data class QrCodeViewAdapter(
         val color: Int,

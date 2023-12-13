@@ -101,6 +101,7 @@ class AvailableCategoriesListFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        categoriesListView?.callback = null
         categoriesListView = null
         super.onDestroyView()
     }

@@ -22,7 +22,6 @@ import net.noliaware.yumi_contributor.commun.util.inflate
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.layoutToTopRight
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
-import net.noliaware.yumi_contributor.commun.util.weak
 import net.noliaware.yumi_contributor.feature_account.presentation.adapters.FilteredManagedAccountsAdapter
 import net.noliaware.yumi_contributor.feature_account.presentation.adapters.PaginatedManagedAccountsAdapter
 
@@ -41,7 +40,7 @@ class AccountsListView @JvmOverloads constructor(
     private lateinit var shimmerRecyclerView: RecyclerView
     private lateinit var accountsRecyclerView: RecyclerView
     private lateinit var filteredAccountRecyclerView: RecyclerView
-    var callback: AccountsListViewCallback? by weak()
+    var callback: AccountsListViewCallback? = null
 
     var paginatedManagedAccountsAdapter
         get() = accountsRecyclerView.adapter as PaginatedManagedAccountsAdapter

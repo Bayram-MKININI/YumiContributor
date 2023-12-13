@@ -81,6 +81,7 @@ class BOSignInFragment : AppCompatDialogFragment() {
     }
 
     override fun onDestroyView() {
+        boSignInView?.callback = null
         boSignInView = null
         super.onDestroyView()
     }

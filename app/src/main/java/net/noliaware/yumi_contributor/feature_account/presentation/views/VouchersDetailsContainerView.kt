@@ -23,7 +23,6 @@ import net.noliaware.yumi_contributor.commun.util.layoutToBottomLeft
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import net.noliaware.yumi_contributor.commun.util.tint
-import net.noliaware.yumi_contributor.commun.util.weak
 
 class VouchersDetailsContainerView @JvmOverloads constructor(
     context: Context,
@@ -40,7 +39,8 @@ class VouchersDetailsContainerView @JvmOverloads constructor(
     private lateinit var vouchersDetailsView: VouchersDetailsView
     private lateinit var displayVoucherLayout: LinearLayoutCompat
     private lateinit var voucherStatusTextView: TextView
-    var callback: VouchersDetailsViewCallback? by weak()
+    var callback: VouchersDetailsViewCallback? = null
+
     val getRequestSpinner get() = vouchersDetailsView.requestSpinner
 
     data class VouchersDetailsViewAdapter(

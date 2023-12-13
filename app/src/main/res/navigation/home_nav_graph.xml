@@ -29,6 +29,12 @@
             app:destination="@id/cancelled_vouchers_list_fragment" />
     </fragment>
 
+    <action
+        android:id="@+id/action_go_to_ManagedAccount"
+        app:destination="@id/managed_account_fragment"
+        app:popUpTo="@id/managed_account_fragment"
+        app:popUpToInclusive="true" />
+
     <dialog
         android:id="@+id/available_vouchers_list_fragment"
         android:name="net.noliaware.yumi_contributor.feature_account.presentation.controllers.AvailableVouchersListFragment"
@@ -138,6 +144,12 @@
             app:destination="@id/privacy_policy_fragment" />
     </fragment>
 
+    <action
+        android:id="@+id/action_go_to_UserProfileFragment"
+        app:destination="@id/user_profile_fragment"
+        app:popUpTo="@id/user_profile_fragment"
+        app:popUpToInclusive="true" />
+
     <dialog
         android:id="@+id/bo_sign_in_fragment"
         android:name="net.noliaware.yumi_contributor.feature_profile.presentation.controllers.BOSignInFragment"
@@ -175,6 +187,12 @@
             android:id="@+id/action_MessagingFragment_to_ReadOutboxMailFragment"
             app:destination="@id/read_outbox_mail_fragment" />
     </fragment>
+
+    <action
+        android:id="@+id/action_go_to_MessagingFragment"
+        app:destination="@id/messaging_fragment"
+        app:popUpTo="@id/messaging_fragment"
+        app:popUpToInclusive="true" />
 
     <dialog
         android:id="@+id/send_mail_fragment"
@@ -224,4 +242,10 @@
         android:name="net.noliaware.yumi_contributor.feature_alerts.presentation.controllers.AlertsFragment"
         android:label="@string/alerts_fragment_screen_label"
         tools:layout="@layout/alerts_layout" />
+
+    <action
+        android:id="@+id/action_go_to_AlertsFragment"
+        app:destination="@id/alerts_fragment"
+        app:popUpTo="@id/alerts_fragment"
+        app:popUpToInclusive="true" />
 </navigation>
