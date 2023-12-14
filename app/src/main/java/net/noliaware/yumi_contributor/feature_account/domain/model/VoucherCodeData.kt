@@ -9,7 +9,8 @@ import kotlinx.parcelize.Parcelize
 data class VoucherCodeData(
     val voucherId: String?,
     val productLabel: String?,
-    val voucherDate: String,
+    val voucherStartDate: String,
+    val voucherEndDate: String,
     val voucherCode: String?,
     val voucherCodeSize: Int
 ) : Parcelable

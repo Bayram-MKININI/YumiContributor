@@ -12,9 +12,11 @@ enum class VoucherStatus(val value: Int) {
 
 enum class VoucherDeliveryStatus(val value: Int) {
     AVAILABLE(1),
-    NON_AVAILABLE(2),
+    NON_AVAILABLE(21),
+    ON_HOLD(22),
     NON_RETRIEVABLE(3),
     NONE(0);
+
     companion object {
         fun fromValue(value: Int?) = entries.firstOrNull { it.value == value }
     }

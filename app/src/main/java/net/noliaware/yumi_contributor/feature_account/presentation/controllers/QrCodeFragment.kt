@@ -26,6 +26,7 @@ import net.noliaware.yumi_contributor.commun.util.handleSharedEvent
 import net.noliaware.yumi_contributor.commun.util.navDismiss
 import net.noliaware.yumi_contributor.commun.util.parseDateToFormat
 import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromSharedEvent
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherCodeData
 import net.noliaware.yumi_contributor.feature_account.presentation.views.QrCodeView
 import net.noliaware.yumi_contributor.feature_account.presentation.views.QrCodeView.QrCodeViewAdapter
 import net.noliaware.yumi_contributor.feature_account.presentation.views.QrCodeView.QrCodeViewCallback
@@ -91,26 +92,35 @@ class QrCodeFragment : AppCompatDialogFragment() {
                     color = args.categoryUI.categoryColor,
                     iconName = args.categoryUI.categoryIcon,
                     title = voucherCodeData.productLabel.orEmpty(),
-                    date = mapCodeDate(voucherCodeData.voucherDate)
+                    date = mapCodeDate(voucherCodeData)
                 )
             )
         }
     }
 
-    private fun mapCodeDate(dateStr: String): SpannableString {
-        val expiryDate = dateStr.parseDateToFormat(DateTime.SHORT_DATE_FORMAT)
+    private fun mapCodeDate(
+        voucherCodeData: VoucherCodeData
+    ): SpannableString {
+        val startDate = voucherCodeData.voucherStartDate.parseDateToFormat(DateTime.SHORT_DATE_FORMAT)
+        val expiryDate = voucherCodeData.voucherEndDate.parseDateToFormat(DateTime.SHORT_DATE_FORMAT)
         return getString(
-            R.string.usable_end_date,
+            R.string.voucher_date,
+            startDate,
             expiryDate
         ).decorateWords(
             wordsToDecorate = listOf(
-                DecoratedText(
-                    textToDecorate = expiryDate,
-                    typeface = context?.getFontFromResources(R.font.omnes_semibold_regular)
-                )
+                decorateTextWithFont(startDate),
+                decorateTextWithFont(expiryDate)
             )
         )
     }
+
+    private fun decorateTextWithFont(
+        date: String
+    ) = DecoratedText(
+        textToDecorate = date,
+        typeface = context?.getFontFromResources(R.font.omnes_semibold_regular)
+    )
 
     private val qrCodeViewCallback: QrCodeViewCallback by lazy {
         object : QrCodeViewCallback {

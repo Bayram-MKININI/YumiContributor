@@ -37,6 +37,7 @@
     <string name="used_vouchers_list">Liste des coupons utilisés de la catégorie %s</string>
     <string name="cancelled_vouchers_list">Liste des coupons annulés de la catégorie %s</string>
     <string name="usable_start_date">Utilisable à partir du %s</string>
+    <string name="on_hold">En attente</string>
     <string name="usage_date">Utilisé le %s</string>
     <string name="cancellation_date">Annulé le %s</string>
     <string name="usable_end_date">Utilisable jusqu\'au %s</string>
@@ -46,6 +47,7 @@
 
     //Vouchers
     <string name="voucher_number">Numéro: %s</string>
+    <string name="voucher_date">Utilisable du %s au %s</string>
     <string name="comment">Commentaire</string>
     <string name="send">Envoyer</string>
     <string name="requests_in_progress">Demandes en cours</string>
@@ -67,6 +69,7 @@
     <string name="application_not_found">Application cartographique introuvable</string>
     <string name="use_voucher_message">CLIQUEZ SUR \"UTILISER CE COUPON\" POUR L\'ACTIVER</string>
     <string name="voucher_non_available">NON DISPONIBLE</string>
+    <string name="voucher_on_hold">EN ATTENTE</string>
     <string name="voucher_non_retrievable">NON RÉCUPÉRABLE</string>
     <string name="voucher_used">UTILISÉ</string>
     <string name="voucher_canceled">ANNULÉ</string>

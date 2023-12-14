@@ -129,7 +129,7 @@ class QrCodeView @JvmOverloads constructor(
         )
 
         val parentContentViewHeight = viewHeight - (headerView.measuredHeight + categoryImageView.measuredHeight / 2 +
-                    convertDpToPx(25))
+                convertDpToPx(25))
 
         contentView.measure(
             MeasureSpec.makeMeasureSpec(viewWidth * 95 / 100, MeasureSpec.EXACTLY),
@@ -199,9 +199,15 @@ class QrCodeView @JvmOverloads constructor(
             titleTextView.bottom + convertDpToPx(5)
         )
 
+        useVoucherLayout.layoutToBottomLeft(
+            (contentView.measuredWidth - useVoucherLayout.measuredWidth) / 2,
+            contentView.measuredHeight - convertDpToPx(40)
+        )
+
+        val availableSpaceForQrCode = useVoucherLayout.top - dateTextView.bottom
         qrCodeBackgroundView.layoutToTopLeft(
             (contentView.measuredWidth - qrCodeBackgroundView.measuredWidth) / 2,
-            (contentView.measuredHeight - qrCodeBackgroundView.measuredHeight) / 2
+            dateTextView.bottom + (availableSpaceForQrCode - qrCodeBackgroundView.measuredHeight) / 2
         )
 
         qrCodeImageView.layoutToTopLeft(
@@ -215,10 +221,5 @@ class QrCodeView @JvmOverloads constructor(
                 qrCodeImageView.top
             )
         }
-
-        useVoucherLayout.layoutToBottomLeft(
-            (contentView.measuredWidth - useVoucherLayout.measuredWidth) / 2,
-            contentView.measuredHeight - convertDpToPx(40)
-        )
     }
 }

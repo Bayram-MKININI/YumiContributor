@@ -39,7 +39,7 @@ import net.noliaware.yumi_contributor.commun.util.redirectToLoginScreenFromShare
 import net.noliaware.yumi_contributor.commun.util.safeNavigate
 import net.noliaware.yumi_contributor.feature_account.domain.model.Voucher
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherCodeData
-import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherDeliveryStatus
+import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherDeliveryStatus.*
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherRetrievalMode
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherRetrievalMode.BENEFICIARY
 import net.noliaware.yumi_contributor.feature_account.domain.model.VoucherRetrievalMode.BOTH
@@ -181,7 +181,7 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
                 retailerLabel = voucher.retailerLabel.orEmpty(),
                 retailerAddress = retailerAddress,
                 retrievalMode = mapRetrievalMode(voucher.voucherRetrievalMode),
-                voucherStatusAvailable = voucher.voucherDeliveryStatus != VoucherDeliveryStatus.AVAILABLE,
+                voucherStatusAvailable = voucher.voucherDeliveryStatus != AVAILABLE,
                 voucherStatus = mapVoucherStatus(voucher)
             )
         )
@@ -198,19 +198,12 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
         voucher: Voucher
     ) = when (voucher.voucherStatus) {
         USABLE -> {
-            if (voucher.voucherExpiryDate != null) {
-                val expiryDate = voucher.voucherExpiryDate.parseDateToFormat(SHORT_DATE_FORMAT)
-                decorateTextWithFont(
-                    getString(R.string.usable_end_date, expiryDate),
-                    listOf(expiryDate)
-                )
-            } else {
-                val startDate = voucher.voucherStartDate?.parseDateToFormat(SHORT_DATE_FORMAT).orEmpty()
-                decorateTextWithFont(
-                    getString(R.string.usable_start_date, startDate),
-                    listOf(startDate)
-                )
-            }
+            val expiryDate = voucher.voucherExpiryDate?.parseDateToFormat(SHORT_DATE_FORMAT).orEmpty()
+            val startDate = voucher.voucherStartDate?.parseDateToFormat(SHORT_DATE_FORMAT).orEmpty()
+            decorateTextWithFont(
+                getString(R.string.voucher_date, startDate, expiryDate),
+                listOf(startDate, expiryDate)
+            )
         }
         USED -> {
             val usageDate = voucher.voucherUseDate?.parseDateToFormat(SHORT_DATE_FORMAT).orEmpty()
@@ -262,8 +255,9 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
     ) = when (voucher.voucherStatus) {
         USABLE -> {
             when (voucher.voucherDeliveryStatus) {
-                VoucherDeliveryStatus.NON_AVAILABLE -> getString(R.string.voucher_non_available)
-                VoucherDeliveryStatus.NON_RETRIEVABLE -> getString(R.string.voucher_non_retrievable)
+                NON_AVAILABLE -> getString(R.string.voucher_non_available)
+                ON_HOLD -> getString(R.string.voucher_on_hold)
+                NON_RETRIEVABLE -> getString(R.string.voucher_non_retrievable)
                 else -> ""
             }
         }
@@ -356,7 +350,8 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
                             VoucherCodeData(
                                 voucherId = voucher.voucherId,
                                 productLabel = voucher.productLabel,
-                                voucherDate = voucher.voucherExpiryDate.orEmpty(),
+                                voucherStartDate = voucher.voucherStartDate.orEmpty(),
+                                voucherEndDate = voucher.voucherExpiryDate.orEmpty(),
                                 voucherCode = voucher.voucherCode,
                                 voucherCodeSize = resources.displayMetrics.widthPixels
                             )
