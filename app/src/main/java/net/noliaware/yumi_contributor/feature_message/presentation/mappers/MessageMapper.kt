@@ -31,7 +31,7 @@ interface MessageMapper {
         time = resolveTime(message.messageDate, message.messageTime),
         mail = resolveMail(context, message),
         body = message.messagePreview.orEmpty(),
-        opened = message.isMessageRead
+        opened = message.messageHasBeenRead
     )
 
     fun resolveMail(context: Context, message: Message): String

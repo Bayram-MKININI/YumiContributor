@@ -23,17 +23,17 @@ class OutboxMessagePagingSource(
     private val sessionData: SessionData
 ) : PagingSource<Int, Message>() {
 
-    override fun getRefreshKey(state: PagingState<Int, Message>): Int? {
-        return state.anchorPosition?.let { anchorPosition ->
-            state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
-                ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
+    override fun getRefreshKey(
+        state: PagingState<Int, Message>
+    ) = state.anchorPosition?.let { anchorPosition ->
+        state.closestPageToPosition(anchorPosition)?.let {
+            it.prevKey?.plus(1) ?: it.nextKey?.minus(1)
         }
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Message> {
         try {
-            // Start refresh at page 1 if undefined.
-            val nextPage = params.key ?: 0
+            val position = params.key ?: 0
 
             val timestamp = currentTimeInMillis()
             val randomString = randomString()
@@ -46,7 +46,11 @@ class OutboxMessagePagingSource(
                     methodName = GET_OUTBOX_MESSAGE_LIST,
                     randomString = randomString
                 ),
-                params = generateGetMessagesListParams(nextPage, GET_OUTBOX_MESSAGE_LIST)
+                params = generateGetMessagesListParams(
+                    offset = position * LIST_PAGE_SIZE,
+                    loadSize = params.loadSize,
+                    tokenKey = GET_OUTBOX_MESSAGE_LIST
+                )
             )
 
             val serviceError = resolvePaginatedListErrorIfAny(
@@ -59,8 +63,6 @@ class OutboxMessagePagingSource(
                 throw PaginationException(serviceError)
             }
 
-            val messageRank = remoteData.data?.messageDTOList?.lastOrNull()?.messageRank ?: nextPage
-
             val moreItemsAvailable = remoteData.data?.messageDTOList?.lastOrNull()?.let { messageDTO ->
                 if (messageDTO.messageRank != null && messageDTO.messageCount != null) {
                     messageDTO.messageRank < messageDTO.messageCount
@@ -69,22 +71,33 @@ class OutboxMessagePagingSource(
                 }
             }
 
-            val canLoadMore = moreItemsAvailable == true
+            val nextKey = if (moreItemsAvailable == true) {
+                // initial load size = 3 * NETWORK_PAGE_SIZE
+                // ensure we're not requesting duplicating items, at the 2nd request
+                position + (params.loadSize / LIST_PAGE_SIZE)
+            } else {
+                null
+            }
+            val prevKey = if (position == 0) null else position - 1
 
             return LoadResult.Page(
                 data = remoteData.data?.messageDTOList?.map { it.toMessage() }.orEmpty(),
-                prevKey = null,// Only paging forward.
-                nextKey = if (canLoadMore) messageRank else null
+                prevKey = prevKey,
+                nextKey = nextKey
             )
         } catch (ex: Exception) {
             return handlePagingSourceError(ex)
         }
     }
 
-    private fun generateGetMessagesListParams(offset: Int, tokenKey: String) = mutableMapOf(
-        LIMIT to LIST_PAGE_SIZE.toString(),
-        OFFSET to offset.toString()
+    private fun generateGetMessagesListParams(
+        offset: Int,
+        loadSize: Int,
+        tokenKey: String
+    ) = mutableMapOf(
+        OFFSET to offset.toString(),
+        LIMIT to loadSize.toString()
     ).also {
-        it.plusAssign(getCommonWSParams(sessionData, tokenKey))
+        it += getCommonWSParams(sessionData, tokenKey)
     }.toMap()
 }

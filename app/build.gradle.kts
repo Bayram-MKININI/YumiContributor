@@ -108,8 +108,8 @@ dependencies {
     ksp("com.google.dagger:hilt-compiler:2.49")
 
     // UI
-    implementation("com.google.android.material:material:1.10.0")
-    implementation("androidx.activity:activity-ktx:1.8.1")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("androidx.activity:activity-ktx:1.8.2")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.paging:paging-runtime-ktx:3.2.1")
@@ -119,8 +119,8 @@ dependencies {
     implementation("com.facebook.shimmer:shimmer:0.5.0")
 
     // Navigation
-    implementation("androidx.navigation:navigation-fragment-ktx:2.7.5")
-    implementation("androidx.navigation:navigation-ui-ktx:2.7.5")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.6")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.6")
 
     // Utils
     implementation("com.google.zxing:zxingorg:3.5.1")

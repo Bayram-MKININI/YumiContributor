@@ -4,7 +4,6 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import net.noliaware.yumi_contributor.commun.ApiConstants.GET_ALERT_LIST
 import net.noliaware.yumi_contributor.commun.ApiParameters.LIMIT
-import net.noliaware.yumi_contributor.commun.ApiParameters.LIST_PAGE_SIZE
 import net.noliaware.yumi_contributor.commun.ApiParameters.TIMESTAMP_OFFSET
 import net.noliaware.yumi_contributor.commun.data.remote.RemoteApi
 import net.noliaware.yumi_contributor.commun.domain.model.SessionData
@@ -23,11 +22,12 @@ class AlertPagingSource(
     private val sessionData: SessionData
 ) : PagingSource<Long, Alert>() {
 
-    override fun getRefreshKey(state: PagingState<Long, Alert>): Nothing? = null
+    override fun getRefreshKey(
+        state: PagingState<Long, Alert>
+    ): Nothing? = null
 
     override suspend fun load(params: LoadParams<Long>): LoadResult<Long, Alert> {
         try {
-            // Start refresh at page 1 if undefined.
             val nextTimestamp = params.key ?: 0
 
             val timestamp = currentTimeInMillis()
@@ -41,7 +41,11 @@ class AlertPagingSource(
                     methodName = GET_ALERT_LIST,
                     randomString = randomString
                 ),
-                params = generateGetAlertsListParams(nextTimestamp, GET_ALERT_LIST)
+                params = generateGetAlertsListParams(
+                    timestamp = nextTimestamp,
+                    loadSize = params.loadSize,
+                    tokenKey = GET_ALERT_LIST
+                )
             )
 
             val serviceError = resolvePaginatedListErrorIfAny(
@@ -72,10 +76,14 @@ class AlertPagingSource(
         }
     }
 
-    private fun generateGetAlertsListParams(timestamp: Long, tokenKey: String) = mutableMapOf(
+    private fun generateGetAlertsListParams(
+        timestamp: Long,
+        loadSize: Int,
+        tokenKey: String
+    ) = mutableMapOf(
         TIMESTAMP_OFFSET to timestamp.toString(),
-        LIMIT to LIST_PAGE_SIZE.toString()
+        LIMIT to loadSize.toString()
     ).also {
-        it.plusAssign(getCommonWSParams(sessionData, tokenKey))
+        it += getCommonWSParams(sessionData, tokenKey)
     }.toMap()
 }

@@ -98,8 +98,7 @@ class ManagedAccountsFragment : Fragment(), OnBackPressedHandler {
         }
     }
 
-    override fun onBackPressedHandled() =
-        if (managedAccountsParentView?.getViewPager?.currentItem == 1) {
+    override fun onBackPressedHandled() = if (managedAccountsParentView?.getViewPager?.currentItem == 1) {
             managedAccountsViewModel.sendBackButtonClickedEvent()
             true
         } else {

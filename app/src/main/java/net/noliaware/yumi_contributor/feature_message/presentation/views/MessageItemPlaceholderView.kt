@@ -18,6 +18,7 @@ class MessageItemPlaceholderView @JvmOverloads constructor(
     private lateinit var iconView: View
     private lateinit var timeView: View
     private lateinit var subjectView: View
+    private lateinit var mailView: View
     private lateinit var bodyView: View
 
     override fun onFinishInflate() {
@@ -29,6 +30,7 @@ class MessageItemPlaceholderView @JvmOverloads constructor(
         iconView = findViewById(R.id.icon_view)
         timeView = findViewById(R.id.time_view)
         subjectView = findViewById(R.id.subject_view)
+        mailView = findViewById(R.id.mail_view)
         bodyView = findViewById(R.id.body_view)
     }
 
@@ -48,12 +50,16 @@ class MessageItemPlaceholderView @JvmOverloads constructor(
             MeasureSpec.makeMeasureSpec(viewWidth * 1 / 2, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(convertDpToPx(15), MeasureSpec.EXACTLY)
         )
+        mailView.measure(
+            MeasureSpec.makeMeasureSpec(viewWidth * 4 / 10, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(convertDpToPx(14), MeasureSpec.EXACTLY)
+        )
         val bodyWidth = viewWidth - (iconView.measuredWidth + convertDpToPx(25))
         bodyView.measure(
             MeasureSpec.makeMeasureSpec(bodyWidth, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(convertDpToPx(25), MeasureSpec.EXACTLY)
         )
-        viewHeight = subjectView.measuredHeight + bodyView.measuredHeight + convertDpToPx(30)
+        viewHeight = subjectView.measuredHeight + mailView.measuredHeight + bodyView.measuredHeight + convertDpToPx(40)
 
         setMeasuredDimension(
             MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
@@ -80,9 +86,14 @@ class MessageItemPlaceholderView @JvmOverloads constructor(
             subjectView.top
         )
 
-        bodyView.layoutToTopLeft(
+        mailView.layoutToTopLeft(
             subjectView.left,
             subjectView.bottom + convertDpToPx(10)
+        )
+
+        bodyView.layoutToTopLeft(
+            subjectView.left,
+            mailView.bottom + convertDpToPx(10)
         )
     }
 }

@@ -17,6 +17,6 @@ data class Message(
     val messagePriority: Priority?,
     val messageSubject: String,
     val messagePreview: String?,
-    val isMessageRead: Boolean,
+    val messageHasBeenRead: Boolean?,
     val messageBody: String?
 ) : Parcelable

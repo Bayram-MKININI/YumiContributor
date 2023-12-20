@@ -25,17 +25,17 @@ class AvailableVoucherPagingSource(
     private val categoryId: String
 ) : PagingSource<Int, Voucher>() {
 
-    override fun getRefreshKey(state: PagingState<Int, Voucher>): Int? {
-        return state.anchorPosition?.let { anchorPosition ->
-            state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
-                ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
+    override fun getRefreshKey(
+        state: PagingState<Int, Voucher>
+    ) = state.anchorPosition?.let { anchorPosition ->
+        state.closestPageToPosition(anchorPosition)?.let {
+            it.prevKey?.plus(1) ?: it.nextKey?.minus(1)
         }
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Voucher> {
         try {
-            // Start refresh at page 1 if undefined.
-            val nextPage = params.key ?: 0
+            val position = params.key ?: 0
 
             val timestamp = currentTimeInMillis()
             val randomString = randomString()
@@ -49,9 +49,10 @@ class AvailableVoucherPagingSource(
                     randomString = randomString
                 ),
                 params = generateWSParams(
-                    categoryId,
-                    nextPage,
-                    GET_AVAILABLE_VOUCHER_LIST_BY_CATEGORY
+                    categoryId = categoryId,
+                    offset = position,
+                    loadSize = params.loadSize,
+                    tokenKey = GET_AVAILABLE_VOUCHER_LIST_BY_CATEGORY
                 )
             )
 
@@ -65,8 +66,6 @@ class AvailableVoucherPagingSource(
                 throw PaginationException(serviceError)
             }
 
-            val voucherRank = remoteData.data?.voucherDTOList?.lastOrNull()?.voucherRank ?: nextPage
-
             val moreItemsAvailable = remoteData.data?.voucherDTOList?.lastOrNull()?.let { voucherDTO ->
                 if (voucherDTO.voucherRank != null && voucherDTO.voucherCount != null) {
                     voucherDTO.voucherRank < voucherDTO.voucherCount
@@ -75,12 +74,19 @@ class AvailableVoucherPagingSource(
                 }
             }
 
-            val canLoadMore = moreItemsAvailable == true
+            val nextKey = if (moreItemsAvailable == true) {
+                // initial load size = 3 * NETWORK_PAGE_SIZE
+                // ensure we're not requesting duplicating items, at the 2nd request
+                position + (params.loadSize / LIST_PAGE_SIZE)
+            } else {
+                null
+            }
+            val prevKey = if (position == 0) null else position - 1
 
             return LoadResult.Page(
                 data = remoteData.data?.voucherDTOList?.map { it.toVoucher() }.orEmpty(),
-                prevKey = null,// Only paging forward.
-                nextKey = if (canLoadMore) voucherRank else null
+                prevKey = prevKey,
+                nextKey = nextKey
             )
         } catch (ex: Exception) {
             return handlePagingSourceError(ex)
@@ -90,12 +96,13 @@ class AvailableVoucherPagingSource(
     private fun generateWSParams(
         categoryId: String,
         offset: Int,
+        loadSize: Int,
         tokenKey: String
     ) = mutableMapOf(
         CATEGORY_ID to categoryId,
-        LIMIT to LIST_PAGE_SIZE.toString(),
-        OFFSET to offset.toString()
+        OFFSET to offset.toString(),
+        LIMIT to loadSize.toString()
     ).also {
-        it.plusAssign(getCommonWSParams(sessionData, tokenKey))
+        it += getCommonWSParams(sessionData, tokenKey)
     }.toMap()
 }

@@ -40,7 +40,7 @@
         android:fontFamily="@font/omnes_regular"
         android:maxLines="1"
         android:textColor="@color/grey_2"
-        android:textSize="15sp"
+        android:textSize="14sp"
         tools:text="De: contact@noliaware.com" />
 
     <com.google.android.material.textview.MaterialTextView

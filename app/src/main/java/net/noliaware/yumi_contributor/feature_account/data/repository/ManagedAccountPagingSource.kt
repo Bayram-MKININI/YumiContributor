@@ -22,17 +22,13 @@ class ManagedAccountPagingSource(
     private val api: RemoteApi, private val sessionData: SessionData
 ) : PagingSource<Int, ManagedAccount>() {
 
-    override fun getRefreshKey(state: PagingState<Int, ManagedAccount>): Int? {
-        return state.anchorPosition?.let { anchorPosition ->
-            state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
-                ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
-        }
-    }
+    override fun getRefreshKey(
+        state: PagingState<Int, ManagedAccount>
+    ): Nothing? = null
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ManagedAccount> {
         try {
-            // Start refresh at page 1 if undefined.
-            val nextPage = params.key ?: 0
+            val position = params.key ?: 0
 
             val timestamp = currentTimeInMillis()
             val randomString = randomString()
@@ -45,7 +41,11 @@ class ManagedAccountPagingSource(
                     methodName = GET_MANAGED_ACCOUNT_LIST,
                     randomString = randomString
                 ),
-                params = generateWSParams(nextPage, GET_MANAGED_ACCOUNT_LIST)
+                params = generateWSParams(
+                    offset = position,
+                    loadSize = params.loadSize,
+                    tokenKey = GET_MANAGED_ACCOUNT_LIST
+                )
             )
 
             val serviceError = resolvePaginatedListErrorIfAny(
@@ -58,8 +58,6 @@ class ManagedAccountPagingSource(
                 throw PaginationException(serviceError)
             }
 
-            val profileRank = remoteData.data?.accountsDTOs?.lastOrNull()?.accountRank ?: nextPage
-
             val moreItemsAvailable = remoteData.data?.accountsDTOs?.lastOrNull()?.let { accountDTO ->
                 if (accountDTO.accountRank != null && accountDTO.accountCount != null) {
                     accountDTO.accountRank < accountDTO.accountCount
@@ -68,21 +66,32 @@ class ManagedAccountPagingSource(
                 }
             }
 
-            val canLoadMore = moreItemsAvailable == true
+            val nextKey = if (moreItemsAvailable == true) {
+                // initial load size = 3 * NETWORK_PAGE_SIZE
+                // ensure we're not requesting duplicating items, at the 2nd request
+                position + (params.loadSize / LIST_PAGE_SIZE)
+            } else {
+                null
+            }
 
-            return LoadResult.Page(data = remoteData.data?.accountsDTOs?.map { it.toManagedAccount() }
-                .orEmpty(),
+            return LoadResult.Page(
+                data = remoteData.data?.accountsDTOs?.map { it.toManagedAccount() }.orEmpty(),
                 prevKey = null,// Only paging forward.
-                nextKey = if (canLoadMore) profileRank else null)
+                nextKey = nextKey
+            )
         } catch (ex: Exception) {
             return handlePagingSourceError(ex)
         }
     }
 
-    private fun generateWSParams(offset: Int, tokenKey: String) = mutableMapOf(
-        LIMIT to LIST_PAGE_SIZE.toString(),
-        OFFSET to offset.toString()
+    private fun generateWSParams(
+        offset: Int,
+        loadSize: Int,
+        tokenKey: String
+    ) = mutableMapOf(
+        OFFSET to offset.toString(),
+        LIMIT to loadSize.toString()
     ).also {
-        it.plusAssign(getCommonWSParams(sessionData, tokenKey))
+        it += getCommonWSParams(sessionData, tokenKey)
     }.toMap()
 }

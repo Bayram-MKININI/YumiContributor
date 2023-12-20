@@ -45,7 +45,7 @@ class ReceivedMessagesFragment : Fragment() {
             findNavController().safeNavigate(
                 MessagingFragmentDirections.actionMessagingFragmentToReadInboxMailFragment(
                     messageId = message.messageId,
-                    firstReadComplete = message.isMessageRead
+                    firstReadComplete = message.messageHasBeenRead == true
                 )
             )
         }

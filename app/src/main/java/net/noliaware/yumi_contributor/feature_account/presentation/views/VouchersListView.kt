@@ -75,12 +75,12 @@ class VouchersListView @JvmOverloads constructor(
         shimmerRecyclerView = shimmerView.findViewById(R.id.shimmer_recycler_view)
         shimmerRecyclerView.also {
             it.setUp()
-            BaseAdapter<Int>().apply {
+            BaseAdapter<Unit>().apply {
                 expressionOnCreateViewHolder = { viewGroup ->
                     viewGroup.inflate(R.layout.voucher_item_placeholder_layout)
                 }
                 it.adapter = this
-                submitList(listOf(0))
+                submitList(listOf(Unit))
             }
         }
         recyclerView = findViewById(R.id.recycler_view)
