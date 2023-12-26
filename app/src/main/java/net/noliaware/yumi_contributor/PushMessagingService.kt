@@ -4,42 +4,30 @@ import android.content.Intent
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.commun.Push.ACTION_PUSH_DATA
 import net.noliaware.yumi_contributor.commun.Push.PUSH_BODY
 import net.noliaware.yumi_contributor.commun.Push.PUSH_TITLE
 
 class PushMessagingService : FirebaseMessagingService() {
 
-    private var broadcaster: LocalBroadcastManager? = null
-    private val job = SupervisorJob()
-    private val scope = CoroutineScope(Dispatchers.Main + job)
-
-    override fun onCreate() {
-        broadcaster = LocalBroadcastManager.getInstance(this)
+    private val broadcaster by lazy {
+        LocalBroadcastManager.getInstance(this)
     }
 
+    override fun onNewToken(token: String) = Unit
+
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        super.onMessageReceived(remoteMessage)
         handleMessage(remoteMessage)
     }
 
     private fun handleMessage(remoteMessage: RemoteMessage) {
-        scope.launch {
-            remoteMessage.notification?.let { notification ->
-                val intent = Intent(ACTION_PUSH_DATA)
-                intent.putExtra(PUSH_TITLE, notification.title)
-                intent.putExtra(PUSH_BODY, notification.body)
-                broadcaster?.sendBroadcast(intent)
+        remoteMessage.notification?.let { notification ->
+            Intent(ACTION_PUSH_DATA).apply {
+                putExtra(PUSH_TITLE, notification.title)
+                putExtra(PUSH_BODY, notification.body)
+            }.also {
+                broadcaster.sendBroadcast(it)
             }
         }
-    }
-
-    override fun onDestroy() {
-        job.cancel()
-        super.onDestroy()
     }
 }

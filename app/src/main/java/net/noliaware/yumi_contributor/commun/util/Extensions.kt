@@ -547,10 +547,8 @@ fun Context.getDrawableCompat(
 @CheckResult
 fun Drawable.tint(
     @ColorInt color: Int
-): Drawable {
-    val tintedDrawable = DrawableCompat.wrap(this).mutate()
-    DrawableCompat.setTint(tintedDrawable, color)
-    return tintedDrawable
+) = DrawableCompat.wrap(this).mutate().apply {
+    DrawableCompat.setTint(this, color)
 }
 
 fun Number.formatNumber(): String = NumberFormat.getNumberInstance(Locale.getDefault()).format(this)

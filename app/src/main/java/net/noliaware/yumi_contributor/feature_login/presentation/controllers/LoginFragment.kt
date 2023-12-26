@@ -1,9 +1,5 @@
 package net.noliaware.yumi_contributor.feature_login.presentation.controllers
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -11,15 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.Push.ACTION_PUSH_DATA
-import net.noliaware.yumi_contributor.commun.Push.PUSH_BODY
-import net.noliaware.yumi_contributor.commun.Push.PUSH_TITLE
 import net.noliaware.yumi_contributor.commun.util.ViewState.DataState
 import net.noliaware.yumi_contributor.commun.util.ViewState.LoadingState
 import net.noliaware.yumi_contributor.commun.util.collectLifecycleAware
@@ -36,23 +27,6 @@ class LoginFragment : Fragment() {
     private val viewModel: LoginFragmentViewModel by viewModels()
     private var loginLayout: LoginLayout? = null
     private val passwordIndexes = mutableListOf<Int>()
-
-    private val messageReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent) {
-            intent.extras?.let {
-                val title = it.getString(PUSH_TITLE)
-                val body = it.getString(PUSH_BODY)
-                val text = "$title:$body"
-                view?.let { view ->
-                    Snackbar.make(
-                        view,
-                        text,
-                        Snackbar.LENGTH_LONG
-                    ).show()
-                }
-            }
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -73,22 +47,9 @@ class LoginFragment : Fragment() {
         collectFlows()
     }
 
-    override fun onStart() {
-        super.onStart()
-        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(
-            messageReceiver,
-            IntentFilter(ACTION_PUSH_DATA)
-        )
-    }
-
     override fun onResume() {
         super.onResume()
         loginLayout?.computeLoginLayout()
-    }
-
-    override fun onStop() {
-        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(messageReceiver)
-        super.onStop()
     }
 
     private fun getAndroidId(): String = Settings.Secure.getString(

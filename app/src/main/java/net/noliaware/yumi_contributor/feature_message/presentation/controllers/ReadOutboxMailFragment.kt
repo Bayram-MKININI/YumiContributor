@@ -71,7 +71,6 @@ class ReadOutboxMailFragment : AppCompatDialogFragment() {
                     .setNegativeButton(R.string.cancel) { dialog, _ ->
                         dialog.dismiss()
                     }
-                    .create()
                     .show()
             }
 

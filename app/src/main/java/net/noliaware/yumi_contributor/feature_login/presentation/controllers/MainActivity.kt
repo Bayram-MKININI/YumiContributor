@@ -15,6 +15,9 @@ import net.noliaware.yumi_contributor.R
 import net.noliaware.yumi_contributor.commun.Push.ACTION_PUSH_DATA
 import net.noliaware.yumi_contributor.commun.Push.PUSH_BODY
 import net.noliaware.yumi_contributor.commun.Push.PUSH_TITLE
+import net.noliaware.yumi_contributor.commun.util.getColorCompat
+import net.noliaware.yumi_contributor.commun.util.getDrawableCompat
+import net.noliaware.yumi_contributor.commun.util.tint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -24,20 +27,21 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 
-    private val messageReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+    private val messageReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent) {
             intent.extras?.let {
                 val title = it.getString(PUSH_TITLE)
                 val body = it.getString(PUSH_BODY)
-                context?.let {
-                    MaterialAlertDialogBuilder(this@MainActivity)
-                        .setTitle(title)
-                        .setMessage(body)
-                        .setPositiveButton(R.string.ok) { dialog, _ ->
-                            dialog.dismiss()
-                        }
-                        .create()
-                        .show()
+                with(MaterialAlertDialogBuilder(this@MainActivity)) {
+                    setTitle(title)
+                    getColorCompat(R.color.grey_6).also { color ->
+                        setIcon(getDrawableCompat(R.drawable.ic_push)?.tint(color))
+                    }
+                    setMessage(body)
+                    setPositiveButton(R.string.ok) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    show()
                 }
             }
         }
