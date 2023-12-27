@@ -1,5 +1,6 @@
 package net.noliaware.yumi_contributor.feature_login.presentation.controllers
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -116,19 +117,22 @@ class LoginFragment : Fragment() {
     }
 
     private fun showForceUpdateDialog() {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.update_app)
-            .setMessage(R.string.update_message)
-            .setPositiveButton(R.string.update) { _, _ ->
-                viewModel.forceUpdateUrl?.let { url ->
-                    context?.startWebBrowserAtURL(url)
+        with(MaterialAlertDialogBuilder(requireContext())) {
+            setTitle(R.string.update_app)
+            setMessage(R.string.update_message)
+            setPositiveButton(R.string.update, null)
+            setCancelable(false)
+            create().apply {
+                show()
+                getButton(
+                    DialogInterface.BUTTON_POSITIVE
+                ).setOnClickListener {
+                    viewModel.forceUpdateUrl?.let { url ->
+                        context.startWebBrowserAtURL(url)
+                    }
                 }
             }
-            .setCancelable(false)
-            .create().apply {
-                setCanceledOnTouchOutside(false)
-                show()
-            }
+        }
     }
 
     private val loginViewCallback: LoginViewCallback by lazy {

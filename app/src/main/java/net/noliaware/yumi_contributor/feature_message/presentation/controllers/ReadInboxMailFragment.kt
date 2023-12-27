@@ -127,8 +127,8 @@ class ReadInboxMailFragment : AppCompatDialogFragment() {
                     .setTitle(R.string.delete)
                     .setMessage(R.string.delete_mail_confirmation)
                     .setPositiveButton(R.string.ok) { dialog, _ ->
-                        dialog.dismiss()
                         viewModel.callDeleteInboxMessageForId()
+                        dialog.dismiss()
                     }
                     .setNegativeButton(R.string.cancel) { dialog, _ ->
                         dialog.dismiss()
