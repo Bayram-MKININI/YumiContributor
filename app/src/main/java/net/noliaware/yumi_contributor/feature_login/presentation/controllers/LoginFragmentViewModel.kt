@@ -1,5 +1,6 @@
 package net.noliaware.yumi_contributor.feature_login.presentation.controllers
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.messaging.FirebaseMessaging
@@ -33,18 +34,22 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginFragmentViewModel @Inject constructor(
     private val repository: LoginRepository,
-    private val dataStoreRepository: DataStoreRepository
+    private val dataStoreRepository: DataStoreRepository,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _forceUpdateStateFlow: MutableStateFlow<ViewState<String>> by lazy {
+    private val _forceUpdateStateFlow: MutableStateFlow<ViewState<Boolean>> by lazy {
         MutableStateFlow(DataState())
     }
     val forceUpdateStateFlow = _forceUpdateStateFlow.asStateFlow()
 
-    val forceUpdateUrl
-        get() = when (forceUpdateStateFlow.value) {
-            is DataState -> (forceUpdateStateFlow.value as DataState<String>).data
-            is LoadingState -> null
+    var forceUpdateUrl
+        get() = savedStateHandle.getStateFlow(
+            key = KEY_FORCE_UPDATE_URL,
+            initialValue = ""
+        ).value
+        private set(value) {
+            savedStateHandle[KEY_FORCE_UPDATE_URL] = value
         }
 
     private val _prefsStateFlow: MutableStateFlow<ViewState<UserPreferences>> by lazy {
@@ -146,9 +151,8 @@ class LoginFragmentViewModel @Inject constructor(
                 val appVersion = BuildConfig.VERSION_CODE
 
                 if (currentVersion > appVersion) {
-                    _forceUpdateStateFlow.value = DataState(
-                        firebaseRemoteConfig.getString(KEY_FORCE_UPDATE_URL)
-                    )
+                    forceUpdateUrl = firebaseRemoteConfig.getString(KEY_FORCE_UPDATE_URL)
+                    _forceUpdateStateFlow.value = DataState(true)
                     return true
                 }
             }

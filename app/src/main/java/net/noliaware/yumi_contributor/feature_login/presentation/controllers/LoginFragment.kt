@@ -1,6 +1,5 @@
 package net.noliaware.yumi_contributor.feature_login.presentation.controllers
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -65,6 +64,7 @@ class LoginFragment : Fragment() {
                 is DataState -> viewState.data?.let {
                     loginLayout?.setLoginViewProgressVisible(false)
                     showForceUpdateDialog()
+                    viewModel.resetForceUpdateStateFlow()
                 }
             }
         }
@@ -80,7 +80,6 @@ class LoginFragment : Fragment() {
         }
         viewModel.initEventsHelper.eventFlow.collectLifecycleAware(viewLifecycleOwner) { sharedEvent ->
             loginLayout?.setLoginViewProgressVisible(false)
-            viewModel.resetForceUpdateStateFlow()
             handleSharedEvent(sharedEvent)
         }
         viewModel.initEventsHelper.stateFlow.collectLifecycleAware(viewLifecycleOwner) { viewState ->
@@ -117,22 +116,13 @@ class LoginFragment : Fragment() {
     }
 
     private fun showForceUpdateDialog() {
-        with(MaterialAlertDialogBuilder(requireContext())) {
-            setTitle(R.string.update_app)
-            setMessage(R.string.update_message)
-            setPositiveButton(R.string.update, null)
-            setCancelable(false)
-            create().apply {
-                show()
-                getButton(
-                    DialogInterface.BUTTON_POSITIVE
-                ).setOnClickListener {
-                    viewModel.forceUpdateUrl?.let { url ->
-                        context.startWebBrowserAtURL(url)
-                    }
-                }
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.update_app)
+            .setMessage(R.string.update_message)
+            .setPositiveButton(R.string.update) { _, _ ->
+                context?.startWebBrowserAtURL(viewModel.forceUpdateUrl)
             }
-        }
+            .show()
     }
 
     private val loginViewCallback: LoginViewCallback by lazy {
