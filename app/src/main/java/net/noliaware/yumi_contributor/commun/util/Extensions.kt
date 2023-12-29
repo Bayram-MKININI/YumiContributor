@@ -20,7 +20,12 @@ import android.view.View
 import android.view.View.MeasureSpec
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.*
+import androidx.annotation.CheckResult
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
+import androidx.annotation.Dimension
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
@@ -55,7 +60,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import net.noliaware.yumi_contributor.BuildConfig
 import net.noliaware.yumi_contributor.R
-import net.noliaware.yumi_contributor.commun.*
 import net.noliaware.yumi_contributor.commun.ApiParameters.APP_VERSION
 import net.noliaware.yumi_contributor.commun.ApiParameters.DEVICE_ID
 import net.noliaware.yumi_contributor.commun.ApiParameters.LOGIN
@@ -69,8 +73,11 @@ import net.noliaware.yumi_contributor.commun.data.remote.dto.ErrorDTO
 import net.noliaware.yumi_contributor.commun.data.remote.dto.SessionDTO
 import net.noliaware.yumi_contributor.commun.domain.model.AppMessageType
 import net.noliaware.yumi_contributor.commun.domain.model.SessionData
-import net.noliaware.yumi_contributor.commun.util.ErrorUI.*
-import net.noliaware.yumi_contributor.commun.util.ServiceError.*
+import net.noliaware.yumi_contributor.commun.util.ErrorUI.ErrUINetwork
+import net.noliaware.yumi_contributor.commun.util.ErrorUI.ErrUISystem
+import net.noliaware.yumi_contributor.commun.util.ServiceError.ErrNetwork
+import net.noliaware.yumi_contributor.commun.util.ServiceError.ErrNone
+import net.noliaware.yumi_contributor.commun.util.ServiceError.ErrSystem
 import retrofit2.HttpException
 import java.io.IOException
 import java.math.BigInteger
@@ -79,8 +86,9 @@ import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.security.SecureRandom
 import java.text.NumberFormat
+import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 fun isNetworkReachable(
     context: Context
@@ -217,24 +225,22 @@ suspend inline fun <reified T : Any> FlowCollector<Resource<T>>.handleRemoteCall
 
 fun String.parseDateToFormat(
     destFormat: String
-) = parseDateStringToFormat(this, DATE_SOURCE_FORMAT, destFormat).orEmpty()
+) = parseDateStringToFormat(DATE_SOURCE_FORMAT, destFormat).orEmpty()
 
 fun String.parseTimeToFormat(
     destFormat: String
-) = parseDateStringToFormat(this, TIME_SOURCE_FORMAT, destFormat).orEmpty()
+) = parseDateStringToFormat(TIME_SOURCE_FORMAT, destFormat).orEmpty()
 
-private fun parseDateStringToFormat(
-    sourceDate: String,
+private fun String.parseDateStringToFormat(
     sourceFormat: String,
     destFormat: String
-): String? {
-    val sourceFormatter = SimpleDateFormat(sourceFormat, Locale.FRANCE)
-    val date = sourceFormatter.parse(sourceDate)
-    val destFormatter = SimpleDateFormat(destFormat, Locale.FRANCE)
-    date?.let {
-        return destFormatter.format(it)
+) = try {
+    SimpleDateFormat(sourceFormat, Locale.FRANCE).parse(this)?.let {
+        SimpleDateFormat(destFormat, Locale.FRANCE).format(it)
     }
-    return null
+} catch (e: ParseException) {
+    e.recordNonFatal()
+    null
 }
 
 fun Int.parseSecondsToMinutesString(): String = SimpleDateFormat(
