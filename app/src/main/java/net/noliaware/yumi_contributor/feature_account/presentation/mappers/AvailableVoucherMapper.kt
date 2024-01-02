@@ -43,7 +43,7 @@ class AvailableVoucherMapper @Inject constructor() : VoucherMapper {
         NON_AVAILABLE -> {
             val startDate = voucher.voucherStartDate?.parseDateToFormat(SHORT_DATE_FORMAT).orEmpty()
             context.getString(
-                R.string.usable_start_date,
+                getSingleDateResIdOrDefault(voucher, R.string.usable_start_date),
                 startDate
             ).decorateWords(
                 wordsToDecorate = listOf(
@@ -54,7 +54,7 @@ class AvailableVoucherMapper @Inject constructor() : VoucherMapper {
         else -> {
             val expiryDate = voucher.voucherExpiryDate?.parseDateToFormat(SHORT_DATE_FORMAT).orEmpty()
             context.getString(
-                R.string.usable_end_date,
+                getSingleDateResIdOrDefault(voucher, R.string.usable_end_date),
                 expiryDate
             ).decorateWords(
                 wordsToDecorate = listOf(
@@ -62,6 +62,15 @@ class AvailableVoucherMapper @Inject constructor() : VoucherMapper {
                 )
             )
         }
+    }
+
+    private fun getSingleDateResIdOrDefault(
+        voucher: Voucher,
+        defaultResId: Int
+    ) = if (voucher.voucherStartDate == voucher.voucherExpiryDate) {
+        R.string.usable_single_date
+    } else {
+        defaultResId
     }
 
     private fun decorateTextWithFont(

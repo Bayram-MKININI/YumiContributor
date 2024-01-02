@@ -126,13 +126,10 @@ class ReadInboxMailFragment : AppCompatDialogFragment() {
                 MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.delete)
                     .setMessage(R.string.delete_mail_confirmation)
-                    .setPositiveButton(R.string.ok) { dialog, _ ->
+                    .setPositiveButton(R.string.ok) { _, _ ->
                         viewModel.callDeleteInboxMessageForId()
-                        dialog.dismiss()
                     }
-                    .setNegativeButton(R.string.cancel) { dialog, _ ->
-                        dialog.dismiss()
-                    }
+                    .setNegativeButton(R.string.cancel, null)
                     .show()
             }
 

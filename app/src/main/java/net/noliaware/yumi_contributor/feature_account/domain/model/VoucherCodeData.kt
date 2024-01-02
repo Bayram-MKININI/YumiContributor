@@ -10,7 +10,7 @@ data class VoucherCodeData(
     val voucherId: String?,
     val productLabel: String?,
     val voucherStartDate: String,
-    val voucherEndDate: String,
+    val voucherExpiryDate: String,
     val voucherCode: String?,
     val voucherCodeSize: Int
 ) : Parcelable

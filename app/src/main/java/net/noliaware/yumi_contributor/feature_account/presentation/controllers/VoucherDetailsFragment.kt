@@ -174,7 +174,7 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
                 voucherNumber = mapVoucherNumber(voucher.voucherNumber),
                 date = mapVoucherDate(voucher),
                 ongoingRequestsAvailable = voucher.voucherOngoingRequestCount > 0,
-                partnerAvailable = voucher.partnerInfoText?.isNotEmpty() == true,
+                partnerAvailable = voucher.isPartnerInfoAvailable == true,
                 partnerLabel = voucher.partnerInfoText,
                 voucherDescription = voucher.productDescription,
                 moreActionAvailable = voucher.productWebpage?.isNotEmpty() == true,
@@ -198,12 +198,19 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
         voucher: Voucher
     ) = when (voucher.voucherStatus) {
         USABLE -> {
-            val expiryDate = voucher.voucherExpiryDate?.parseDateToFormat(SHORT_DATE_FORMAT).orEmpty()
             val startDate = voucher.voucherStartDate?.parseDateToFormat(SHORT_DATE_FORMAT).orEmpty()
-            decorateTextWithFont(
-                getString(R.string.voucher_date, startDate, expiryDate),
-                listOf(startDate, expiryDate)
-            )
+            val expiryDate = voucher.voucherExpiryDate?.parseDateToFormat(SHORT_DATE_FORMAT).orEmpty()
+            if (voucher.voucherStartDate == voucher.voucherExpiryDate) {
+                decorateTextWithFont(
+                    getString(R.string.usable_single_date, startDate),
+                    listOf(startDate)
+                )
+            } else {
+                decorateTextWithFont(
+                    getString(R.string.voucher_date, startDate, expiryDate),
+                    listOf(startDate, expiryDate)
+                )
+            }
         }
         USED -> {
             val usageDate = voucher.voucherUseDate?.parseDateToFormat(SHORT_DATE_FORMAT).orEmpty()
@@ -351,7 +358,7 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
                                 voucherId = voucher.voucherId,
                                 productLabel = voucher.productLabel,
                                 voucherStartDate = voucher.voucherStartDate.orEmpty(),
-                                voucherEndDate = voucher.voucherExpiryDate.orEmpty(),
+                                voucherExpiryDate = voucher.voucherExpiryDate.orEmpty(),
                                 voucherCode = voucher.voucherCode,
                                 voucherCodeSize = resources.displayMetrics.widthPixels
                             )
@@ -377,16 +384,13 @@ class VoucherDetailsFragment : AppCompatDialogFragment() {
                 )
             )
             setView(voucherRequestView)
-            setPositiveButton(R.string.send) { dialog, _ ->
+            setPositiveButton(R.string.send) { _, _ ->
                 viewModel.callSendVoucherRequestWithTypeId(
                     voucherRequestTypeId = selectedRequestType.requestTypeId,
                     voucherRequestComment = voucherRequestView.getUserComment()
                 )
-                dialog.dismiss()
             }
-            setNegativeButton(R.string.cancel) { dialog, _ ->
-                dialog.dismiss()
-            }
+            setNegativeButton(R.string.cancel, null)
         }.create().show()
     }
 

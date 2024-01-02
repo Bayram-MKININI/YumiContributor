@@ -67,6 +67,8 @@ data class VoucherDTO(
     val partnerInfoText: String?,
     @Json(name = "partnerInfoURL")
     val partnerInfoURL: String?,
+    @Json(name = "voucherPartnerDisplayStatus")
+    val voucherPartnerDisplayStatus: Int?,
     @Json(name = "voucherRank")
     val voucherRank: Int?,
     @Json(name = "voucherCount")
@@ -101,6 +103,7 @@ data class VoucherDTO(
         retailerEmail = retailerEmail,
         retailerWebsite = retailerWebsite,
         partnerInfoText = partnerInfoText,
-        partnerInfoURL = partnerInfoURL
+        partnerInfoURL = partnerInfoURL,
+        isPartnerInfoAvailable = voucherPartnerDisplayStatus == 1
     )
 }

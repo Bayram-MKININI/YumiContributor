@@ -257,9 +257,7 @@ fun Fragment.handleSharedEvent(sharedEvent: UIEvent) = context?.let {
                     MaterialAlertDialogBuilder(it)
                         .setTitle(appMessage.title)
                         .setMessage(appMessage.body)
-                        .setPositiveButton(R.string.ok) { dialog, _ ->
-                            dialog.dismiss()
-                        }
+                        .setPositiveButton(R.string.ok, null)
                         .setCancelable(false)
                         .show()
                 }

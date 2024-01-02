@@ -102,17 +102,28 @@ class QrCodeFragment : AppCompatDialogFragment() {
         voucherCodeData: VoucherCodeData
     ): SpannableString {
         val startDate = voucherCodeData.voucherStartDate.parseDateToFormat(DateTime.SHORT_DATE_FORMAT)
-        val expiryDate = voucherCodeData.voucherEndDate.parseDateToFormat(DateTime.SHORT_DATE_FORMAT)
-        return getString(
-            R.string.voucher_date,
-            startDate,
-            expiryDate
-        ).decorateWords(
-            wordsToDecorate = listOf(
-                decorateTextWithFont(startDate),
-                decorateTextWithFont(expiryDate)
+        val expiryDate = voucherCodeData.voucherExpiryDate.parseDateToFormat(DateTime.SHORT_DATE_FORMAT)
+        return if (voucherCodeData.voucherStartDate == voucherCodeData.voucherExpiryDate) {
+            getString(
+                R.string.usable_single_date,
+                startDate
+            ).decorateWords(
+                wordsToDecorate = listOf(
+                    decorateTextWithFont(startDate)
+                )
             )
-        )
+        } else {
+            getString(
+                R.string.voucher_date,
+                startDate,
+                expiryDate
+            ).decorateWords(
+                wordsToDecorate = listOf(
+                    decorateTextWithFont(startDate),
+                    decorateTextWithFont(expiryDate)
+                )
+            )
+        }
     }
 
     private fun decorateTextWithFont(

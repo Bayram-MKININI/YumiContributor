@@ -109,13 +109,10 @@ class VoucherOngoingRequestListFragment : AppCompatDialogFragment() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.delete)
             .setMessage(R.string.delete_voucher_request_confirmation)
-            .setPositiveButton(R.string.ok) { dialog, _ ->
+            .setPositiveButton(R.string.ok) { _, _ ->
                 viewModel.callRemoveVoucherRequestById(voucherRequest.voucherRequestId)
-                dialog.dismiss()
             }
-            .setNegativeButton(R.string.cancel) { dialog, _ ->
-                dialog.dismiss()
-            }
+            .setNegativeButton(R.string.cancel, null)
             .show()
     }
 

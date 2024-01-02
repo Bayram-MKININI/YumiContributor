@@ -41,6 +41,7 @@
     <string name="usage_date">Utilisé le %s</string>
     <string name="cancellation_date">Annulé le %s</string>
     <string name="usable_end_date">Utilisable jusqu\'au %s</string>
+    <string name="usable_single_date">Utilisable le %s</string>
     <string name="to_retrieve">À retirer chez :</string>
     <string name="retrieved">Retiré chez :</string>
     <string name="retailer">Fournisseur :</string>

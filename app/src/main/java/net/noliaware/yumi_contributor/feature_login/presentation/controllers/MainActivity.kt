@@ -38,9 +38,7 @@ class MainActivity : AppCompatActivity() {
                         setIcon(getDrawableCompat(R.drawable.ic_push)?.tint(color))
                     }
                     setMessage(body)
-                    setPositiveButton(R.string.ok) { dialog, _ ->
-                        dialog.dismiss()
-                    }
+                    setPositiveButton(R.string.ok, null)
                     show()
                 }
             }
