@@ -116,7 +116,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun showForceUpdateDialog() {
-        MaterialAlertDialogBuilder(requireContext())
+        MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialog)
             .setTitle(R.string.update_app)
             .setMessage(R.string.update_message)
             .setPositiveButton(R.string.update) { _, _ ->

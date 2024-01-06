@@ -106,7 +106,7 @@ class VoucherOngoingRequestListFragment : AppCompatDialogFragment() {
     }
 
     private fun displayDeleteRequestDialog(voucherRequest: VoucherRequest) {
-        MaterialAlertDialogBuilder(requireContext())
+        MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialog)
             .setTitle(R.string.delete)
             .setMessage(R.string.delete_voucher_request_confirmation)
             .setPositiveButton(R.string.ok) { _, _ ->

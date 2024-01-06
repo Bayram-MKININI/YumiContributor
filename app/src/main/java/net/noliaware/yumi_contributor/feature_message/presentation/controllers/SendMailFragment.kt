@@ -124,14 +124,14 @@ class SendMailFragment : AppCompatDialogFragment() {
                 subject: String,
                 text: String
             ) {
-                val selectedPriorityIndex = sendMailView?.getSelectedPriorityIndex() ?: 0
-                val priority = Priority.entries[selectedPriorityIndex].value
-
-                if (args.message != null) {
+                args.message?.let {
                     sendMailReply(text)
-                } else {
-                    sendNewMail(recipients, subject, priority, text)
-                }
+                } ?: sendNewMail(
+                    recipients = recipients,
+                    subject = subject,
+                    priority = Priority.entries[sendMailView?.getSelectedPriorityIndex() ?: 0].value,
+                    text = text
+                )
             }
         }
     }

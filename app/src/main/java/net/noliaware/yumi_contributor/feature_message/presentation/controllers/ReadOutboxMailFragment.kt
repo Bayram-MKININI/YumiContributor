@@ -61,7 +61,7 @@ class ReadOutboxMailFragment : AppCompatDialogFragment() {
             }
 
             override fun onDeleteButtonClicked() {
-                MaterialAlertDialogBuilder(requireContext())
+                MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialog)
                     .setTitle(R.string.delete)
                     .setMessage(R.string.delete_mail_confirmation)
                     .setPositiveButton(R.string.ok) { _, _ ->

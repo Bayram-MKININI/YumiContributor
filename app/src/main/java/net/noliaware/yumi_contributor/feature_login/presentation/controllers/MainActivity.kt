@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
             intent.extras?.let {
                 val title = it.getString(PUSH_TITLE)
                 val body = it.getString(PUSH_BODY)
-                with(MaterialAlertDialogBuilder(this@MainActivity)) {
+                with(MaterialAlertDialogBuilder(this@MainActivity, R.style.AlertDialog)) {
                     setTitle(title)
                     getColorCompat(R.color.grey_6).also { color ->
                         setIcon(getDrawableCompat(R.drawable.ic_push)?.tint(color))

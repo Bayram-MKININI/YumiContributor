@@ -88,7 +88,8 @@
             app:cardBackgroundColor="@android:color/white"
             app:cardCornerRadius="21dp"
             app:cardElevation="16dp"
-            app:cardPreventCornerOverlap="false">
+            app:cardPreventCornerOverlap="false"
+            app:strokeWidth="0dp">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/pad_first_digit_text_view"
@@ -108,7 +109,8 @@
             app:cardBackgroundColor="@android:color/white"
             app:cardCornerRadius="21dp"
             app:cardElevation="16dp"
-            app:cardPreventCornerOverlap="false">
+            app:cardPreventCornerOverlap="false"
+            app:strokeWidth="0dp">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/pad_second_digit_text_view"
@@ -128,7 +130,8 @@
             app:cardBackgroundColor="@android:color/white"
             app:cardCornerRadius="21dp"
             app:cardElevation="16dp"
-            app:cardPreventCornerOverlap="false">
+            app:cardPreventCornerOverlap="false"
+            app:strokeWidth="0dp">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/pad_third_digit_text_view"
@@ -148,7 +151,8 @@
             app:cardBackgroundColor="@android:color/white"
             app:cardCornerRadius="21dp"
             app:cardElevation="16dp"
-            app:cardPreventCornerOverlap="false">
+            app:cardPreventCornerOverlap="false"
+            app:strokeWidth="0dp">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/pad_fourth_digit_text_view"
@@ -168,7 +172,8 @@
             app:cardBackgroundColor="@android:color/white"
             app:cardCornerRadius="21dp"
             app:cardElevation="16dp"
-            app:cardPreventCornerOverlap="false">
+            app:cardPreventCornerOverlap="false"
+            app:strokeWidth="0dp">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/pad_fifth_digit_text_view"
@@ -188,7 +193,8 @@
             app:cardBackgroundColor="@android:color/white"
             app:cardCornerRadius="21dp"
             app:cardElevation="16dp"
-            app:cardPreventCornerOverlap="false">
+            app:cardPreventCornerOverlap="false"
+            app:strokeWidth="0dp">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/pad_sixth_digit_text_view"
@@ -208,7 +214,8 @@
             app:cardBackgroundColor="@android:color/white"
             app:cardCornerRadius="21dp"
             app:cardElevation="16dp"
-            app:cardPreventCornerOverlap="false">
+            app:cardPreventCornerOverlap="false"
+            app:strokeWidth="0dp">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/pad_seventh_digit_text_view"
@@ -228,7 +235,8 @@
             app:cardBackgroundColor="@android:color/white"
             app:cardCornerRadius="21dp"
             app:cardElevation="16dp"
-            app:cardPreventCornerOverlap="false">
+            app:cardPreventCornerOverlap="false"
+            app:strokeWidth="0dp">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/pad_eighth_digit_text_view"
@@ -248,7 +256,8 @@
             app:cardBackgroundColor="@android:color/white"
             app:cardCornerRadius="21dp"
             app:cardElevation="16dp"
-            app:cardPreventCornerOverlap="false">
+            app:cardPreventCornerOverlap="false"
+            app:strokeWidth="0dp">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/pad_ninth_digit_text_view"
@@ -268,7 +277,8 @@
             app:cardBackgroundColor="@android:color/white"
             app:cardCornerRadius="21dp"
             app:cardElevation="16dp"
-            app:cardPreventCornerOverlap="false">
+            app:cardPreventCornerOverlap="false"
+            app:strokeWidth="0dp">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/pad_tenth_digit_text_view"
