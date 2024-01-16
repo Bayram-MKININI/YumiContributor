@@ -23,8 +23,9 @@ import net.noliaware.yumi_contributor.commun.util.layoutToBottomLeft
 import net.noliaware.yumi_contributor.commun.util.layoutToTopLeft
 import net.noliaware.yumi_contributor.commun.util.measureWrapContent
 import net.noliaware.yumi_contributor.commun.util.tint
+import net.noliaware.yumi_contributor.feature_account.presentation.adapters.VoucherPartnersAdapter
 
-class VouchersDetailsContainerView @JvmOverloads constructor(
+class VoucherDetailsContainerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
@@ -36,22 +37,26 @@ class VouchersDetailsContainerView @JvmOverloads constructor(
     private lateinit var categoryImageView: ImageView
     private lateinit var parentContentView: View
     private lateinit var shimmerView: ShimmerFrameLayout
-    private lateinit var vouchersDetailsView: VouchersDetailsView
+    private lateinit var voucherDetailsView: VoucherDetailsView
+    var voucherPartnersAdapter
+        get() = voucherDetailsView.partnersRecyclerView.adapter as VoucherPartnersAdapter
+        set(adapter) {
+            voucherDetailsView.partnersRecyclerView.adapter = adapter
+        }
     private lateinit var displayVoucherLayout: LinearLayoutCompat
     private lateinit var voucherStatusTextView: TextView
-    var callback: VouchersDetailsViewCallback? = null
+    var callback: VoucherDetailsViewCallback? = null
 
-    val getRequestSpinner get() = vouchersDetailsView.requestSpinner
+    val getRequestSpinner get() = voucherDetailsView.requestSpinner
 
-    data class VouchersDetailsViewAdapter(
+    data class VoucherDetailsViewAdapter(
         val title: String = "",
         val titleCrossed: Boolean = false,
         val requestsAvailable: Boolean = false,
         val voucherNumber: SpannableString?,
         val date: SpannableString?,
         val ongoingRequestsAvailable: Boolean,
-        val partnerAvailable: Boolean,
-        val partnerLabel: String? = null,
+        val partnersAvailable: Boolean,
         val voucherDescription: String? = null,
         val moreActionAvailable: Boolean,
         val retailerLabel: String = "",
@@ -61,11 +66,10 @@ class VouchersDetailsContainerView @JvmOverloads constructor(
         val voucherStatus: String = ""
     )
 
-    interface VouchersDetailsViewCallback {
+    interface VoucherDetailsViewCallback {
         fun onBackButtonClicked()
         fun onRequestSelectedAtIndex(index: Int)
         fun onOngoingRequestsClicked()
-        fun onPartnerInfoClicked()
         fun onMoreButtonClicked()
         fun onPhoneButtonClicked()
         fun onLocationClicked()
@@ -86,19 +90,18 @@ class VouchersDetailsContainerView @JvmOverloads constructor(
 
         parentContentView = findViewById(R.id.parent_content_layout)
         shimmerView = findViewById(R.id.shimmer_view)
-        vouchersDetailsView = shimmerView.findViewById(R.id.content_layout)
+        voucherDetailsView = shimmerView.findViewById(R.id.content_layout)
         post {
-            vouchersDetailsView.requestSpinner.setSelection(
-                vouchersDetailsView.requestSpinner.adapter.count,
+            voucherDetailsView.requestSpinner.setSelection(
+                voucherDetailsView.requestSpinner.adapter.count,
                 false
             )
-            vouchersDetailsView.requestSpinner.onItemSelectedListener = onSpinnerItemSelectedListener
+            voucherDetailsView.requestSpinner.onItemSelectedListener = onSpinnerItemSelectedListener
         }
-        vouchersDetailsView.ongoingRequestsButton.setOnClickListener(onButtonClickListener)
-        vouchersDetailsView.informationTextView.setOnClickListener(onButtonClickListener)
-        vouchersDetailsView.moreTextView.setOnClickListener(onButtonClickListener)
-        vouchersDetailsView.openLocationLayout.setOnClickListener(onButtonClickListener)
-        vouchersDetailsView.phoneButton.setOnClickListener(onButtonClickListener)
+        voucherDetailsView.ongoingRequestsButton.setOnClickListener(onButtonClickListener)
+        voucherDetailsView.moreTextView.setOnClickListener(onButtonClickListener)
+        voucherDetailsView.openLocationLayout.setOnClickListener(onButtonClickListener)
+        voucherDetailsView.phoneButton.setOnClickListener(onButtonClickListener)
 
         displayVoucherLayout = parentContentView.findViewById(R.id.display_voucher_layout)
         displayVoucherLayout.setOnClickListener(onButtonClickListener)
@@ -111,7 +114,6 @@ class VouchersDetailsContainerView @JvmOverloads constructor(
             when (it.id) {
                 R.id.back_view -> callback?.onBackButtonClicked()
                 R.id.ongoing_requests_action_layout -> callback?.onOngoingRequestsClicked()
-                R.id.information_text_view -> callback?.onPartnerInfoClicked()
                 R.id.more_text_view -> callback?.onMoreButtonClicked()
                 R.id.phone_action_layout -> callback?.onPhoneButtonClicked()
                 R.id.open_location_layout -> callback?.onLocationClicked()
@@ -131,7 +133,7 @@ class VouchersDetailsContainerView @JvmOverloads constructor(
                 val lastPosition = parent?.count ?: 0
                 if (position < lastPosition) {
                     callback?.onRequestSelectedAtIndex(position)
-                    vouchersDetailsView.requestSpinner.setSelection(lastPosition, false)
+                    voucherDetailsView.requestSpinner.setSelection(lastPosition, false)
                 }
             }
 
@@ -155,13 +157,13 @@ class VouchersDetailsContainerView @JvmOverloads constructor(
         )?.tint(color)
     }
 
-    fun fillViewWithData(vouchersDetailsViewAdapter: VouchersDetailsViewAdapter) {
-        vouchersDetailsView.fillViewWithData(vouchersDetailsViewAdapter)
+    fun fillViewWithData(voucherDetailsViewAdapter: VoucherDetailsViewAdapter) {
+        voucherDetailsView.fillViewWithData(voucherDetailsViewAdapter)
 
-        if (vouchersDetailsViewAdapter.voucherStatusAvailable) {
+        if (voucherDetailsViewAdapter.voucherStatusAvailable) {
             displayVoucherLayout.isGone = true
             voucherStatusTextView.isVisible = true
-            voucherStatusTextView.text = vouchersDetailsViewAdapter.voucherStatus
+            voucherStatusTextView.text = voucherDetailsViewAdapter.voucherStatus
         } else {
             displayVoucherLayout.isVisible = true
             voucherStatusTextView.isGone = true

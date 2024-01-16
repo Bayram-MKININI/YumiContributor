@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView
+<net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherDetailsContainerView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -51,7 +51,7 @@
                 android:overScrollMode="never"
                 android:paddingVertical="20dp">
 
-                <net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsView
+                <net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherDetailsView
                     android:id="@+id/content_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -121,38 +121,14 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/rectangle_rounded_primary" />
 
-                    <View
-                        android:id="@+id/sponsor_background"
-                        android:layout_width="wrap_content"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/partners_recycler_view"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/rectangle_rounded_green"
+                        android:overScrollMode="never"
                         android:visibility="gone"
-                        tools:visibility="visible" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/sponsor_text_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/omnes_medium"
-                        android:textColor="@color/grey_2"
-                        android:textSize="15sp"
-                        android:visibility="gone"
-                        tools:text="La mairie 99 remercie sponsor pour le financement de ce coupon"
-                        tools:visibility="visible" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/information_text_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/circle_primary"
-                        android:clickable="true"
-                        android:fontFamily="@font/omnes_medium_italic"
-                        android:gravity="center"
-                        android:includeFontPadding="false"
-                        android:text="@string/information"
-                        android:textColor="@android:color/white"
-                        android:textSize="15sp"
-                        android:visibility="gone"
+                        tools:layoutManager="LinearLayoutManager"
+                        tools:listitem="@layout/voucher_partner_item_layout"
                         tools:visibility="visible" />
 
                     <com.google.android.material.textview.MaterialTextView
@@ -303,7 +279,7 @@
                             android:textColor="@android:color/white"
                             android:textSize="14sp" />
                     </androidx.appcompat.widget.LinearLayoutCompat>
-                </net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsView>
+                </net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherDetailsView>
             </androidx.core.widget.NestedScrollView>
         </com.facebook.shimmer.ShimmerFrameLayout>
 
@@ -353,4 +329,4 @@
             tools:visibility="visible" />
 
     </net.noliaware.yumi_contributor.commun.presentation.views.ElevatedCardView>
-</net.noliaware.yumi_contributor.feature_account.presentation.views.VouchersDetailsContainerView>
+</net.noliaware.yumi_contributor.feature_account.presentation.views.VoucherDetailsContainerView>

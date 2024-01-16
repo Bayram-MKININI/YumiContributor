@@ -81,7 +81,7 @@
         android:id="@+id/voucher_detail_fragment"
         android:name="net.noliaware.yumi_contributor.feature_account.presentation.controllers.VoucherDetailsFragment"
         android:label="@string/voucher_details_fragment_screen_label"
-        tools:layout="@layout/vouchers_details_layout">
+        tools:layout="@layout/voucher_details_layout">
         <argument
             android:name="categoryUI"
             app:argType="net.noliaware.yumi_contributor.feature_account.presentation.controllers.CategoryUI" />

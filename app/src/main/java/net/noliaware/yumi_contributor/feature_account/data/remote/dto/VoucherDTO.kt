@@ -63,12 +63,8 @@ data class VoucherDTO(
     val retailerEmail: String?,
     @Json(name = "retailerWebsite")
     val retailerWebsite: String?,
-    @Json(name = "partnerInfoText")
-    val partnerInfoText: String?,
-    @Json(name = "partnerInfoURL")
-    val partnerInfoURL: String?,
-    @Json(name = "voucherPartnerDisplayStatus")
-    val voucherPartnerDisplayStatus: Int?,
+    @Json(name = "voucherPartnerInfos")
+    val voucherPartnerInfos: List<VoucherPartnerDTO>?,
     @Json(name = "voucherRank")
     val voucherRank: Int?,
     @Json(name = "voucherCount")
@@ -87,6 +83,7 @@ data class VoucherDTO(
         voucherDeliveryStatus = VoucherDeliveryStatus.fromValue(voucherDeliveryStatus),
         productLabel = productLabel,
         voucherOngoingRequestCount = voucherRequestCount ?: 0,
+        voucherPartnersList = voucherPartnerInfos?.map { it.toVoucherPartner() },
         productDescription = productDescription,
         productWebpage = productWebpage,
         retailerType = retailerType,
@@ -101,9 +98,6 @@ data class VoucherDTO(
         retailerPhoneNumber = retailerPhoneNumber,
         retailerCellPhoneNumber = retailerCellPhoneNumber,
         retailerEmail = retailerEmail,
-        retailerWebsite = retailerWebsite,
-        partnerInfoText = partnerInfoText,
-        partnerInfoURL = partnerInfoURL,
-        isPartnerInfoAvailable = voucherPartnerDisplayStatus == 1
+        retailerWebsite = retailerWebsite
     )
 }

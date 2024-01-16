@@ -13,6 +13,7 @@ data class Voucher(
     val voucherDeliveryStatus: VoucherDeliveryStatus?,
     val productLabel: String?,
     val voucherOngoingRequestCount: Int,
+    val voucherPartnersList: List<VoucherPartner>?,
     val productDescription: String?,
     val productWebpage: String?,
     val retailerType: String?,
@@ -27,8 +28,5 @@ data class Voucher(
     val retailerPhoneNumber: String?,
     val retailerCellPhoneNumber: String?,
     val retailerEmail: String?,
-    val retailerWebsite: String?,
-    val partnerInfoText: String?,
-    val partnerInfoURL: String?,
-    val isPartnerInfoAvailable: Boolean?
+    val retailerWebsite: String?
 )
