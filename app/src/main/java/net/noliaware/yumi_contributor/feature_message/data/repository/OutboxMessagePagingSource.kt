@@ -4,7 +4,6 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import net.noliaware.yumi_contributor.commun.ApiConstants.GET_OUTBOX_MESSAGE_LIST
 import net.noliaware.yumi_contributor.commun.ApiParameters.LIMIT
-import net.noliaware.yumi_contributor.commun.ApiParameters.LIST_PAGE_SIZE
 import net.noliaware.yumi_contributor.commun.ApiParameters.OFFSET
 import net.noliaware.yumi_contributor.commun.data.remote.RemoteApi
 import net.noliaware.yumi_contributor.commun.domain.model.SessionData
@@ -25,15 +24,11 @@ class OutboxMessagePagingSource(
 
     override fun getRefreshKey(
         state: PagingState<Int, Message>
-    ) = state.anchorPosition?.let { anchorPosition ->
-        state.closestPageToPosition(anchorPosition)?.let {
-            it.prevKey?.plus(1) ?: it.nextKey?.minus(1)
-        }
-    }
+    ) = null
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Message> {
         try {
-            val position = params.key ?: 0
+            val offset = params.key ?: 0
 
             val timestamp = currentTimeInMillis()
             val randomString = randomString()
@@ -47,7 +42,7 @@ class OutboxMessagePagingSource(
                     randomString = randomString
                 ),
                 params = generateGetMessagesListParams(
-                    offset = position * LIST_PAGE_SIZE,
+                    offset = offset,
                     loadSize = params.loadSize,
                     tokenKey = GET_OUTBOX_MESSAGE_LIST
                 )
@@ -63,6 +58,8 @@ class OutboxMessagePagingSource(
                 throw PaginationException(serviceError)
             }
 
+            val lastMessageRank = remoteData.data?.messageDTOList?.lastOrNull()?.messageRank ?: 0
+
             val moreItemsAvailable = remoteData.data?.messageDTOList?.lastOrNull()?.let { messageDTO ->
                 if (messageDTO.messageRank != null && messageDTO.messageCount != null) {
                     messageDTO.messageRank < messageDTO.messageCount
@@ -71,19 +68,10 @@ class OutboxMessagePagingSource(
                 }
             }
 
-            val nextKey = if (moreItemsAvailable == true) {
-                // initial load size = 3 * NETWORK_PAGE_SIZE
-                // ensure we're not requesting duplicating items, at the 2nd request
-                position + (params.loadSize / LIST_PAGE_SIZE)
-            } else {
-                null
-            }
-            val prevKey = if (position == 0) null else position - 1
-
             return LoadResult.Page(
                 data = remoteData.data?.messageDTOList?.map { it.toMessage() }.orEmpty(),
-                prevKey = prevKey,
-                nextKey = nextKey
+                prevKey = null,
+                nextKey = if (moreItemsAvailable == true) lastMessageRank else null
             )
         } catch (ex: Exception) {
             return handlePagingSourceError(ex)

@@ -102,11 +102,6 @@ class MessageItemView @JvmOverloads constructor(
             MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         )
 
-        bodyTextView.measure(
-            MeasureSpec.makeMeasureSpec(viewWidth * 9 / 10, MeasureSpec.AT_MOST),
-            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
-        )
-
         viewHeight = mailTextView.measuredHeight + bodyTextView.measuredHeight + max(
             subjectTextView.measuredHeight,
             timeTextView.measuredHeight

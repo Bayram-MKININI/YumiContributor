@@ -24,11 +24,11 @@ class AlertPagingSource(
 
     override fun getRefreshKey(
         state: PagingState<Long, Alert>
-    ): Nothing? = null
+    ) = null
 
     override suspend fun load(params: LoadParams<Long>): LoadResult<Long, Alert> {
         try {
-            val nextTimestamp = params.key ?: 0
+            val offsetTimestamp = params.key ?: 0
 
             val timestamp = currentTimeInMillis()
             val randomString = randomString()
@@ -42,7 +42,7 @@ class AlertPagingSource(
                     randomString = randomString
                 ),
                 params = generateGetAlertsListParams(
-                    timestamp = nextTimestamp,
+                    timestamp = offsetTimestamp,
                     loadSize = params.loadSize,
                     tokenKey = GET_ALERT_LIST
                 )
@@ -58,18 +58,16 @@ class AlertPagingSource(
                 throw PaginationException(serviceError)
             }
 
-            val alertTimestamp = remoteData.data?.alertDTOList?.lastOrNull()?.alertTimestamp ?: nextTimestamp
+            val lastAlertTimestamp = remoteData.data?.alertDTOList?.lastOrNull()?.alertTimestamp ?: offsetTimestamp
 
             val moreItemsAvailable = remoteData.data?.alertDTOList?.lastOrNull()?.let { alertDTO ->
                 alertDTO.alertRank < alertDTO.alertCount
             }
 
-            val canLoadMore = moreItemsAvailable == true
-
             return LoadResult.Page(
                 data = remoteData.data?.alertDTOList?.map { it.toAlert() }.orEmpty(),
                 prevKey = null,// Only paging forward.
-                nextKey = if (canLoadMore) alertTimestamp else null
+                nextKey = if (moreItemsAvailable == true) lastAlertTimestamp else null
             )
         } catch (ex: Exception) {
             return handlePagingSourceError(ex)

@@ -4,7 +4,6 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import net.noliaware.yumi_contributor.commun.ApiConstants.GET_MANAGED_ACCOUNT_LIST
 import net.noliaware.yumi_contributor.commun.ApiParameters.LIMIT
-import net.noliaware.yumi_contributor.commun.ApiParameters.LIST_PAGE_SIZE
 import net.noliaware.yumi_contributor.commun.ApiParameters.OFFSET
 import net.noliaware.yumi_contributor.commun.data.remote.RemoteApi
 import net.noliaware.yumi_contributor.commun.domain.model.SessionData
@@ -24,11 +23,11 @@ class ManagedAccountPagingSource(
 
     override fun getRefreshKey(
         state: PagingState<Int, ManagedAccount>
-    ): Nothing? = null
+    ) = null
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ManagedAccount> {
         try {
-            val position = params.key ?: 0
+            val offset = params.key ?: 0
 
             val timestamp = currentTimeInMillis()
             val randomString = randomString()
@@ -42,7 +41,7 @@ class ManagedAccountPagingSource(
                     randomString = randomString
                 ),
                 params = generateWSParams(
-                    offset = position,
+                    offset = offset,
                     loadSize = params.loadSize,
                     tokenKey = GET_MANAGED_ACCOUNT_LIST
                 )
@@ -58,6 +57,8 @@ class ManagedAccountPagingSource(
                 throw PaginationException(serviceError)
             }
 
+            val lastAccountRank = remoteData.data?.accountsDTOs?.lastOrNull()?.accountRank ?: offset
+
             val moreItemsAvailable = remoteData.data?.accountsDTOs?.lastOrNull()?.let { accountDTO ->
                 if (accountDTO.accountRank != null && accountDTO.accountCount != null) {
                     accountDTO.accountRank < accountDTO.accountCount
@@ -66,18 +67,10 @@ class ManagedAccountPagingSource(
                 }
             }
 
-            val nextKey = if (moreItemsAvailable == true) {
-                // initial load size = 3 * NETWORK_PAGE_SIZE
-                // ensure we're not requesting duplicating items, at the 2nd request
-                position + (params.loadSize / LIST_PAGE_SIZE)
-            } else {
-                null
-            }
-
             return LoadResult.Page(
                 data = remoteData.data?.accountsDTOs?.map { it.toManagedAccount() }.orEmpty(),
                 prevKey = null,// Only paging forward.
-                nextKey = nextKey
+                nextKey = if (moreItemsAvailable == true) lastAccountRank else null
             )
         } catch (ex: Exception) {
             return handlePagingSourceError(ex)
