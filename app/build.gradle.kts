@@ -75,7 +75,7 @@ dependencies {
 
     implementation("androidx.core:core-splashscreen:1.0.1")
 
-    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
     implementation("com.google.firebase:firebase-messaging-ktx")
     implementation("com.google.firebase:firebase-config-ktx")
     implementation("com.google.firebase:firebase-crashlytics-ktx")
