@@ -54,13 +54,13 @@ jobs:
         run: echo "RELEASE_DATE=$(date --rfc-3339=date)" >> ${GITHUB_ENV}
 
       - name: Upload APK Release
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Yumi Contributor APK - ${{ env.RELEASE_DATE }}
           path: app/build/outputs/apk/release/
 
       - name: Upload AAB Release
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Yumi Contributor AAB - ${{ env.RELEASE_DATE }}
           path: app/build/outputs/bundle/release/

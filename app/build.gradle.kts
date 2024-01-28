@@ -18,8 +18,8 @@ android {
         applicationId = "net.noliaware.yumi_contributor"
         minSdk = 21
         targetSdk = 34
-        versionCode = 12
-        versionName = "1.0.2"
+        versionCode = 14
+        versionName = "1.0.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -115,7 +115,7 @@ dependencies {
     implementation("androidx.paging:paging-runtime-ktx:3.2.1")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("androidx.browser:browser:1.7.0")
-    implementation("androidx.webkit:webkit:1.9.0")
+    implementation("androidx.webkit:webkit:1.10.0")
     implementation("com.facebook.shimmer:shimmer:0.5.0")
 
     // Navigation
