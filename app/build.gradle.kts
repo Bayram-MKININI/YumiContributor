@@ -75,7 +75,7 @@ dependencies {
 
     implementation("androidx.core:core-splashscreen:1.0.1")
 
-    implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
+    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
     implementation("com.google.firebase:firebase-messaging-ktx")
     implementation("com.google.firebase:firebase-config-ktx")
     implementation("com.google.firebase:firebase-crashlytics-ktx")
@@ -94,8 +94,8 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp")
     implementation("com.squareup.okhttp3:logging-interceptor")
 
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
+    implementation("com.squareup.retrofit2:retrofit:2.10.0")
+    implementation("com.squareup.retrofit2:converter-moshi:2.10.0")
 
     implementation("com.squareup.moshi:moshi-kotlin:1.15.1")
     ksp("com.squareup.moshi:moshi-kotlin-codegen:1.15.1")
