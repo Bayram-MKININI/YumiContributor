@@ -94,8 +94,8 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp")
     implementation("com.squareup.okhttp3:logging-interceptor")
 
-    implementation("com.squareup.retrofit2:retrofit:2.10.0")
-    implementation("com.squareup.retrofit2:converter-moshi:2.10.0")
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-moshi:2.11.0")
 
     implementation("com.squareup.moshi:moshi-kotlin:1.15.1")
     ksp("com.squareup.moshi:moshi-kotlin-codegen:1.15.1")
@@ -104,8 +104,8 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // DI
-    implementation("com.google.dagger:hilt-android:2.51")
-    ksp("com.google.dagger:hilt-compiler:2.51")
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    ksp("com.google.dagger:hilt-compiler:2.51.1")
 
     // UI
     implementation("com.google.android.material:material:1.11.0")
