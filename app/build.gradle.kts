@@ -82,7 +82,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
 
     // Core
-    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.core:core-ktx:1.13.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
 
     // Support Libraries
@@ -101,7 +101,7 @@ dependencies {
     ksp("com.squareup.moshi:moshi-kotlin-codegen:1.15.1")
 
     // Cache
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("androidx.datastore:datastore-preferences:1.1.0")
 
     // DI
     implementation("com.google.dagger:hilt-android:2.51.1")
@@ -109,7 +109,7 @@ dependencies {
 
     // UI
     implementation("com.google.android.material:material:1.11.0")
-    implementation("androidx.activity:activity-ktx:1.8.2")
+    implementation("androidx.activity:activity-ktx:1.9.0")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     implementation("androidx.paging:paging-runtime-ktx:3.2.1")
@@ -126,5 +126,5 @@ dependencies {
     implementation("com.google.zxing:zxingorg:3.5.1")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.13")
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.14")
 }
