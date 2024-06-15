@@ -75,18 +75,18 @@ dependencies {
 
     implementation("androidx.core:core-splashscreen:1.0.1")
 
-    implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
+    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
     implementation("com.google.firebase:firebase-messaging-ktx")
     implementation("com.google.firebase:firebase-config-ktx")
     implementation("com.google.firebase:firebase-crashlytics-ktx")
     implementation("com.google.firebase:firebase-analytics-ktx")
 
     // Core
-    implementation("androidx.core:core-ktx:1.13.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
+    implementation("androidx.core:core-ktx:1.13.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
 
     // Support Libraries
-    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
     // Network
@@ -101,21 +101,21 @@ dependencies {
     ksp("com.squareup.moshi:moshi-kotlin-codegen:1.15.1")
 
     // Cache
-    implementation("androidx.datastore:datastore-preferences:1.1.0")
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 
     // DI
     implementation("com.google.dagger:hilt-android:2.51.1")
     ksp("com.google.dagger:hilt-compiler:2.51.1")
 
     // UI
-    implementation("com.google.android.material:material:1.11.0")
+    implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.activity:activity-ktx:1.9.0")
-    implementation("androidx.fragment:fragment-ktx:1.6.2")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
-    implementation("androidx.paging:paging-runtime-ktx:3.2.1")
+    implementation("androidx.fragment:fragment-ktx:1.8.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.2")
+    implementation("androidx.paging:paging-runtime-ktx:3.3.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("androidx.browser:browser:1.8.0")
-    implementation("androidx.webkit:webkit:1.10.0")
+    implementation("androidx.webkit:webkit:1.11.0")
     implementation("com.facebook.shimmer:shimmer:0.5.0")
 
     // Navigation
