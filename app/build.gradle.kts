@@ -12,7 +12,7 @@ plugins {
 android {
     namespace = "net.noliaware.yumi_contributor"
     compileSdk = 34
-    buildToolsVersion = "34.0.0"
+    buildToolsVersion = "35.0.0"
 
     defaultConfig {
         applicationId = "net.noliaware.yumi_contributor"
@@ -75,7 +75,7 @@ dependencies {
 
     implementation("androidx.core:core-splashscreen:1.0.1")
 
-    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
     implementation("com.google.firebase:firebase-messaging-ktx")
     implementation("com.google.firebase:firebase-config-ktx")
     implementation("com.google.firebase:firebase-crashlytics-ktx")
@@ -110,8 +110,8 @@ dependencies {
     // UI
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.activity:activity-ktx:1.9.0")
-    implementation("androidx.fragment:fragment-ktx:1.8.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.2")
+    implementation("androidx.fragment:fragment-ktx:1.8.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.3")
     implementation("androidx.paging:paging-runtime-ktx:3.3.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("androidx.browser:browser:1.8.0")
